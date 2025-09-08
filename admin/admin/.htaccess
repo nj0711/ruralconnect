@@ -1,0 +1,5 @@
+# Use PHP 7.4
+AddHandler application/x-httpd-php74 .php
+
+# Enable Rewrite Engine
+RewriteEngine On

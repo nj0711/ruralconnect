@@ -1,0 +1,125 @@
+
+
+.close1,.close2,.close3,.close4,.close5 {
+    color: #707070;
+    float: right;
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 0%;
+}
+
+
+
+.close1:hover,
+.close1:focus{
+    color: #01313c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close2:hover,
+.close2:focus {
+    color: #01313c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.close3:hover,
+.close3:focus {
+    color: #01313c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.close4:hover,
+.close4:focus {
+    color: #01313c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.close5:hover,
+.close5:focus {
+    color: #01313c;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    color: white;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    background-color: whitesmoke;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #003b49;
+    width: 80%;
+    max-width: 800px; /* Adjust max-width as needed */
+    
+    height: fit-content;
+    
+}
+
+.modal-body {
+    display: flex;
+    
+}
+
+.text-content,
+.map-content {
+    flex: 1;
+    
+    padding: 0 10px;
+}
+
+.map-content {
+    border:1px solid #01313c;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    align-items: center;
+    max-width: 300px; /* Adjust the max-width as needed */
+    width: 100%; /* Ensure the map takes up the full width */
+    margin: auto auto; /* Center the map horizontally */
+    
+}
+
+.google-map img {
+    max-width: 100%; /* Limit the width of the map image */
+    height: 100%; /* Ensure the aspect ratio is maintained */
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .modal-body {
+        flex-direction: column;
+        
+    }
+    .text-content,
+    .map-content {
+        padding: 0;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .modal-content {
+        padding-top: 15%;
+        width: 95%;
+    }
+}
+

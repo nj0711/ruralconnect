@@ -1,0 +1,19 @@
+<section class="cta-five-section">
+    <div class="container">
+        <div class="cta-five-card">
+            <div class="cta-five-card-icon">
+                <i class="flaticon-file"></i>
+            </div><!-- cta-five-card-icon -->
+            <div class="cta-five-content">
+                <h4>Download List Of Villages In Anand</h4>
+                <p>There are many villages that can be found in Anand, but we may not be <br> able to list them all, so you can check from this list.</p>
+            </div><!-- cta-five-content -->
+            <div class="cta-five-button">
+                <a href="download_villages.php" class="btn btn-primary">Download Files</a>
+            </div><!-- cta-five-button -->
+            <div class="cta-five-img">
+                <i class="flaticon-file"></i>
+            </div><!-- cta-five-img -->
+        </div><!--cta-five-card-->
+    </div><!-- container -->
+</section><!--cta-five-section-->
