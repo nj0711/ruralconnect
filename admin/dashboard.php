@@ -142,7 +142,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">SPU</a> 2024</p>
+                <p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
             </div>
         </div>
         <!--**********************************

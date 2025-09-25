@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 $dbfooter = new ConnDb();
 
-$temp_dbf = explode('_',$db);
+$temp_dbf = explode('_', $db);
 
 ?>
 <section class="footer">
@@ -46,7 +46,7 @@ $temp_dbf = explode('_',$db);
                     <div class="footer-widget">
                         <div class="footer-widget-department">
 
-                            <h4 class="footer-widget-title">   </h4>
+                            <h4 class="footer-widget-title"> </h4>
 
                             <ul class="list-unstyled">
 
@@ -86,7 +86,7 @@ $temp_dbf = explode('_',$db);
     <!--footer-inner-->
     <div class="bottom-footer">
         <div class="conatiner">
-            <p>© Copyright 2024 by villageonweb.com</p>
+            <p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
         </div><!-- container -->
     </div>
     <!--bottom-footer-->

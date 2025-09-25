@@ -1,9 +1,9 @@
-<?php include_once("config.php"); 
+<?php include_once("config.php");
 
 session_start();
 if (!isset($_SESSION['admin_email'])) {
-    header("Location: index.php");
-    exit();
+	header("Location: index.php");
+	exit();
 }
 
 //Session management code
@@ -13,11 +13,11 @@ $timeout_duration = 600; // 10 minutes
 
 // Check if last activity is set and calculate the inactivity period
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
-    // Last request was over 10 minutes ago, so destroy the session
-    session_unset();     // Unset session variables
-    session_destroy();   // Destroy the session
-    header("Location: index.php"); // Redirect to login page
-    exit();
+	// Last request was over 10 minutes ago, so destroy the session
+	session_unset();     // Unset session variables
+	session_destroy();   // Destroy the session
+	header("Location: index.php"); // Redirect to login page
+	exit();
 }
 
 // Update the last activity timestamp to the current time
@@ -29,81 +29,83 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-   <meta charset="utf-8">
+	<meta charset="utf-8">
 	<meta name="format-detection" content="telephone=no">
-	
+
 	<!-- Mobile Specific -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
+
 	<!-- PAGE TITLE HERE -->
 	<title>Village List | Super Admin Panel</title>
-	
+
 	<!-- Favicon icon -->
 	<link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
 	<link href="./vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
-	
-	
+
+
 	<!-- Style css -->
-    <link href="css/style.css" rel="stylesheet">
-	
+	<link href="css/style.css" rel="stylesheet">
+
 </head>
+
 <body>
 
 
-    <!--**********************************
+	<!--**********************************
         Main wrapper start
     ***********************************-->
-    <div id="main-wrapper">
+	<div id="main-wrapper">
 
 		<?php include('header.php');  ?>
 
-		
+
 		<!--**********************************
             Content body start
         ***********************************-->
-        <div class="content-body">
-            <!-- row -->
+		<div class="content-body">
+			<!-- row -->
 			<div class="container-fluid">
-				
+
 				<div class="row">
 					<div class="col-xl-12">
 						<div class="mt-4 d-flex justify-content-between align-items-center flex-wrap">
 							<div class="mb-4">
-							    <?php 
-                            $result = mysqli_query($conn, "SELECT COUNT(*) AS village_count FROM villages");
-                            $row = mysqli_fetch_assoc($result);
-                            $count = $row['village_count'];
-                            echo "<p class='mb-2'>Showing $count Village(s)</p>"; 
-                            ?>
+								<?php
+								$result = mysqli_query($conn, "SELECT COUNT(*) AS village_count FROM villages");
+								$row = mysqli_fetch_assoc($result);
+								$count = $row['village_count'];
+								echo "<p class='mb-2'>Showing $count Village(s)</p>";
+								?>
 
-							</div>	
+							</div>
 							<div class="d-flex align-items-center mb-4">
 								<div class="default-tab job-tabs">
 									<ul class="nav nav-tabs" role="tablist">
 										<li class="nav-item">
 											<a class="nav-link active" data-bs-toggle="tab" href="#Boxed">
 												<i class="fas fa-th-large"></i>
-											</a>	
-										</li>	
+											</a>
+										</li>
 										<li class="nav-item">
 											<a class="nav-link" data-bs-toggle="tab" href="#List1">
 												<i class="fas fa-list"></i>
 											</a>
-										</li>	
-									</ul>	
-								</div>	
-								
+										</li>
+									</ul>
+								</div>
+
 							</div>
 						</div>
 						<div class="tab-content">
 							<div class="tab-pane fade show active" id="Boxed" role="tabpanel">
 								<div class="row">
-								<?php 
-										$table=mysqli_query($conn,"select * from villages");
-										while($row=mysqli_fetch_array($table)){
-										echo"<div class='col-xl-3 col-xxl-4  col-md-4 col-sm-6'>
+									<?php
+									$table = mysqli_query($conn, "select * from villages");
+									while ($row = mysqli_fetch_array($table)) {
+										echo "<div class='col-xl-3 col-xxl-4  col-md-4 col-sm-6'>
 										
 										<div class='card'>
 											<div class='jobs2 card-body'>
@@ -128,21 +130,22 @@ $_SESSION['LAST_ACTIVITY'] = time();
 												
 											</div>
 										</div> 
-									</div> ";}
-								?>
+									</div> ";
+									}
+									?>
 								</div>
-										
+
 							</div>
 							<div class="tab-pane fade" id="List1">
 								<div class="row">
-									
+
 									<div class="col-12">
 
-									
-										
-									<?php	$table=mysqli_query($conn,"select * from villages");
-										while($row=mysqli_fetch_array($table)){
-									echo "<div class='d-flex flex-wrap search-row bg-white p-3 mb-3 rounded justify-content-between align-items-center'>
+
+
+										<?php $table = mysqli_query($conn, "select * from villages");
+										while ($row = mysqli_fetch_array($table)) {
+											echo "<div class='d-flex flex-wrap search-row bg-white p-3 mb-3 rounded justify-content-between align-items-center'>
 											<div class='d-flex col-xl-3 col-xxl-4 col-lg-4 col-sm-6 align-items-center'>
 												<svg class='me-3' xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 71 71'>
 												  <g  transform='translate(0.243)'>
@@ -178,68 +181,70 @@ $_SESSION['LAST_ACTIVITY'] = time();
 											<div class='col-xl-2 col-xxl-12 text-xl-right text-lg-left text-sm-right col-lg-12 col-sm-6  mt-2'>
 												<a href='https://villageonweb.in/villages/$row[village_name]/admin' target='_blank' class='btn btn-sm btn-outline-primary rounded me-2'> Admin Login</a>
 											</div>
-										</div>";}?>
-										
-										</div>
-										
+										</div>";
+										} ?>
+
 									</div>
-								</div>	
+
+								</div>
 							</div>
-						</div>	
+						</div>
 					</div>
-					
-            </div>
+				</div>
+
+			</div>
 		</div>
-        <!--**********************************
+		<!--**********************************
             Content body end
         ***********************************-->
-		
-		
-		
-        <!--**********************************
+
+
+
+		<!--**********************************
             Footer start
         ***********************************-->
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">SPU</a> 2024</p>
-            </div>
-        </div>
-        <!--**********************************
+		<div class="footer">
+			<div class="copyright">
+				<p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
+			</div>
+		</div>
+		<!--**********************************
             Footer end
         ***********************************-->
 
 		<!--**********************************
            Support ticket button start
         ***********************************-->
-		
-        <!--**********************************
+
+		<!--**********************************
            Support ticket button end
         ***********************************-->
 
 
 	</div>
-    <!--**********************************
+	<!--**********************************
         Main wrapper end
     ***********************************-->
-	 <!-- Modal -->
+	<!-- Modal -->
 
-	
 
-    <!--**********************************
+
+	<!--**********************************
         Scripts
     ***********************************-->
-    <!-- Required vendors -->
-    <script src="vendor/global/global.min.js"></script>
+	<!-- Required vendors -->
+	<script src="vendor/global/global.min.js"></script>
 	<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-	
-	
+
+
 	<!-- Apex Chart -->
 	<!-- Chart piety plugin files -->
 	<!-- Dashboard 1 -->
-    <script src="js/custom.min.js"></script>
+	<script src="js/custom.min.js"></script>
 	<script src="js/dlabnav-init.js"></script>
-	
-  
+
+
 
 </body>
+
 </html>

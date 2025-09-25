@@ -54,13 +54,13 @@
 
 
     <script>
-    function remove() {
-        var r = confirm("Are you sure to delete your record?");
-        if (r == true)
-            return true;
-        else
-            return false;
-    }
+        function remove() {
+            var r = confirm("Are you sure to delete your record?");
+            if (r == true)
+                return true;
+            else
+                return false;
+        }
     </script>
 
 </head>
@@ -104,34 +104,34 @@
                                     <tbody>
                                         <?php
 
-$obj = new ConnDb();
-$table = 'contacts';
-$values = 'SELECT * FROM  contacts';
+                                        $obj = new ConnDb();
+                                        $table = 'contacts';
+                                        $values = 'SELECT * FROM  contacts';
 
-$result = $obj->selectdata($table, $values);
+                                        $result = $obj->selectdata($table, $values);
 
-                                            foreach ($result as $r => $row){
-                                                
-                                            ?>
-                                        <tr>
-                                            <td><?php echo"$row[contactid]"; ?></td>
-                                            <td><?php echo"$row[name]"; ?></td>
-                                            <td><?php echo"$row[subject]"; ?></td>
-                                            <td><?php echo"$row[email]"; ?></td>
-                                            <td><?php echo"$row[phoneno]"; ?></td>
-                                            <td><textarea id="" disabled><?php echo"$row[msg]"; ?></textarea></td>
+                                        foreach ($result as $r => $row) {
 
-                                            <td>
-                                                <div class="d-flex">
-                                                    <a href="mailto:<?php echo"$row[email]"; ?>"
-                                                        class="btn btn-primary shadow btn-xs sharp me-1"><i
-                                                            class="fa-regular fa-envelope"></i></a>
-                                                    <a href="delete-contact.php?id=<?php echo"$row[contactid]"; ?>"
-                                                        class="btn btn-danger shadow btn-xs sharp"><i
-                                                            class="fa fa-trash" onclick='return remove()'></i></a>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        ?>
+                                            <tr>
+                                                <td><?php echo "$row[contactid]"; ?></td>
+                                                <td><?php echo "$row[name]"; ?></td>
+                                                <td><?php echo "$row[subject]"; ?></td>
+                                                <td><?php echo "$row[email]"; ?></td>
+                                                <td><?php echo "$row[phoneno]"; ?></td>
+                                                <td><textarea id="" disabled><?php echo "$row[msg]"; ?></textarea></td>
+
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <a href="mailto:<?php echo "$row[email]"; ?>"
+                                                            class="btn btn-primary shadow btn-xs sharp me-1"><i
+                                                                class="fa-regular fa-envelope"></i></a>
+                                                        <a href="delete-contact.php?id=<?php echo "$row[contactid]"; ?>"
+                                                            class="btn btn-danger shadow btn-xs sharp"><i
+                                                                class="fa fa-trash" onclick='return remove()'></i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         <?php } ?>
                                     </tbody>
                                 </table>
@@ -153,7 +153,7 @@ $result = $obj->selectdata($table, $values);
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">SPU</a> 2024</p>
+                <p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
             </div>
         </div>
         <!--**********************************

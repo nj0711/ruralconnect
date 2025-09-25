@@ -34,7 +34,8 @@ error_reporting(E_ALL);
 // Start output buffering
 ob_start();
 
-function copyDirectory($src, $dst) {
+function copyDirectory($src, $dst)
+{
     if (!is_dir($src)) {
         die("Source directory does not exist: $src");
     }
@@ -59,7 +60,8 @@ function copyDirectory($src, $dst) {
 }
 
 // Function to execute SQL file to create tables
-function executeSqlFile($conn, $filePath) {
+function executeSqlFile($conn, $filePath)
+{
     $sql = file_get_contents($filePath);
     if (mysqli_multi_query($conn, $sql)) {
         do {
@@ -68,13 +70,13 @@ function executeSqlFile($conn, $filePath) {
             }
         } while (mysqli_next_result($conn));
     } else {
-        echo "<script>alert('Error executing SQL file: " . mysqli_error($conn) ."');</script>";
+        echo "<script>alert('Error executing SQL file: " . mysqli_error($conn) . "');</script>";
     }
 }
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $villageName = strtolower(trim(mysqli_real_escape_string($conn, $_POST['village_name'])));
+    $villageName = strtolower(trim(mysqli_real_escape_string($conn, $_POST['village_name'])));
 
     $dbHost = trim(mysqli_real_escape_string($conn, $_POST['db_host']));
     $dbName = trim(mysqli_real_escape_string($conn, $_POST['db_name']));
@@ -82,8 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dbPass = trim($_POST['db_pass']);
     $adminEmail = trim(mysqli_real_escape_string($conn, $_POST['admin_email']));
     $adminPass = trim($_POST['admin_pass']);
-    
-    $salt = "villageonweb"; 
+
+    $salt = "villageonweb";
     $password_encrypted = sha1($adminPass . $salt);
 
     // Create village folder dynamically
@@ -268,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insert admin credentials into the village database
             $insertAdminQuery = "INSERT INTO admin (email, passwordhash) VALUES ('$adminEmail', '$password_encrypted')";
             mysqli_query($conn, $insertAdminQuery) or die("Error inserting admin: " . mysqli_error($conn));
-            
+
             mysqli_close($conn);
 
             // Now connect to the admin panel database
@@ -283,19 +285,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_query($conn, $query) or die("Error inserting village: " . mysqli_error($conn));
 
 
-             //jagdish code start 
-                    
+            //jagdish code start 
+
             $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel');
-            $id_of_admin_query="select * from villages where village_name='".$villageName."'";
-            $id_of_admin=mysqli_query($conn,$id_of_admin_query);
+            $id_of_admin_query = "select * from villages where village_name='" . $villageName . "'";
+            $id_of_admin = mysqli_query($conn, $id_of_admin_query);
             $id_a = mysqli_fetch_assoc($id_of_admin)['id'];
-            
+
             mysqli_close($conn);
 
 
             $conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
-            $admin_id_query="UPDATE admin set AdminID= $id_a";
-            $admin_id_res=mysqli_query($conn,$admin_id_query);
+            $admin_id_query = "UPDATE admin set AdminID= $id_a";
+            $admin_id_res = mysqli_query($conn, $admin_id_query);
             mysqli_close($conn);
 
 
@@ -305,22 +307,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (mysqli_query($conn, $ins)) {
                 // echo "<script>alert('Now you can insert data');</script>";
                 echo $insp = "INSERT INTO population (populationid,villageid) VALUES (1,1)";
-            echo "<script>alert($ins);</script>";
-            if (mysqli_query($conn, $insp)) {
-                 echo "<script>alert('Now you can insert data');</script>";
-            } else {
-                echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
-            }
+                echo "<script>alert($ins);</script>";
+                if (mysqli_query($conn, $insp)) {
+                    echo "<script>alert('Now you can insert data');</script>";
+                } else {
+                    echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
+                }
             } else {
                 // echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
             }
-            
+
             mysqli_close($conn);
 
             // Redirect after village creation
             header("Location: villages.php");
             exit;
-
         } else {
             echo "<script>alert('Failed to create village folder.');</script>";
         }
@@ -336,75 +337,91 @@ ob_end_flush();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-   <meta charset="utf-8">
-	<meta name="format-detection" content="telephone=no">
-	
-	<!-- Mobile Specific -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	<!-- PAGE TITLE HERE -->
-	<title>Village Creation | Super Admin Panel</title>
-	
-	<!-- Favicon icon -->
-	<link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
-<link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
-	<link href="vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-	
-	<!-- Style css -->
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- PAGE TITLE HERE -->
+    <title>Village Creation | Super Admin Panel</title>
+
+    <!-- Favicon icon -->
+    <link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
+    <link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <!-- Style css -->
     <link href="css/style.css" rel="stylesheet">
-	
-<style>
+
+    <style>
         /* Loader styles */
         .loader {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 9999; /* Above everything */
-        top: 40%; /* Adjust to move loader a bit higher */
-        left: 50%;
-        transform: translate(-50%, -50%);
-        border: 16px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 16px solid #3498db;
-        width: 120px;
-        height: 120px;
-        animation: spin 2s linear infinite;
-    }
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 9999;
+            /* Above everything */
+            top: 40%;
+            /* Adjust to move loader a bit higher */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
 
-    /* Overlay to disable background interaction */
-    .overlay {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 9998; /* Just below the loader */
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-    }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-    /* Warning text for "Do not refresh" */
-    .loader-text {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 9999; /* Above everything */
-        top: 60%; /* Adjust to appear just below the loader */
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        text-align: center;
-    }
-</style>
+        /* Overlay to disable background interaction */
+        .overlay {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 9998;
+            /* Just below the loader */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black */
+        }
+
+        /* Warning text for "Do not refresh" */
+        .loader-text {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 9999;
+            /* Above everything */
+            top: 60%;
+            /* Adjust to appear just below the loader */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
 
 </head>
+
 <body>
 
 
@@ -413,134 +430,133 @@ ob_end_flush();
     ***********************************-->
     <div id="main-wrapper">
 
-	<?php include('header.php');  ?>
-		
-		<!--**********************************
+        <?php include('header.php');  ?>
+
+        <!--**********************************
             Content body start
         ***********************************-->
         <div class="content-body">
             <!-- row -->
-			<div class="container-fluid">
-				
-				<div class="row">
-					<div class="col-12">
-                    <div class="basic-form">
-                    <h2>Add New Village</h2>
-                    <hr>
-<form method="POST" class="mb-5">
-                    
-                        <h3>Database Details</h3><br>
+            <div class="container-fluid">
 
-                        <label for="db_host">Database Host:</label><br>
-                        <input type="text" id="db_host" class="form-control input-default" value="localhost" name="db_host" required><br><br>
-                        
-                        <label for="db_name">Database Name:</label><br>
-                        <input type="text" id="db_name" name="db_name" class="form-control input-default" required><br><br>
-                        
-                        <label for="db_user">Database Username:</label><br>
-                        <input type="text" id="db_user" name="db_user" class="form-control input-default" required><br><br>
-                        
-                        <label for="db_pass">Database Password:</label><br>
-                        <input type="password" id="db_pass" class="form-control input-default" name="db_pass"><br><br>
-                      
-                        <h3>Village Details</h3><br>
-                        
-                        <label for="village_name">Village Name:</label><br>
-                        <input type="text" class="form-control input-default" id="village_name" placeholder="Database name and village name will be same" name="village_name" required><br><br>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="basic-form">
+                            <h2>Add New Village</h2>
+                            <hr>
+                            <form method="POST" class="mb-5">
 
-                        <label for="admin_email">Village Admin Email:</label><br>
-                        <input type="email" id="admin_email" name="admin_email" class="form-control input-default" required><br><br>
+                                <h3>Database Details</h3><br>
 
-                        <label for="admin_pass">Village Admin Password:</label><br>
-                        <input type="password" id="admin_pass" name="admin_pass" class="form-control input-default" required><br><br>
-                        
-                        <input type="submit" class="btn btn-primary mb-5" value="Create Village">
-                    </form>
+                                <label for="db_host">Database Host:</label><br>
+                                <input type="text" id="db_host" class="form-control input-default" value="localhost" name="db_host" required><br><br>
+
+                                <label for="db_name">Database Name:</label><br>
+                                <input type="text" id="db_name" name="db_name" class="form-control input-default" required><br><br>
+
+                                <label for="db_user">Database Username:</label><br>
+                                <input type="text" id="db_user" name="db_user" class="form-control input-default" required><br><br>
+
+                                <label for="db_pass">Database Password:</label><br>
+                                <input type="password" id="db_pass" class="form-control input-default" name="db_pass"><br><br>
+
+                                <h3>Village Details</h3><br>
+
+                                <label for="village_name">Village Name:</label><br>
+                                <input type="text" class="form-control input-default" id="village_name" placeholder="Database name and village name will be same" name="village_name" required><br><br>
+
+                                <label for="admin_email">Village Admin Email:</label><br>
+                                <input type="email" id="admin_email" name="admin_email" class="form-control input-default" required><br><br>
+
+                                <label for="admin_pass">Village Admin Password:</label><br>
+                                <input type="password" id="admin_pass" name="admin_pass" class="form-control input-default" required><br><br>
+
+                                <input type="submit" class="btn btn-primary mb-5" value="Create Village">
+                            </form>
 
 
+                        </div>
+                    </div>
                 </div>
-				</div>
             </div>
-        </div>
-		
-		   <!-- Loader and Overlay elements -->
-        <div class="overlay" id="overlay"></div>
-        <div class="loader" id="loader"></div>
-        <div id="loader-text" class="loader-text" style="align-items: center; align-text:center;">Please wait, do not refresh the page...</div>
+
+            <!-- Loader and Overlay elements -->
+            <div class="overlay" id="overlay"></div>
+            <div class="loader" id="loader"></div>
+            <div id="loader-text" class="loader-text" style="align-items: center; align-text:center;">Please wait, do not refresh the page...</div>
 
 
-        <!--**********************************
+            <!--**********************************
             Content body end
         ***********************************-->
-		
-		
-        <!--**********************************
+
+
+            <!--**********************************
             Footer start
         ***********************************-->
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">SPU</a> 2023</p>
+            <div class="footer">
+                <div class="copyright">
+                    <p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
+                </div>
             </div>
-        </div>
-        <!--**********************************
+            <!--**********************************
             Footer end
         ***********************************-->
 
-	
 
 
-	</div>
-    <!--**********************************
+
+        </div>
+        <!--**********************************
         Main wrapper end
     ***********************************-->
 
 
-	
 
-    <!--**********************************
+
+        <!--**********************************
         Scripts
     ***********************************-->
 
 
-        
-<script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-        // Show loader, overlay, and "do not refresh" text
-        document.getElementById('loader').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        document.getElementById('loader-text').style.display = 'block';
 
-        // Disable form submission (for demo purpose, remove this line in production)
-        // event.preventDefault();
-    });
-    
-  
-</script>
+        <script>
+            document.querySelector('form').addEventListener('submit', function(event) {
+                // Show loader, overlay, and "do not refresh" text
+                document.getElementById('loader').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+                document.getElementById('loader-text').style.display = 'block';
+
+                // Disable form submission (for demo purpose, remove this line in production)
+                // event.preventDefault();
+            });
+        </script>
 
 
-    <!-- Required vendors -->
-    <script src="vendor/global/global.min.js"></script>
-	<script src="vendor/chartjs/chart.bundle.min.js"></script>
-	<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-	
-	<!-- Apex Chart -->
-	<script src="vendor/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
-	
-	<!-- Chart piety plugin files -->
-   <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
-   <script src="js/plugins-init/datatables.init.js"></script>
-	
-	<!-- Dashboard 1 -->
-	 
-	
-	
-	
-    <script src="js/custom.min.js"></script>
-	<script src="js/dlabnav-init.js"></script>
-	
-  
+        <!-- Required vendors -->
+        <script src="vendor/global/global.min.js"></script>
+        <script src="vendor/chartjs/chart.bundle.min.js"></script>
+        <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
-	
+        <!-- Apex Chart -->
+        <script src="vendor/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
+
+        <!-- Chart piety plugin files -->
+        <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="js/plugins-init/datatables.init.js"></script>
+
+        <!-- Dashboard 1 -->
+
+
+
+
+        <script src="js/custom.min.js"></script>
+        <script src="js/dlabnav-init.js"></script>
+
+
+
+
 
 </body>
+
 </html>

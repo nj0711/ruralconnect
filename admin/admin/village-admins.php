@@ -29,41 +29,40 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-   <meta charset="utf-8">
-	<meta name="format-detection" content="telephone=no">
-	
-	<!-- Mobile Specific -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	<!-- PAGE TITLE HERE -->
-	<title>Village Admins | Super Admin Panel</title>
-	
-	<!-- Favicon icon -->
-	<link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
-<link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
-	<link href="vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-	
-	<!-- Style css -->
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- PAGE TITLE HERE -->
+    <title>Village Admins | Super Admin Panel</title>
+
+    <!-- Favicon icon -->
+    <link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
+    <link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+
+    <!-- Style css -->
     <link href="css/style.css" rel="stylesheet">
-    
-      <script>
 
-    function remove(){
-      var r=confirm("Are you sure to delete your village?");
-      if(r==true)
-        return true;
-      else
-        return false;
+    <script>
+        function remove() {
+            var r = confirm("Are you sure to delete your village?");
+            if (r == true)
+                return true;
+            else
+                return false;
 
-    }
+        }
+    </script>
 
-  
-</script>
 
-	
 </head>
+
 <body>
 
 
@@ -72,24 +71,24 @@ $_SESSION['LAST_ACTIVITY'] = time();
     ***********************************-->
     <div id="main-wrapper">
 
-	<?php include('header.php');  ?>
-		
-		<!--**********************************
+        <?php include('header.php');  ?>
+
+        <!--**********************************
             Content body start
         ***********************************-->
         <div class="content-body">
             <!-- row -->
-			<div class="container-fluid">
-				<div class="d-flex align-items-center mb-4 flex-wrap">
-					<h3 class="me-auto">Village/Admin List</h3>
-					<div>
-					<a href="village-creation.php" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Add New Village</a>
-					
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-					<div class="card">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center mb-4 flex-wrap">
+                    <h3 class="me-auto">Village/Admin List</h3>
+                    <div>
+                        <a href="village-creation.php" class="btn btn-primary me-3 btn-sm"><i class="fas fa-plus me-2"></i>Add New Village</a>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Profile Datatable</h4>
                             </div>
@@ -110,10 +109,10 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                             </tr>
                                         </thead>
                                         <tbody>
-                                           <?php
-                                                $table=mysqli_query($conn,"select * from villages");
-                                                while($row=mysqli_fetch_array($table)){ 
-                                                    echo"
+                                            <?php
+                                            $table = mysqli_query($conn, "select * from villages");
+                                            while ($row = mysqli_fetch_array($table)) {
+                                                echo "
                                                 <tr>
                                                     <td>$row[0]</td>
                                                     <td>$row[village_name]</td>
@@ -129,82 +128,84 @@ $_SESSION['LAST_ACTIVITY'] = time();
 															<a href='delete-village.php?village=$row[1]' onclick='return remove()' class='btn btn-danger shadow btn-xs sharp'><i class='fa fa-trash'></i></a>
 														</div>												
 													</td>
-                                                </tr>"; } ?>
-                           
+                                                </tr>";
+                                            } ?>
+
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-						
-					</div>
-				</div>
+
+                    </div>
+                </div>
             </div>
         </div>
-		
-		
+
+
         <!--**********************************
             Content body end
         ***********************************-->
-		
-		
+
+
         <!--**********************************
             Footer start
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">SPU</a> 2024</p>
+                <p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
             </div>
         </div>
         <!--**********************************
             Footer end
         ***********************************-->
 
-		<!--**********************************
+        <!--**********************************
            Support ticket button start
         ***********************************-->
-		
+
         <!--**********************************
            Support ticket button end
         ***********************************-->
 
 
-	</div>
+    </div>
     <!--**********************************
         Main wrapper end
     ***********************************-->
-	 <!-- Modal -->
-	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
-		<?php include('modal.php'); ?>
-	</div>
-	
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <?php include('modal.php'); ?>
+    </div>
+
 
     <!--**********************************
         Scripts
     ***********************************-->
     <!-- Required vendors -->
     <script src="vendor/global/global.min.js"></script>
-	<script src="vendor/chartjs/chart.bundle.min.js"></script>
-	<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-	
-	<!-- Apex Chart -->
-	<script src="vendor/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
-	
-	<!-- Chart piety plugin files -->
-   <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
-   <script src="js/plugins-init/datatables.init.js"></script>
-	
-	<!-- Dashboard 1 -->
-	 
-	
-	
-	
-    <script src="js/custom.min.js"></script>
-	<script src="js/dlabnav-init.js"></script>
-	
-  
+    <script src="vendor/chartjs/chart.bundle.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
-	
+    <!-- Apex Chart -->
+    <script src="vendor/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- Chart piety plugin files -->
+    <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="js/plugins-init/datatables.init.js"></script>
+
+    <!-- Dashboard 1 -->
+
+
+
+
+    <script src="js/custom.min.js"></script>
+    <script src="js/dlabnav-init.js"></script>
+
+
+
+
 
 </body>
+
 </html>
