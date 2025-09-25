@@ -1,5 +1,5 @@
-<?php 
-   include_once('../config.php');
+<?php
+include_once('../config.php');
 
 session_start();
 if (!isset($_SESSION['village_admin_email'])) {
@@ -22,184 +22,182 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 // Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
 
-   $obj = new ConnDb();
+$obj = new ConnDb();
 
 
-   // Retrieve form data
-    $tot_males =0;
-    $tot_females = 0;
-    $tot_childs = 0;
-    $birth_and_death_ratio = '0:0';
-    
-    // Education wise population
-    $tot_pgs = 0;
-    $tot_ugs =0;
-    $tot_12 = 0;
-    $tot_10 = 0;
-    $tot_nonedus =0;
+// Retrieve form data
+$tot_males = 0;
+$tot_females = 0;
+$tot_childs = 0;
+$birth_and_death_ratio = '0:0';
 
-    // Age wise population
-    $tot_100_m = 0;
-    $tot_100_f = 0;
-    $tot_80_m = 0;
-    $tot_80_f = 0;
-    $tot_60_m = 0;
-    $tot_60_f = 0;
-    $tot_40_m = 0;
-    $tot_40_f = 0;
-    $tot_20_m = 0;
-    $tot_20_f =  0;
+// Education wise population
+$tot_pgs = 0;
+$tot_ugs = 0;
+$tot_12 = 0;
+$tot_10 = 0;
+$tot_nonedus = 0;
 
-
-
-
-    // Religion wise population
-    $tot_hindus = 0;
-    $tot_muslims = 0;
-    $tot_christians = 0;
-    $tot_sikh = 0;
-    $tot_others = 0;
-
-
-    
-
-    // Annual Income wise population
-    $inc_above_15 = 0;
-    $inc_10_15 = 0;
-    $inc_3_10 = 0;
-    $inc_below_3 = 0;
-   
-    
-
-    $tot_farmers = 0;
-    $tot_govEmp = 0;
-    $occ_3_name = '';
-    $occ_3 = 0;
-    $occ_4_name = '';
-    $occ_4 = 0;
-    $occ_5_name = '';
-    $occ_5 = 0;
+// Age wise population
+$tot_100_m = 0;
+$tot_100_f = 0;
+$tot_80_m = 0;
+$tot_80_f = 0;
+$tot_60_m = 0;
+$tot_60_f = 0;
+$tot_40_m = 0;
+$tot_40_f = 0;
+$tot_20_m = 0;
+$tot_20_f =  0;
 
 
 
-	
-        // Check if the delete ID is set from the previous page
-        if (isset($_GET['deleteid'])) {
-            // Store the delete ID for use later in PHP
-            $deleteId = $_GET['deleteid'];
-            ?>
 
-<script>
-// Show the confirmation dialog
-if (confirm("Are you sure you want to proceed?")) {
-    // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
-    window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
-} else {
-    // If the user cancels, redirect back to a safe page (e.g., edit form)
-    window.location.href = "editform.php?tablename=population";
-}
-</script>
+// Religion wise population
+$tot_hindus = 0;
+$tot_muslims = 0;
+$tot_christians = 0;
+$tot_sikh = 0;
+$tot_others = 0;
+
+
+
+
+// Annual Income wise population
+$inc_above_15 = 0;
+$inc_10_15 = 0;
+$inc_3_10 = 0;
+$inc_below_3 = 0;
+
+
+
+$tot_farmers = 0;
+$tot_govEmp = 0;
+$occ_3_name = '';
+$occ_3 = 0;
+$occ_4_name = '';
+$occ_4 = 0;
+$occ_5_name = '';
+$occ_5 = 0;
+
+
+
+
+// Check if the delete ID is set from the previous page
+if (isset($_GET['deleteid'])) {
+    // Store the delete ID for use later in PHP
+    $deleteId = $_GET['deleteid'];
+?>
+
+    <script>
+        // Show the confirmation dialog
+        if (confirm("Are you sure you want to proceed?")) {
+            // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
+            window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
+        } else {
+            // If the user cancels, redirect back to a safe page (e.g., edit form)
+            window.location.href = "editform.php?tablename=population";
+        }
+    </script>
 
 <?php
-        }
-        
-        // After confirmation, handle the deletion process using 'confirmeddeleteid'
-        if (isset($_GET['confirmeddeleteid'])) {
-            $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
-        
-            
-            // Delete the record from the database
-            $del = "DELETE FROM population WHERE populationid=" . $deleteId;
-            $result = $obj->deletedata("population", $del);
-        
-            // Handle success or failure
-            if ($result == "Data Deleted") {
-                echo "<script>alert('Success! Data Deleted');
+}
+
+// After confirmation, handle the deletion process using 'confirmeddeleteid'
+if (isset($_GET['confirmeddeleteid'])) {
+    $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
+
+
+    // Delete the record from the database
+    $del = "DELETE FROM population WHERE populationid=" . $deleteId;
+    $result = $obj->deletedata("population", $del);
+
+    // Handle success or failure
+    if ($result == "Data Deleted") {
+        echo "<script>alert('Success! Data Deleted');
                 window.location.href = 'editform.php?tablename=population';
                 </script>";
-            } else {
-                echo "<script>alert('Error: Failed to delete data');</script>";
-            }
-        }
-    
-    if(isset($_GET['updateid'])){
-
-        $selall= "select * from population where populationid=".$_GET['updateid'];
-        $res = $obj->selectdata("population",$selall);
-        
-        $tot_males = $res[0]['totalnoofmale'];
-        $tot_females = $res[0]['totalnooffemale'];
-        $tot_childs = $res[0]['totalnoofchildren'];
-        $birth_and_death_ratio = $res[0]['birthanddeathratio'];
-
-        $religion_population=json_decode($res[0]['religionandpopulation']);
-        $occupation_population=json_decode($res[0]['occupationandpopulation']);
-        $education_population=json_decode($res[0]['educationandpopulation']);
-        $age_male=json_decode($res[0]['agewisemale']);
-        $age_female=json_decode($res[0]['agewisefemale']);
-        $salary_population=json_decode($res[0]['salaryandpopulation']);
-        
-        
-         $tot_hindus = $religion_population->tot_hindus;
-        $tot_muslims = $religion_population->tot_muslims;
-        $tot_christians = $religion_population->tot_christians;
-        $tot_sikh = $religion_population->tot_sikh;
-        $tot_others = $religion_population->tot_others;
-
-
-        
-        
-        $tot_farmers = $occupation_population->tot_farmers;
-        $tot_govEmp = $occupation_population->tot_govEmp;
-        $occ_3_name= $occupation_population->occ_3_name;
-        $occ_3= $occupation_population->occ_3;
-        $occ_4_name= $occupation_population->occ_4_name;
-        $occ_4= $occupation_population->occ_4;
-        $occ_5_name= $occupation_population->occ_5_name;
-        $occ_5= $occupation_population->occ_5;
-        
-        $tot_pgs = $education_population->tot_pgs;
-        $tot_ugs =$education_population->tot_ugs;
-        $tot_12 = $education_population->tot_12;
-        $tot_10 = $education_population->tot_10;
-        $tot_nonedus =$education_population->tot_nonedus;
-
-        $inc_above_15 =  $salary_population->inc_above_15;
-        $inc_10_15 = $salary_population->inc_10_15;
-        $inc_3_10 = $salary_population->inc_3_10;
-        $inc_below_3 = $salary_population->inc_below_3;
-
-
-
-          // Age wise population
-        $tot_100_m = $age_male->tot_100_m;
-        $tot_100_f = $age_female->tot_100_f;
-        $tot_80_m = $age_male->tot_80_m;
-        $tot_80_f = $age_female->tot_80_f;
-        $tot_60_m = $age_male->tot_60_m;
-        $tot_60_f = $age_female->tot_60_f;
-        $tot_40_m = $age_male->tot_40_m;
-        $tot_40_f = $age_female->tot_40_f;
-        $tot_20_m = $age_male->tot_20_m;
-        $tot_20_f =  $age_female->tot_20_f;
-
-
+    } else {
+        echo "<script>alert('Error: Failed to delete data');</script>";
     }
+}
 
-    $selQ= "select villageid from villagebasic";
-    $res = $obj->selectdata("villagebasic",$selQ);
-    $village_id=$res[0]['villageid'];
-    // echo $res[0]['villageid'];
+if (isset($_GET['updateid'])) {
+
+    $selall = "select * from population where populationid=" . $_GET['updateid'];
+    $res = $obj->selectdata("population", $selall);
+
+    $tot_males = $res[0]['totalnoofmale'];
+    $tot_females = $res[0]['totalnooffemale'];
+    $tot_childs = $res[0]['totalnoofchildren'];
+    $birth_and_death_ratio = $res[0]['birthanddeathratio'];
+
+    $religion_population = json_decode($res[0]['religionandpopulation']);
+    $occupation_population = json_decode($res[0]['occupationandpopulation']);
+    $education_population = json_decode($res[0]['educationandpopulation']);
+    $age_male = json_decode($res[0]['agewisemale']);
+    $age_female = json_decode($res[0]['agewisefemale']);
+    $salary_population = json_decode($res[0]['salaryandpopulation']);
 
 
-    if( isset($_POST['update'])){
+    $tot_hindus = $religion_population->tot_hindus;
+    $tot_muslims = $religion_population->tot_muslims;
+    $tot_christians = $religion_population->tot_christians;
+    $tot_sikh = $religion_population->tot_sikh;
+    $tot_others = $religion_population->tot_others;
+
+
+
+
+    $tot_farmers = $occupation_population->tot_farmers;
+    $tot_govEmp = $occupation_population->tot_govEmp;
+    $occ_3_name = $occupation_population->occ_3_name;
+    $occ_3 = $occupation_population->occ_3;
+    $occ_4_name = $occupation_population->occ_4_name;
+    $occ_4 = $occupation_population->occ_4;
+    $occ_5_name = $occupation_population->occ_5_name;
+    $occ_5 = $occupation_population->occ_5;
+
+    $tot_pgs = $education_population->tot_pgs;
+    $tot_ugs = $education_population->tot_ugs;
+    $tot_12 = $education_population->tot_12;
+    $tot_10 = $education_population->tot_10;
+    $tot_nonedus = $education_population->tot_nonedus;
+
+    $inc_above_15 =  $salary_population->inc_above_15;
+    $inc_10_15 = $salary_population->inc_10_15;
+    $inc_3_10 = $salary_population->inc_3_10;
+    $inc_below_3 = $salary_population->inc_below_3;
+
+
+
+    // Age wise population
+    $tot_100_m = $age_male->tot_100_m;
+    $tot_100_f = $age_female->tot_100_f;
+    $tot_80_m = $age_male->tot_80_m;
+    $tot_80_f = $age_female->tot_80_f;
+    $tot_60_m = $age_male->tot_60_m;
+    $tot_60_f = $age_female->tot_60_f;
+    $tot_40_m = $age_male->tot_40_m;
+    $tot_40_f = $age_female->tot_40_f;
+    $tot_20_m = $age_male->tot_20_m;
+    $tot_20_f =  $age_female->tot_20_f;
+}
+
+$selQ = "select villageid from villagebasic";
+$res = $obj->selectdata("villagebasic", $selQ);
+$village_id = $res[0]['villageid'];
+// echo $res[0]['villageid'];
+
+
+if (isset($_POST['update'])) {
 
 
     $tot_males = isset($_POST['tot_males']) ? intval($_POST['tot_males']) : 0;
     $tot_females = isset($_POST['tot_females']) ? intval($_POST['tot_females']) : 0;
     $tot_childs = isset($_POST['tot_childs']) ? intval($_POST['tot_childs']) : 0;
     $birth_and_death_ratio = isset($_POST['birth_death_ratio']) ? $_POST['birth_death_ratio'] : '';
-    
+
     // Education wise population
     $tot_pgs = isset($_POST['tot_pgs']) ? intval($_POST['tot_pgs']) : 0;
     $tot_ugs = isset($_POST['tot_ugs']) ? intval($_POST['tot_ugs']) : 0;
@@ -208,14 +206,14 @@ if (confirm("Are you sure you want to proceed?")) {
     $tot_nonedus = isset($_POST['tot_nonedus']) ? intval($_POST['tot_nonedus']) : 0;
 
 
-        $education_and_population=json_encode([
-            'tot_10' => $tot_10,
-            'tot_12' => $tot_12,
-            'tot_ugs' => $tot_ugs,
-            'tot_pgs' => $tot_pgs,
-            'tot_nonedus' => $tot_nonedus
-            
-        ]);
+    $education_and_population = json_encode([
+        'tot_10' => $tot_10,
+        'tot_12' => $tot_12,
+        'tot_ugs' => $tot_ugs,
+        'tot_pgs' => $tot_pgs,
+        'tot_nonedus' => $tot_nonedus
+
+    ]);
 
 
 
@@ -242,15 +240,15 @@ if (confirm("Are you sure you want to proceed?")) {
     $tot_others = isset($_POST['tot_others']) ? intval($_POST['tot_others']) : 0;
 
 
-    
+
 
     // Annual Income wise population
     $inc_above_15 = isset($_POST['inc_above_15']) ? intval($_POST['inc_above_15']) : 0;
     $inc_10_15 = isset($_POST['inc_10_15']) ? intval($_POST['inc_10_15']) : 0;
     $inc_3_10 = isset($_POST['inc_3_10']) ? intval($_POST['inc_3_10']) : 0;
     $inc_below_3 = isset($_POST['inc_below_3']) ? intval($_POST['inc_below_3']) : 0;
-   
-    
+
+
 
     $tot_farmers = isset($_POST['tot_farmers']) ? $_POST['tot_farmers'] : '';
     $tot_govEmp = isset($_POST['tot_govEmp']) ? $_POST['tot_govEmp'] : '';
@@ -262,61 +260,61 @@ if (confirm("Are you sure you want to proceed?")) {
     $occ_5 = isset($_POST['occ_5']) ? $_POST['occ_5'] : '';
 
 
-   
 
 
-        $religion_and_population=json_encode([
-            'tot_hindus' => $tot_hindus,
-            'tot_muslims' => $tot_muslims,
-            'tot_christians' => $tot_christians,
-            'tot_sikh' => $tot_sikh,
-            'tot_others' => $tot_others
-            
-        ]);
-        
-        $occupation_and_population=json_encode([
-            'tot_farmers' => $tot_farmers,
-            'tot_govEmp' => $tot_govEmp,
-            'occ_3_name' => $occ_3_name,
-            'occ_3' => $occ_3,
-            'occ_4_name' => $occ_4_name,
-            'occ_4' => $occ_4,
-            'occ_5_name' => $occ_5_name,
-            'occ_5' => $occ_5,
-            
-            
-        ]); 
-        
-        $salary_and_population=json_encode([
-            'inc_above_15' => $inc_above_15,
-            'inc_10_15' => $inc_10_15,
-            'inc_3_10' => $inc_3_10,
-            'inc_below_3' => $inc_below_3,
-            
-        ]); 
-    
-        
-    $age_wise_female=json_encode([
+
+    $religion_and_population = json_encode([
+        'tot_hindus' => $tot_hindus,
+        'tot_muslims' => $tot_muslims,
+        'tot_christians' => $tot_christians,
+        'tot_sikh' => $tot_sikh,
+        'tot_others' => $tot_others
+
+    ]);
+
+    $occupation_and_population = json_encode([
+        'tot_farmers' => $tot_farmers,
+        'tot_govEmp' => $tot_govEmp,
+        'occ_3_name' => $occ_3_name,
+        'occ_3' => $occ_3,
+        'occ_4_name' => $occ_4_name,
+        'occ_4' => $occ_4,
+        'occ_5_name' => $occ_5_name,
+        'occ_5' => $occ_5,
+
+
+    ]);
+
+    $salary_and_population = json_encode([
+        'inc_above_15' => $inc_above_15,
+        'inc_10_15' => $inc_10_15,
+        'inc_3_10' => $inc_3_10,
+        'inc_below_3' => $inc_below_3,
+
+    ]);
+
+
+    $age_wise_female = json_encode([
         'tot_100_f' => $tot_100_f,
         'tot_80_f' => $tot_80_f,
         'tot_60_f' => $tot_60_f,
         'tot_40_f' => $tot_40_f,
         'tot_20_f' => $tot_20_f
-        
-    ]); 
 
-    $age_wise_male=json_encode([
+    ]);
+
+    $age_wise_male = json_encode([
         'tot_100_m' => $tot_100_m,
         'tot_80_m' => $tot_80_m,
         'tot_60_m' => $tot_60_m,
         'tot_40_m' => $tot_40_m,
         'tot_20_m' => $tot_20_m,
-        
-    ]); 
-    if(isset($_POST['update'])){
 
-        $updateid= $_GET['updateid'];
-          $qUpdate="UPDATE population 
+    ]);
+    if (isset($_POST['update'])) {
+
+        $updateid = $_GET['updateid'];
+        $qUpdate = "UPDATE population 
             SET totalnoofmale = $tot_males, 
                 totalnooffemale = $tot_females, 
                 totalnoofchildren = $tot_childs, 
@@ -328,36 +326,34 @@ if (confirm("Are you sure you want to proceed?")) {
                 agewisemale = '$age_wise_male', 
                 agewisefemale = '$age_wise_female'
             WHERE populationid = $updateid";
-        $result= $obj->updatedata("population",$qUpdate);
-        if($result =="Data Updated"){
+        $result = $obj->updatedata("population", $qUpdate);
+        if ($result == "Data Updated") {
             // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
             echo "<script>alert('Success! Data Updated');
             window.location.href = 'editform.php?tablename=population';
             </script>";
-            
-        }else{
+        } else {
             echo "<script>alert('Error: Failed to update data');</script>";
         }
 
-    // }else if(isset($_POST['insert'])){
-    //      $query = "INSERT INTO population ( villageid, totalnoofmale, totalnooffemale, totalnoofchildren, religionandpopulation, occupationandpopulation, educationandpopulation, salaryandpopulation, birthanddeathratio, agewisemale, agewisefemale) VALUES (
-    //         $village_id, $tot_males, $tot_females, $tot_childs, '$religion_and_population', '$occupation_and_population', '$education_and_population', '$salary_and_population', '$birth_and_death_ratio', '$age_wise_male', '$age_wise_female'
-    //     )";
-    //     $result= $obj->insertdata("population",$query);
-    //     if($result =="Data Inserted."){
-    //         // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-    //         echo "<script>alert('Success! Data Inserted');
-    //         window.location.href = 'editform.php?tablename=population';
-    //         </script>";
-            
-    //     }else{
-    //         echo "<script>alert('Error: Failed to insert data');</script>";
-    //     }
-        
+        // }else if(isset($_POST['insert'])){
+        //      $query = "INSERT INTO population ( villageid, totalnoofmale, totalnooffemale, totalnoofchildren, religionandpopulation, occupationandpopulation, educationandpopulation, salaryandpopulation, birthanddeathratio, agewisemale, agewisefemale) VALUES (
+        //         $village_id, $tot_males, $tot_females, $tot_childs, '$religion_and_population', '$occupation_and_population', '$education_and_population', '$salary_and_population', '$birth_and_death_ratio', '$age_wise_male', '$age_wise_female'
+        //     )";
+        //     $result= $obj->insertdata("population",$query);
+        //     if($result =="Data Inserted."){
+        //         // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        //         echo "<script>alert('Success! Data Inserted');
+        //         window.location.href = 'editform.php?tablename=population';
+        //         </script>";
+
+        //     }else{
+        //         echo "<script>alert('Error: Failed to insert data');</script>";
+        //     }
+
     }
-        
-    }
-    
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -845,14 +841,14 @@ if (confirm("Are you sure you want to proceed?")) {
                                         </div>
                                         <div class="mb-3 row">
                                             <div class="col-lg-1 ms-auto">
-                                                <?php if(isset($_GET['updateid'])){?>
-                                                <button type="submit" name="update"
-                                                    class="btn btn-primary">Update</button>
+                                                <?php if (isset($_GET['updateid'])) { ?>
+                                                    <button type="submit" name="update"
+                                                        class="btn btn-primary">Update</button>
 
-                                                <?php } else{?>
+                                                <?php } else { ?>
 
-                                                <button type="submit" name="insert"
-                                                    class="btn btn-primary">Submit</button>
+                                                    <button type="submit" name="insert"
+                                                        class="btn btn-primary">Submit</button>
 
                                                 <?php } ?>
                                             </div>
@@ -863,7 +859,42 @@ if (confirm("Are you sure you want to proceed?")) {
                         </div>
                     </div>
                     <!-- Here Edit End -->
+                    <!-- Add this right after <div class="content-body"> and before the existing form -->
+                    <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;">
+                        <h4>📊 Bulk Import Population Data</h4>
+                        <p class="text-muted mb-3">
+                            <strong>How it works:</strong> Download the template, fill in the population data, and import.
+                            <!-- <strong>Village ID is automatically assigned</strong> - you don't need to fill it. -->
+                        </p>
 
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-4">
+                                <a href="templates/population_template.php" class="btn btn-info w-100">
+                                    📥 Download Template
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <form action="imports/import_population.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                    <input type="file" name="excel_file" class="form-control"
+                                        accept=".xls,.xlsx" required style="max-width: 300px;">
+                                    <button type="submit" class="btn btn-success">
+                                        📤 Import Excel
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 p-2 border rounded">
+                            <small class="text-muted">
+                                <strong>💡 Required fields:</strong> Total Males, Total Females, Total Children, Entity Name<br>
+                                <strong>📝 Optional fields:</strong> Birth/Death Ratio, Religion data, Occupation data, Education data, Salary data, Age-wise data<br>
+                                <strong>⚠️ Notes:</strong>
+                                All population numbers should be numeric,<br>
+                                Religion, Occupation, Education, Salary, and Age data should be in JSON format or separate columns,<br>
+                                Village ID automatically assigned from villagebasic table
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--**********************************
@@ -925,59 +956,59 @@ if (confirm("Are you sure you want to proceed?")) {
 
 
     <script>
-    function JobickCarousel() {
+        function JobickCarousel() {
 
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
 
-                    margin: 10
-                },
+                        margin: 10
+                    },
 
-                480: {
-                    items: 1
-                },
+                    480: {
+                        items: 1
+                    },
 
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
-            }
-        })
-    }
-    document.getElementById("myInput").addEventListener("keydown", function(event) {
-        // Allow: numbers (0-9), Backspace, Arrow keys, Delete, and Tab
-        if (
-            (event.keyCode < 48 || event.keyCode > 57) && // Numbers (0-9)
-            (event.keyCode < 96 || event.keyCode > 105) && // Numpad numbers (0-9)
-            ![8, 9, 37, 38, 39, 40, 46].includes(event.keyCode) // Backspace, Tab, Arrow keys, Delete
-        ) {
-            event.preventDefault(); // Block all other keys
+            })
         }
-    });
+        document.getElementById("myInput").addEventListener("keydown", function(event) {
+            // Allow: numbers (0-9), Backspace, Arrow keys, Delete, and Tab
+            if (
+                (event.keyCode < 48 || event.keyCode > 57) && // Numbers (0-9)
+                (event.keyCode < 96 || event.keyCode > 105) && // Numpad numbers (0-9)
+                ![8, 9, 37, 38, 39, 40, 46].includes(event.keyCode) // Backspace, Tab, Arrow keys, Delete
+            ) {
+                event.preventDefault(); // Block all other keys
+            }
+        });
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
     </script>
 </body>
 

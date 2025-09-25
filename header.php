@@ -1,21 +1,22 @@
 <head>
-<style>
-    .main-menu-logo{
-        padding: 0px;
-        background: #003b49;
-    
-    }
-    .main-menu{
-        background: #003b49;
-     
-    }
-    .goog-te-banner-frame {
-    display:none !important
-    }
-    /* Default menu item styles */
-    
+    <style>
+        .main-menu-logo {
+            padding: 0px;
+            background: #003b49;
 
-</style>
+        }
+
+        .main-menu {
+            background: #003b49;
+
+        }
+
+        .goog-te-banner-frame {
+            display: none !important
+        }
+
+        /* Default menu item styles */
+    </style>
 </head>
 <header class="header">
 
@@ -26,7 +27,7 @@
             <div class="main-menu-left">
                 <div class="main-menu-logo">
                     <a href="index.php"><img src="assets/image/logo1.png" alt="img-1" width="95" style="margin-left: 10px ;"></a>
-                  <!--  <div id="google_translate_element" class="translate-widget container mt-5  p-3 text-center" class="skiptranslate" style="margin-left:40px;">
+                    <!--  <div id="google_translate_element" class="translate-widget container mt-5  p-3 text-center" class="skiptranslate" style="margin-left:40px;">
                     
                         </div> -->
                 </div><!-- main-menu-logo -->
@@ -36,18 +37,18 @@
                         <li>
                             <a href="index.php" style="color:white;">Home</a>
                         </li><!-- has-dropdown -->
-                      
+
                         <li>
                             <a href="villages-list.php" style="color:white;">Village Lists</a>
                         </li><!-- has-dropdown -->
-                         <li>
-                            <a href="about.php"  style="color:white;">About </a>
+                        <li>
+                            <a href="about.php" style="color:white;">About </a>
                         </li><!-- has-dropdown -->
-                         <li>
-                            <a href="contact.php"  style="color:white;">Contact</a>
+                        <li>
+                            <a href="contact.php" style="color:white;">Contact</a>
                         </li><!-- has-dropdown -->
-                        
-        
+
+
                     </ul><!-- main-menu-list -->
                 </div><!-- navigation -->
             </div><!-- main-menu-left -->
@@ -59,9 +60,9 @@
                     <span></span>
                     <span></span>
                 </div><!-- mobile-menu-button -->
-           
-                
-                
+
+
+
             </div><!-- main-menu-right -->
         </div><!-- main-menu-inner -->
     </div><!-- main-menu -->
@@ -70,7 +71,7 @@
 
 
 <!-- Google Translate Script -->
- 
+
 <script type="text/javascript">
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
@@ -89,23 +90,23 @@
 
 <!-- Custom CSS to Redesign the Div -->
 <style>
-select.goog-te-combo {
-    padding: 5px 8px;
-    border: 1px solid #afabab;
-    border-radius: 0px;
-    
-}
-.p-3 {
-    padding: 0px !important;
-}
+    select.goog-te-combo {
+        padding: 5px 8px;
+        border: 1px solid #afabab;
+        border-radius: 0px;
 
-.goog-te-gadget {
-    font-size: 0px;
-    margin-bottom: 20px;
-}
-div.skiptranslate.goog-te-gadget > span{ 
-    display: none;
-}
+    }
 
+    .p-3 {
+        padding: 0px !important;
+    }
 
+    .goog-te-gadget {
+        font-size: 0px;
+        margin-bottom: 20px;
+    }
+
+    div.skiptranslate.goog-te-gadget>span {
+        display: none;
+    }
 </style>

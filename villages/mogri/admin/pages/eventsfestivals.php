@@ -31,7 +31,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -52,6 +52,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
     <link href="../css/delete_btn.css" rel="stylesheet">
 
 </head>
+
 <body>
 
 
@@ -69,7 +70,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
             <!-- row -->
             <div class="container-fluid">
                 <?php
-                
+
                 $Event = new ConnDb();
 
 
@@ -171,7 +172,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                         }
                     } else {
                         if ($EventName != "" && $EventType != "" && $StartDate != "" && $EndDate != "" && $contactNo != "" && $Description != "" && $VillageID != "") {
-                            $sql = "insert into eventsfestivals values(null,'$EventName','$EventType','$StartDate','$EndDate','$contactNo','$Description',$VillageID)";
+                            $sql = "insert into eventsfestivals(eventname,eventtype,startdate,enddate,contactnumber,description,villageid) values('$EventName','$EventType','$StartDate','$EndDate','$contactNo','$Description',$VillageID)";
                             $result = $Event->insertdata("eventsfestivals", $sql);
                             if ($result == "Data Inserted.") {
                                 // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
@@ -266,7 +267,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                             <div class="mb-3 col-md-6">
                                                 <label class="text-label form-label">Contact No.</label>
                                                 <input type="text" name="ContactNo" value="<?php echo $connum; ?>"
-                                                  
+
                                                     class="form-control" " >
                                             </div>
                                             <div class=" mb-3 col-md-6">
@@ -292,12 +293,52 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                             </div>
                                         </div>
                                     </form>
+                                    <!-- Import Section -->
+
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- Here Edit End -->
+                    <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;" id="import-section">
+                        <h4>🎉 Bulk Import Events & Festivals</h4>
+                        <p class="text-muted mb-3">
+                            <strong>How it works:</strong> Download the template, fill in the events data, and import.
+                            <strong>Village ID is automatically assigned</strong> - you don't need to fill it.
+                        </p>
 
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-4">
+                                <a href="templates/eventsfestivals_template.php" class="btn btn-info w-100">
+                                    📥 Download Template
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <form action="imports/import_eventsfestivals.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                    <input type="file" name="excel_file" class="form-control"
+                                        accept=".xls,.xlsx" required style="max-width: 300px;">
+                                    <button type="submit" class="btn btn-success">
+                                        📤 Import Excel
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 p-2  border rounded">
+                            <small class="text-muted">
+                                <strong>💡 Required fields:</strong> Event Name, Event Type<br>
+                                <strong>📝 Optional fields:</strong> Start Date, End Date, Contact Number, Description<br>
+                                <strong>⚠️ Notes:</strong><br>
+                                • <strong>Event Type:</strong> Cultural, Music, Film, Food, Art, Religious, Seasonal, Historical, Literary, Sports, Harvest, Technology, Community, Other - defaults to Other<br>
+                                • <strong>Dates:</strong> Format YYYY-MM-DD (e.g., 2024-10-03)<br>
+                                • <strong>Contact Number:</strong> 10-digit phone number<br>
+                                • <strong>Date Range:</strong> Start date can be after end date (will auto-swap)<br>
+                                • <strong>Visibility:</strong> on/off - defaults to off
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--**********************************
@@ -305,7 +346,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
         ***********************************-->
 
 
-         
+
 
             <!--**********************************
            Support ticket button start
@@ -321,13 +362,13 @@ $_SESSION['LAST_ACTIVITY'] = time();
         <!--**********************************
             Content body end
         ***********************************-->
-   <!--**********************************
+        <!--**********************************
             Footer start
         ***********************************-->
-            <div class="footer">
-                <?php include_once('../footer.php'); ?>
-            </div>
-            <!--**********************************
+        <div class="footer">
+            <?php include_once('../footer.php'); ?>
+        </div>
+        <!--**********************************
             Footer end
         ***********************************-->
 

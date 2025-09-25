@@ -1,0 +1,15 @@
+
+    .carousel-inner {
+        position: relative;
+    }
+
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* Adjust as needed */
+        margin-top: 10px; /* Adjust spacing from the carousel */
+    }
+
+    .delete-btn {
+        z-index: 20;
+    }

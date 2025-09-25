@@ -30,7 +30,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -91,7 +91,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <th>S.No</th>
                                                                         <th>Title</th>
-                                                                       
+
                                                                         <!-- <th>Modified</th> -->
                                                                         <th>Actions</th>
                                                                     </tr>
@@ -100,7 +100,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>1</td>
                                                                         <td>Bank</td>
-                                                                      
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -123,7 +123,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>2</td>
                                                                         <td>Drainage</td>
-                                                                      
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -145,7 +145,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>3</td>
                                                                         <td>Education</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -163,11 +163,11 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>4</td>
                                                                         <td>Electrification</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
-                                                                             <a href="electrification.php"
+                                                                            <a href="electrification.php"
                                                                                 class="btn btn-warning btn-sm content-icon">
                                                                                 <i class="fa fa-plus"></i>
                                                                             </a>
@@ -185,7 +185,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
                                                                     <td>5</td>
                                                                     <td>Entertainment</td>
-                                                                   
+
                                                                     <!-- <td>18 Feb, 2024</td> -->
                                                                     <td>
 
@@ -205,31 +205,31 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     </td>
                                                                     </tr>
                                                                     <tr>
-                                                                    <td>6</td>
-                                                                    <td>Emergency Service</td>
-                                                                   
-                                                                    <!-- <td>18 Feb, 2024</td> -->
-                                                                    <td>
+                                                                        <td>6</td>
+                                                                        <td>Emergency Service</td>
 
-                                                                        <a href="emergencyservices.php"
-                                                                            class="btn btn-warning btn-sm content-icon">
-                                                                            <i class="fa fa-plus"></i>
-                                                                        </a>
+                                                                        <!-- <td>18 Feb, 2024</td> -->
+                                                                        <td>
 
-                                                                        <a href="editform.php?tablename=emergencyservices"
-                                                                            class="btn btn-warning btn-sm content-icon">
-                                                                            <i class="fa fa-edit"></i>
-                                                                        </a>
-                                                                        <!-- <a href="javascript:void(0);"
+                                                                            <a href="emergencyservices.php"
+                                                                                class="btn btn-warning btn-sm content-icon">
+                                                                                <i class="fa fa-plus"></i>
+                                                                            </a>
+
+                                                                            <a href="editform.php?tablename=emergencyservices"
+                                                                                class="btn btn-warning btn-sm content-icon">
+                                                                                <i class="fa fa-edit"></i>
+                                                                            </a>
+                                                                            <!-- <a href="javascript:void(0);"
 																		class="btn btn-danger btn-sm content-icon">
 																		<i class="fa fa-times"></i> -->
-                                                                        </a>
-                                                                    </td>
+                                                                            </a>
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>7</td>
                                                                         <td>Employment Centers</td>
-                                                                        
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -272,7 +272,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>9</td>
                                                                         <td>Fuel station</td>
-                                                                      
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -294,7 +294,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>10</td>
                                                                         <td>Hospitals</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -317,7 +317,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>11</td>
                                                                         <td>Hotels</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -339,7 +339,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>12</td>
                                                                         <td>Pillar of Community</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -362,7 +362,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>13</td>
                                                                         <td>Place to Worship</td>
-                                                                        
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -384,11 +384,11 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>14</td>
                                                                         <td>Population</td>
-                                                                     
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
-                                                                            <a href="editform.php?tablename=population"
+                                                                            <a href="population.php"
                                                                                 class="btn btn-warning btn-sm content-icon">
                                                                                 <i class="fa fa-plus"></i>
                                                                             </a>
@@ -406,7 +406,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>15</td>
                                                                         <td>Restaurants</td>
-                                                                        
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -428,7 +428,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>16</td>
                                                                         <td>Tourism Places</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -450,7 +450,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>17</td>
                                                                         <td>Transport</td>
-                                                                        
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -473,7 +473,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>18</td>
                                                                         <td>Village basic</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -496,7 +496,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>19</td>
                                                                         <td>Washrooms</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
@@ -518,11 +518,11 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                                     <tr>
                                                                         <td>20</td>
                                                                         <td>Water Supply</td>
-                                                                       
+
                                                                         <!-- <td>18 Feb, 2024</td> -->
                                                                         <td>
 
-                                                                           <a href="watersupply.php"
+                                                                            <a href="watersupply.php"
                                                                                 class="btn btn-warning btn-sm content-icon">
                                                                                 <i class="fa fa-plus"></i>
                                                                             </a>
@@ -578,18 +578,18 @@ $_SESSION['LAST_ACTIVITY'] = time();
             <!--**********************************
 		Content body end
 	***********************************-->
- 
+
 
 
         </div>
-     
+
 
     </div>
 
-        <div class="footer">
-            
-        <?php include('../footer.php'); ?>    
-        </div>
+    <div class="footer">
+
+        <?php include('../footer.php'); ?>
+    </div>
 
 
     <!--**********************************
@@ -616,49 +616,49 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 
     <script>
-    function JobickCarousel() {
+        function JobickCarousel() {
 
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
 
-                    margin: 10
-                },
+                        margin: 10
+                    },
 
-                480: {
-                    items: 1
-                },
+                    480: {
+                        items: 1
+                    },
 
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
-            }
-        })
-    }
+            })
+        }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
     </script>
 </body>
 

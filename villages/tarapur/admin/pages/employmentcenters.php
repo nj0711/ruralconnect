@@ -30,7 +30,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -51,6 +51,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
     <link href="../css/delete_btn.css" rel="stylesheet">
 
 </head>
+
 <body>
 
     <!--*******************
@@ -80,8 +81,8 @@ $_SESSION['LAST_ACTIVITY'] = time();
             <!-- row -->
             <div class="container-fluid">
                 <?php
-                
-                
+
+
                 $Emp = new ConnDb();
 
 
@@ -158,9 +159,9 @@ $_SESSION['LAST_ACTIVITY'] = time();
                     $zip = isset($_POST['zip']) ? $Emp->escape($_POST['zip']) : "";
                     $Address_join = $Address . "@" . $city . "@" . $zip;
 
-                    echo '<pre>';
-                    print_r($_POST);
-                    echo '</pre>';
+                    // echo '<pre>';
+                    // print_r($_POST);
+                    // echo '</pre>';
 
                     if (isset($_POST['employmentcentersid']) && $_POST['employmentcentersid'] != "") {
                         if ($ServiceName != "" && $ServiceType != "" && $contactNo != "" && $VillageID != "") {
@@ -182,7 +183,13 @@ $_SESSION['LAST_ACTIVITY'] = time();
                         }
                     } else {
                         if ($ServiceName != "" && $ServiceType != "" && $contactNo != "" && $VillageID != "") {
-                            $sql = "insert into employmentcenters values(null,'$ServiceName','$ServiceType','$contactNo','$Address_join',$VillageID)";
+                            // $sql = "insert into employmentcenters values(null,'$ServiceName','$ServiceType','$contactNo','$Address_join',$VillageID)";
+                            $sql = "INSERT INTO employmentcenters 
+                                            (centername, servicetype, contactnumber, address, villageid) 
+                                            VALUES 
+                                            ('$ServiceName','$ServiceType','$contactNo','$Address_join',$VillageID)";
+                            // echo $sql;
+                            // die;
                             $result = $Emp->insertdata("employmentcenters", $sql);
                             if ($result == "Data Inserted.") {
                                 // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
@@ -242,7 +249,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                             <div class="mb-3 col-md-6">
                                                 <label class="text-label form-label">Contact No.</label>
                                                 <input type="text" name="ContactNo" class="form-control"
-                                                    
+
                                                     value="<?php echo $connum; ?>">
                                             </div>
                                             <div class="mb-3 col-md-6">
@@ -286,7 +293,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
                                                 <?php } else { ?>
 
-                                                    <button type="submit" name="insert"
+                                                    <button type="submit" name="submit"
                                                         class="btn btn-primary">Submit</button>
 
                                                 <?php } ?>
@@ -294,12 +301,52 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                         </div>
 
                                     </form>
+                                    <!-- Import Section -->
+
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- Here Edit End -->
+                    <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;" id="import-section">
+                        <h4>💼 Bulk Import Employment Centers</h4>
+                        <p class="text-muted mb-3">
+                            <strong>How it works:</strong> Download the template, fill in the employment center data, and import.
+                            <strong>Village ID is automatically assigned</strong> - you don't need to fill it.
+                        </p>
 
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-4">
+                                <a href="templates/employmentcenters_template.php" class="btn btn-info w-100">
+                                    📥 Download Template
+                                </a>
+                            </div>
+                            <div class="col-md-8">
+                                <form action="imports/import_employmentcenters.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                    <input type="file" name="excel_file" class="form-control"
+                                        accept=".xls,.xlsx" required style="max-width: 300px;">
+                                    <button type="submit" class="btn btn-success">
+                                        📤 Import Excel
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 p-2  border rounded">
+                            <small class="text-muted">
+                                <strong>💡 Required fields:</strong> Center Name, Service Type, Contact Number<br>
+                                <strong>📝 Optional fields:</strong> Address, City, Zip<br>
+                                <strong>⚠️ Notes:</strong><br>
+                                • <strong>Service Type:</strong> Job Placement, Skill Training, Career Counseling, Other - defaults to Other<br>
+                                • <strong>Contact Number:</strong> 10-digit phone number<br>
+                                • <strong>Zip Code:</strong> 6-digit number (e.g., 388001)<br>
+                                • <strong>Address Format:</strong> Full address in Address column, City and Zip in separate columns<br>
+                                • <strong>Visibility:</strong> on/off - defaults to off
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--**********************************

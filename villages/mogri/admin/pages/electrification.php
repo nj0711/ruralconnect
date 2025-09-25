@@ -1,6 +1,6 @@
 <?php
-    include('../config.php');
-    
+include('../config.php');
+
 
 session_start();
 if (!isset($_SESSION['village_admin_email'])) {
@@ -23,310 +23,308 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 // Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
 
-    $obj = new ConnDb();
+$obj = new ConnDb();
 
-    $name = "";
-    $econtact='';
-    $solar=0;
-    $wind=0;
-    $coal=0;
-    $gas=0;
-    $address = "";
-    $city = "";
-    $pincode = "";
-    $fullAddress = $address . '@' . $city . '@' . $pincode;
-    $servicearea='';
-    $contactno='';
-    $email='';
-    $supplychain='';
+$name = "";
+$econtact = '';
+$solar = 0;
+$wind = 0;
+$coal = 0;
+$gas = 0;
+$address = "";
+$city = "";
+$pincode = "";
+$fullAddress = $address . '@' . $city . '@' . $pincode;
+$servicearea = '';
+$contactno = '';
+$email = '';
+$supplychain = '';
 
-    $description = "";
-    $photos = "";
-    
-    $contactno = "";
+$description = "";
+$photos = "";
+
+$contactno = "";
 
 
-    if (isset($_GET['deleteid'])) {
-        // Store the delete ID for use later in PHP
-        $deleteId = $_GET['deleteid'];
-        ?>
+if (isset($_GET['deleteid'])) {
+    // Store the delete ID for use later in PHP
+    $deleteId = $_GET['deleteid'];
+?>
 
-<script>
-// Show the confirmation dialog
-if (confirm("Are you sure you want to proceed?")) {
-    // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
-    window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
-} else {
-    // If the user cancels, redirect back to a safe page (e.g., edit form)
-    window.location.href = "editform.php?tablename=electrification";
-}
-</script>
+    <script>
+        // Show the confirmation dialog
+        if (confirm("Are you sure you want to proceed?")) {
+            // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
+            window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
+        } else {
+            // If the user cancels, redirect back to a safe page (e.g., edit form)
+            window.location.href = "editform.php?tablename=electrification";
+        }
+    </script>
 
 <?php
-    }
-    
-    // After confirmation, handle the deletion process using 'confirmeddeleteid'
-    if (isset($_GET['confirmeddeleteid'])) {
-        $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
-    
-        // Perform the deletion logic here
-        $sel = "select * from electrification where electrificationid=" . $deleteId;
-        $res = $obj->selectdata("electrification", $sel);
-    
-        $p = $res[0]['photo'];
-        $array = json_decode($p, true);  // Decode the JSON into an array
-    
-        // Directory for uploaded images
-        $uploadDir = './uploadedimages/'; 
-        foreach ($array as $image) {
-            $filePath = $uploadDir . $image;  // Full path to the image
-            if (file_exists($filePath)) {  // Check if the file exists
-                if (unlink($filePath)) {  // Attempt to delete the file
-                    //echo "Deleted: $image<br>";
-                } else {
-                    //echo "Failed to delete: $image<br>";
-                }
+}
+
+// After confirmation, handle the deletion process using 'confirmeddeleteid'
+if (isset($_GET['confirmeddeleteid'])) {
+    $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
+
+    // Perform the deletion logic here
+    $sel = "select * from electrification where electrificationid=" . $deleteId;
+    $res = $obj->selectdata("electrification", $sel);
+
+    $p = $res[0]['photo'];
+    $array = json_decode($p, true);  // Decode the JSON into an array
+
+    // Directory for uploaded images
+    $uploadDir = './uploadedimages/';
+    foreach ($array as $image) {
+        $filePath = $uploadDir . $image;  // Full path to the image
+        if (file_exists($filePath)) {  // Check if the file exists
+            if (unlink($filePath)) {  // Attempt to delete the file
+                //echo "Deleted: $image<br>";
             } else {
-                //echo "File does not exist: $image<br>";
+                //echo "Failed to delete: $image<br>";
             }
+        } else {
+            //echo "File does not exist: $image<br>";
         }
-    
-        // Delete the record from the database
-        $del = "DELETE FROM electrification WHERE electrificationid=" . $deleteId;
-        $result = $obj->deletedata("electrification", $del);
-    
-        // Handle success or failure
-        if ($result == "Data Deleted") {
-            echo "<script>alert('Success! Data Deleted');
+    }
+
+    // Delete the record from the database
+    $del = "DELETE FROM electrification WHERE electrificationid=" . $deleteId;
+    $result = $obj->deletedata("electrification", $del);
+
+    // Handle success or failure
+    if ($result == "Data Deleted") {
+        echo "<script>alert('Success! Data Deleted');
             window.location.href = 'editform.php?tablename=electrification';
             </script>";
-        } else {
-            echo "<script>alert('Error: Failed to delete data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to delete data');</script>";
     }
-    
-    
-
-    if (isset($_POST['insert'])) {
-
-        $name = isset($_POST['name']) ? $obj->escape($_POST['name']) : "";
-        $econtact=isset($_POST['econtact']) ? $obj->escape($_POST['econtact']) : "";
-        $solar=isset($_POST['solar']) ? $obj->escape($_POST['solar']) : "";
-        $wind=isset($_POST['wind']) ? $obj->escape($_POST['wind']) : "";
-        $coal=isset($_POST['coal']) ? $obj->escape($_POST['coal']) : "";
-        $gas=isset($_POST['gas']) ? $obj->escape($_POST['gas']) : "";
-        $address = isset($_POST['address']) ? $obj->escape($_POST['address']) : "";
-        $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : "";
-        $pincode = isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : "";
-        $fullAddress = $address . '@' . $city . '@' . $pincode;
-        $servicearea=isset($_POST['servicearea']) ? $obj->escape($_POST['servicearea']) : "";
-        $contactno=isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";
-        $email=isset($_POST['email']) ? $obj->escape($_POST['email']) : "";
-        $supplychain=isset($_POST['supplychain']) ? $obj->escape($_POST['supplychain']) : "";
-        $description = isset($_POST['description']) ? $obj->escape($_POST['description']) : "";
-        $contactno = isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";    
+}
 
 
 
+if (isset($_POST['insert'])) {
 
-        $filesJson = json_encode('');
-        $uploadDir = './uploadedimages/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+    $name = isset($_POST['name']) ? $obj->escape($_POST['name']) : "";
+    $econtact = isset($_POST['econtact']) ? $obj->escape($_POST['econtact']) : "";
+    $solar = isset($_POST['solar']) ? $obj->escape($_POST['solar']) : "";
+    $wind = isset($_POST['wind']) ? $obj->escape($_POST['wind']) : "";
+    $coal = isset($_POST['coal']) ? $obj->escape($_POST['coal']) : "";
+    $gas = isset($_POST['gas']) ? $obj->escape($_POST['gas']) : "";
+    $address = isset($_POST['address']) ? $obj->escape($_POST['address']) : "";
+    $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : "";
+    $pincode = isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : "";
+    $fullAddress = $address . '@' . $city . '@' . $pincode;
+    $servicearea = isset($_POST['servicearea']) ? $obj->escape($_POST['servicearea']) : "";
+    $contactno = isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";
+    $email = isset($_POST['email']) ? $obj->escape($_POST['email']) : "";
+    $supplychain = isset($_POST['supplychain']) ? $obj->escape($_POST['supplychain']) : "";
+    $description = isset($_POST['description']) ? $obj->escape($_POST['description']) : "";
+    $contactno = isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";
 
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
-        $maxFileSize = 5 * 1024 * 1024; // 5 MB
-        // Array to store filenames
-        $uploadedFiles = [];
 
-        if (isset($_FILES['Photo']) && !empty($_FILES['Photo']['name'][0])) {
 
-            $fileCount = count($_FILES['Photo']['name']);
 
-            for ($i = 0; $i < $fileCount; $i++) {
-                $fileName = $_FILES['Photo']['name'][$i];
-                $fileTmpName = $_FILES['Photo']['tmp_name'][$i];
-                $fileError = $_FILES['Photo']['error'][$i];
-                $fileSize = $_FILES['Photo']['size'][$i];
+    $filesJson = json_encode('');
+    $uploadDir = './uploadedimages/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
 
-                if ($fileError === UPLOAD_ERR_OK) {
-                    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-                    $newFileName = time().$name . 'electrification' . $i . '.' . $fileExtension;
-                    $destination = $uploadDir . $newFileName;
-                    if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
-                        if (move_uploaded_file($fileTmpName, $destination)) {
-                            // Store the filename in the array
-    
-                            $uploadedFiles[] = $newFileName;
-                        } else {
-                            // echo "Failed to move file: $fileName<br>";
-                        }
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
+    $maxFileSize = 5 * 1024 * 1024; // 5 MB
+    // Array to store filenames
+    $uploadedFiles = [];
+
+    if (isset($_FILES['Photo']) && !empty($_FILES['Photo']['name'][0])) {
+
+        $fileCount = count($_FILES['Photo']['name']);
+
+        for ($i = 0; $i < $fileCount; $i++) {
+            $fileName = $_FILES['Photo']['name'][$i];
+            $fileTmpName = $_FILES['Photo']['tmp_name'][$i];
+            $fileError = $_FILES['Photo']['error'][$i];
+            $fileSize = $_FILES['Photo']['size'][$i];
+
+            if ($fileError === UPLOAD_ERR_OK) {
+                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $newFileName = time() . $name . 'electrification' . $i . '.' . $fileExtension;
+                $destination = $uploadDir . $newFileName;
+                if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
+                    if (move_uploaded_file($fileTmpName, $destination)) {
+                        // Store the filename in the array
+
+                        $uploadedFiles[] = $newFileName;
                     } else {
-                        // echo "File Formate or Size is invalid";
+                        // echo "Failed to move file: $fileName<br>";
                     }
+                } else {
+                    // echo "File Formate or Size is invalid";
                 }
             }
-        } else {
-            // echo "No files selected.";
         }
-        $filesJson = json_encode($uploadedFiles);
+    } else {
+        // echo "No files selected.";
+    }
+    $filesJson = json_encode($uploadedFiles);
 
-        $selQ = "select villageid from villagebasic";
-        $res = $obj->selectdata("villagebasic", $selQ);
-        $village_id = $res[0]['villageid'];
-        $res[0]['villageid'];
+    $selQ = "select villageid from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selQ);
+    $village_id = $res[0]['villageid'];
+    $res[0]['villageid'];
 
-        $query="INSERT INTO electrification(companyname, emergencycontactno, energyresourcessolar, energyresourceswind, energyresourcescoal,energyresourcesgas, photo, 
+    $query = "INSERT INTO electrification(companyname, emergencycontactno, energyresourcessolar, energyresourceswind, energyresourcescoal,energyresourcesgas, photo, 
         officeaddress, servicearea, contactno, email, supplychain, villageid, description) 
         VALUES ('$name','$econtact','$solar','$wind','$coal','$gas','$filesJson','$fullAddress','$servicearea',
         '$contactno','$email','$supplychain','$village_id','$description')";
-        // echo $query;
-        $result = $obj->insertdata("electrification", $query);
+    // echo $query;
+    $result = $obj->insertdata("electrification", $query);
 
-        if($result =="Data Inserted."){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Inserted');
+    if ($result == "Data Inserted.") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Inserted');
             window.location.href = 'editform.php?tablename=electrification';
             </script>";
-            
-        }else{
-            echo "<script>alert('Error: Failed to insert data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to insert data');</script>";
     }
+}
 
-    if (isset($_GET['updateid'])) {
+if (isset($_GET['updateid'])) {
 
-        $selQ = "select * from electrification where electrificationid=" . $_GET['updateid'];
+    $selQ = "select * from electrification where electrificationid=" . $_GET['updateid'];
 
-        $res = $obj->selectdata("electrification", $selQ);
-        if ($res != null) {
+    $res = $obj->selectdata("electrification", $selQ);
+    if ($res != null) {
         $name = $res[0]['companyname'];
-        $solar= $res[0]['energyresourcessolar'];
-        $wind= $res[0]['energyresourceswind'];
-        $coal= $res[0]['energyresourcescoal'];
-        $gas= $res[0]['energyresourcesgas'];
+        $solar = $res[0]['energyresourcessolar'];
+        $wind = $res[0]['energyresourceswind'];
+        $coal = $res[0]['energyresourcescoal'];
+        $gas = $res[0]['energyresourcesgas'];
         $fullAddress = array_map('trim', explode('@', $res[0]['officeaddress']));
-            $address = $fullAddress[0];
-            $city =  $fullAddress[1];
-            $pincode =  $fullAddress[2];
+        $address = $fullAddress[0];
+        $city =  $fullAddress[1];
+        $pincode =  $fullAddress[2];
 
-        $servicearea= $res[0]['servicearea'];
-        $contactno= $res[0]['contactno'];
-        $email= $res[0]['email'];
-        $supplychain= $res[0]['supplychain'];
+        $servicearea = $res[0]['servicearea'];
+        $contactno = $res[0]['contactno'];
+        $email = $res[0]['email'];
+        $supplychain = $res[0]['supplychain'];
         $description =  $res[0]['description'];
-        $econtact=$res[0]['emergencycontactno'];
-        
+        $econtact = $res[0]['emergencycontactno'];
+
         $photo = $res[0]['photo'];
         $data = json_decode($photo, true);
-        } else {
-            header('Location: electrification.php');
-        }
+    } else {
+        header('Location: electrification.php');
+    }
+}
+
+if (isset($_POST['update'])) {
+    // echo '<pre>';
+    // print_r($_POST);
+    // echo '</pre>';
+    $name = isset($_POST['name']) ? $obj->escape($_POST['name']) : "";
+    $solar = isset($_POST['solar']) ? $obj->escape($_POST['solar']) : "";
+    $wind = isset($_POST['wind']) ? $obj->escape($_POST['wind']) : "";
+    $coal = isset($_POST['coal']) ? $obj->escape($_POST['coal']) : "";
+    $gas = isset($_POST['gas']) ? $obj->escape($_POST['gas']) : "";
+    $address = isset($_POST['address']) ? $obj->escape($_POST['address']) : "";
+    $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : "";
+    $pincode = isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : "";
+    $fullAddress = $address . '@' . $city . '@' . $pincode;
+    $servicearea = isset($_POST['servicearea']) ? $obj->escape($_POST['servicearea']) : "";
+    $contactno = isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";
+    $email = isset($_POST['email']) ? $obj->escape($_POST['email']) : "";
+    $supplychain = isset($_POST['supplychain']) ? $obj->escape($_POST['supplychain']) : "";
+    $description = isset($_POST['description']) ? $obj->escape($_POST['description']) : "";
+    $contactno = isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";
+    $econtact = isset($_POST['econtact']) ? $obj->escape($_POST['econtact']) : "";
+
+
+
+    $selQ = "select photo from electrification  where electrificationid  = " . $_GET['updateid'];
+    $res = $obj->selectdata("electrification", $selQ);
+    $p = $res[0]['photo'];
+    $array = json_decode($p);
+    $count = count($array);
+
+
+    $filesJson = json_encode('');
+    $uploadDir = './uploadedimages/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
 
-    if (isset($_POST['update'])) {
-        // echo '<pre>';
-        // print_r($_POST);
-        // echo '</pre>';
-        $name = isset($_POST['name']) ? $obj->escape($_POST['name']) : "";
-        $solar=isset($_POST['solar']) ? $obj->escape($_POST['solar']) : "";
-        $wind=isset($_POST['wind']) ? $obj->escape($_POST['wind']) : "";
-        $coal=isset($_POST['coal']) ? $obj->escape($_POST['coal']) : "";
-        $gas=isset($_POST['gas']) ? $obj->escape($_POST['gas']) : "";
-        $address = isset($_POST['address']) ? $obj->escape($_POST['address']) : "";
-        $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : "";
-        $pincode = isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : "";
-        $fullAddress = $address . '@' . $city . '@' . $pincode;
-        $servicearea=isset($_POST['servicearea']) ? $obj->escape($_POST['servicearea']) : "";
-        $contactno=isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";
-        $email=isset($_POST['email']) ? $obj->escape($_POST['email']) : "";
-        $supplychain=isset($_POST['supplychain']) ? $obj->escape($_POST['supplychain']) : "";
-        $description = isset($_POST['description']) ? $obj->escape($_POST['description']) : "";
-        $contactno = isset($_POST['contactno']) ? $obj->escape($_POST['contactno']) : "";    
-        $econtact=isset($_POST['econtact']) ? $obj->escape($_POST['econtact']) : "";
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
+    $maxFileSize = 5 * 1024 * 1024; // 5 MB
+    // Array to store filenames
+    $uploadedFiles = [];
+    $uploadedFiles = $array;
 
+    if (isset($_FILES['Photo']) && !empty($_FILES['Photo']['name'][0])) {
 
+        $fileCount = count($_FILES['Photo']['name']);
 
-        $selQ = "select photo from electrification  where electrificationid  = " . $_GET['updateid'];
-        $res = $obj->selectdata("electrification", $selQ);
-        $p = $res[0]['photo'];
-        $array = json_decode($p);
-        $count = count($array);
+        for ($i = 0; $i < $fileCount; $i++) {
+            $fileName = $_FILES['Photo']['name'][$i];
+            $fileTmpName = $_FILES['Photo']['tmp_name'][$i];
+            $fileError = $_FILES['Photo']['error'][$i];
+            $fileSize = $_FILES['Photo']['size'][$i];
 
+            if ($fileError === UPLOAD_ERR_OK) {
+                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $newFileName =  time() . $name . 'electrification' . $count + $i . '.' . $fileExtension;
+                $destination = $uploadDir . $newFileName;
+                if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
+                    if (move_uploaded_file($fileTmpName, $destination)) {
+                        // Store the filename in the array
 
-        $filesJson = json_encode('');
-        $uploadDir = './uploadedimages/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
-        $maxFileSize = 5 * 1024 * 1024; // 5 MB
-        // Array to store filenames
-        $uploadedFiles = [];
-        $uploadedFiles = $array;
-
-        if (isset($_FILES['Photo']) && !empty($_FILES['Photo']['name'][0])) {
-
-            $fileCount = count($_FILES['Photo']['name']);
-
-            for ($i = 0; $i < $fileCount; $i++) {
-                $fileName = $_FILES['Photo']['name'][$i];
-                $fileTmpName = $_FILES['Photo']['tmp_name'][$i];
-                $fileError = $_FILES['Photo']['error'][$i];
-                $fileSize = $_FILES['Photo']['size'][$i];
-
-                if ($fileError === UPLOAD_ERR_OK) {
-                    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-                     $newFileName =  time().$name . 'electrification' . $count + $i . '.' . $fileExtension;
-                    $destination = $uploadDir . $newFileName;
-                    if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
-                        if (move_uploaded_file($fileTmpName, $destination)) {
-                            // Store the filename in the array
-    
-                            $uploadedFiles[] = $newFileName;
-                        } else {
-                            // echo "Failed to move file: $fileName<br>";
-                        }
+                        $uploadedFiles[] = $newFileName;
                     } else {
-                        // echo "File Formate or Size is invalid";
+                        // echo "Failed to move file: $fileName<br>";
                     }
+                } else {
+                    // echo "File Formate or Size is invalid";
                 }
             }
-        } else {
-            // echo "No files selected.";
         }
-        $filesJson = json_encode($uploadedFiles);
+    } else {
+        // echo "No files selected.";
+    }
+    $filesJson = json_encode($uploadedFiles);
 
-        $selQ = "select villageid from villagebasic";
-        $res = $obj->selectdata("villagebasic", $selQ);
-        $village_id = $res[0]['villageid'];
-        $res[0]['villageid'];
+    $selQ = "select villageid from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selQ);
+    $village_id = $res[0]['villageid'];
+    $res[0]['villageid'];
 
 
-        $qupdate = "UPDATE electrification SET companyname='$name',emergencycontactno='$econtact',
+    $qupdate = "UPDATE electrification SET companyname='$name',emergencycontactno='$econtact',
         energyresourcessolar='$solar',energyresourceswind='$wind',
         energyresourcescoal='$coal',energyresourcesgas='$gas',
         photo='$filesJson',officeaddress='$fullAddress',servicearea='$servicearea',
         contactno='$contactno',email='$email',
-        supplychain='$supplychain',description='$description' WHERE electrificationid=".$_GET['updateid'];
+        supplychain='$supplychain',description='$description' WHERE electrificationid=" . $_GET['updateid'];
 
 
-        $result = $obj->updatedata("electrification", $qupdate);
-        if($result =="Data Updated"){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Updated');
+    $result = $obj->updatedata("electrification", $qupdate);
+    if ($result == "Data Updated") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Updated');
             window.location.href = 'editform.php?tablename=electrification';
             </script>";
-            
-        }else{
-            echo "<script>alert('Error: Failed to update data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to update data');</script>";
     }
+}
 
 
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -335,7 +333,7 @@ if (confirm("Are you sure you want to proceed?")) {
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -356,6 +354,7 @@ if (confirm("Are you sure you want to proceed?")) {
     <link href="../css/delete_btn.css" rel="stylesheet">
 
 </head>
+
 <body>
 
 
@@ -446,7 +445,11 @@ if (confirm("Are you sure you want to proceed?")) {
                                                             <div class="mb-3">
                                                                 <label class="text-label form-label">city</label>
                                                                 <input type="text" name="city"
-                                                                    value="<?php if($city!=''){echo $city;}else{echo 'Anand';} ?>"
+                                                                    value="<?php if ($city != '') {
+                                                                                echo $city;
+                                                                            } else {
+                                                                                echo 'Anand';
+                                                                            } ?>"
                                                                     class="form-control">
                                                             </div>
                                                         </div>
@@ -513,95 +516,95 @@ if (confirm("Are you sure you want to proceed?")) {
                                                                 <input class="form-control" type="file" name="Photo[]"
                                                                     id="photo" multiple>
                                                                 <?php if (isset($_GET['updateid'])) { ?>
-                                                                <div class="col-xl-6">
-                                                                    <div class="card">
-                                                                        <div class="card-body p-4">
-                                                                            <h4 class="card-intro-title">Slides only
-                                                                            </h4>
-                                                                            <div id="carouselExampleIndicators"
-                                                                                class="carousel slide"
-                                                                                data-bs-ride="carousel">
-                                                                                <div class="carousel-indicators">
+                                                                    <div class="col-xl-6">
+                                                                        <div class="card">
+                                                                            <div class="card-body p-4">
+                                                                                <h4 class="card-intro-title">Slides only
+                                                                                </h4>
+                                                                                <div id="carouselExampleIndicators"
+                                                                                    class="carousel slide"
+                                                                                    data-bs-ride="carousel">
+                                                                                    <div class="carousel-indicators">
 
-                                                                                    <?php
+                                                                                        <?php
 
                                                                                         foreach ($data as $index => $person) { ?>
-                                                                                    <button type="button"
-                                                                                        data-bs-target="#carouselExampleIndicators"
-                                                                                        data-bs-slide-to="<?php echo $index; ?>"
-                                                                                        <?php if ($index == 0) { ?>
-                                                                                        class="active"
-                                                                                        aria-current="true" <?php } ?>
-                                                                                        aria-label="Slide <?php echo ($index + 1); ?>">
-                                                                                    </button>
-                                                                                    <?php } ?>
-                                                                                </div>
-                                                                                <div class="carousel-inner">
-                                                                                    <?php
+                                                                                            <button type="button"
+                                                                                                data-bs-target="#carouselExampleIndicators"
+                                                                                                data-bs-slide-to="<?php echo $index; ?>"
+                                                                                                <?php if ($index == 0) { ?>
+                                                                                                class="active"
+                                                                                                aria-current="true" <?php } ?>
+                                                                                                aria-label="Slide <?php echo ($index + 1); ?>">
+                                                                                            </button>
+                                                                                        <?php } ?>
+                                                                                    </div>
+                                                                                    <div class="carousel-inner">
+                                                                                        <?php
                                                                                         $active = true;
                                                                                         foreach ($data as $index => $person) { ?>
-                                                                                    <div
-                                                                                        class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-                                                                                        <img class="d-block w-100"
-                                                                                            style="width:200px; height:200px"
-                                                                                            src="uploadedimages/<?php echo $person; ?>"
-                                                                                            alt="Slide image">
-                                                                                        <div class="button-container">
-                                                                                            <?php 
-                                                                                            if(count($data)>1){?>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-danger delete-btn"
-                                                                                                data-image="<?php echo $person; ?>">
-                                                                                                <span>Delete</span>
-                                                                                            </button>
-                                                                                            <?php }
-                                                                                            ?>
+                                                                                            <div
+                                                                                                class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                                                                                                <img class="d-block w-100"
+                                                                                                    style="width:200px; height:200px"
+                                                                                                    src="uploadedimages/<?php echo $person; ?>"
+                                                                                                    alt="Slide image">
+                                                                                                <div class="button-container">
+                                                                                                    <?php
+                                                                                                    if (count($data) > 1) { ?>
+                                                                                                        <button type="button"
+                                                                                                            class="btn btn-danger delete-btn"
+                                                                                                            data-image="<?php echo $person; ?>">
+                                                                                                            <span>Delete</span>
+                                                                                                        </button>
+                                                                                                    <?php }
+                                                                                                    ?>
 
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <?php
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        <?php
                                                                                             $active = false;
                                                                                         } ?>
+                                                                                    </div>
+
+
+                                                                                    <!-- Previous Button -->
+                                                                                    <button class="carousel-control-prev"
+                                                                                        type="button"
+                                                                                        data-bs-target="#carouselExampleIndicators"
+                                                                                        data-bs-slide="prev">
+                                                                                        <span
+                                                                                            class="carousel-control-prev-icon"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <span>Previous</span>
+                                                                                    </button>
+
+                                                                                    <!-- Next Button -->
+                                                                                    <button class="carousel-control-next"
+                                                                                        type="button"
+                                                                                        data-bs-target="#carouselExampleIndicators"
+                                                                                        data-bs-slide="next">
+                                                                                        <span
+                                                                                            class="carousel-control-next-icon"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <span>Next</span>
+                                                                                    </button>
+
                                                                                 </div>
-
-
-                                                                                <!-- Previous Button -->
-                                                                                <button class="carousel-control-prev"
-                                                                                    type="button"
-                                                                                    data-bs-target="#carouselExampleIndicators"
-                                                                                    data-bs-slide="prev">
-                                                                                    <span
-                                                                                        class="carousel-control-prev-icon"
-                                                                                        aria-hidden="true"></span>
-                                                                                    <span>Previous</span>
-                                                                                </button>
-
-                                                                                <!-- Next Button -->
-                                                                                <button class="carousel-control-next"
-                                                                                    type="button"
-                                                                                    data-bs-target="#carouselExampleIndicators"
-                                                                                    data-bs-slide="next">
-                                                                                    <span
-                                                                                        class="carousel-control-next-icon"
-                                                                                        aria-hidden="true"></span>
-                                                                                    <span>Next</span>
-                                                                                </button>
-
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
                                                         <div class="row" style="margin-top:50px;">
                                                             <div class="col-lg-1 ms-auto">
                                                                 <?php if (isset($_GET['updateid'])) { ?>
-                                                                <button type="submit" name="update"
-                                                                    class="btn btn-primary">Update</button>
+                                                                    <button type="submit" name="update"
+                                                                        class="btn btn-primary">Update</button>
                                                                 <?php } else { ?>
-                                                                <button type="submit" name="insert"
-                                                                    class="btn btn-primary">Submit</button>
+                                                                    <button type="submit" name="insert"
+                                                                        class="btn btn-primary">Submit</button>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
@@ -616,13 +619,54 @@ if (confirm("Are you sure you want to proceed?")) {
                     </div>
                     <!-- Here Edit End -->
                 </div>
+                <!-- Import Section -->
+                <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;" id="import-section">
+                    <h4>⚡ Bulk Import Electrification Providers</h4>
+                    <p class="text-muted mb-3">
+                        <strong>How it works:</strong> Download the template, fill in the electrification data, and import.
+                        <strong>Village ID is automatically assigned</strong> - you don't need to fill it.
+                        <strong>Photos will be empty</strong> - add them later via the edit form.
+                    </p>
+
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-4">
+                            <a href="templates/electrification_template.php" class="btn btn-info w-100">
+                                📥 Download Template
+                            </a>
+                        </div>
+                        <div class="col-md-8">
+                            <form action="imports/import_electrification.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                <input type="file" name="excel_file" class="form-control"
+                                    accept=".xls,.xlsx" required style="max-width: 300px;">
+                                <button type="submit" class="btn btn-success">
+                                    📤 Import Excel
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 p-2  border rounded">
+                        <small class="text-muted">
+                            <strong>💡 Required fields:</strong> Company Name, Office Address, Service Area<br>
+                            <strong>📝 Optional fields:</strong> Emergency Contact, Phone, Email, Description<br>
+                            <strong>⚠️ Notes:</strong><br>
+                            • <strong>Energy Resources:</strong> 1 (Yes) or 0 (No) for Solar/Wind/Coal/Gas<br>
+                            • <strong>Phone Numbers:</strong> 10-digit numbers only<br>
+                            • <strong>Pin Code:</strong> 6-digit number (e.g., 388001)<br>
+                            • <strong>Email:</strong> Valid email format<br>
+                            • <strong>Address Format:</strong> Full address in Office Address column, City and Pin Code in separate columns<br>
+                            • <strong>Visibility:</strong> on/off - defaults to off<br>
+                            • <strong>Photos:</strong> Will be empty - add via edit form later
+                        </small>
+                    </div>
+                </div>
             </div>
             <!--**********************************
             Content body end
         ***********************************-->
 
 
-         
+
             <!--**********************************
            Support ticket button start
         ***********************************-->
@@ -637,13 +681,13 @@ if (confirm("Are you sure you want to proceed?")) {
         <!--**********************************
             Content body end
         ***********************************-->
-   <!--**********************************
+        <!--**********************************
             Footer start
         ***********************************-->
-            <div class="footer">
-                <?php include_once('../footer.php'); ?>
-            </div>
-            <!--**********************************
+        <div class="footer">
+            <?php include_once('../footer.php'); ?>
+        </div>
+        <!--**********************************
             Footer end
         ***********************************-->
 
@@ -681,188 +725,188 @@ if (confirm("Are you sure you want to proceed?")) {
 
 
     <script>
-    function validateForm() {
-        // Validate  Name
-        let Name = document.forms["electrificationForm"]["name"].value;
-        if (Name == "") {
-            alert("Name must be filled out");
-            return false;
-        }
-        if (Name.trim().length > 20) {
-            alert("Name must be less than 20 characters long");
-            return false;
-        }
-        // Validate Emergency Contact (must be a 10-digit number)
-        // let econtact = document.forms["electrificationForm"]['econtact'].value;
-        // let econtactPattern = /^[0-9]{10}$/;
-        // if (!econtactPattern.test(econtact)) {
-        //     alert("Please enter a valid contact number (10 digits starting with 6-9)");
-        //     return false;
-        // }
-        // Validate Solar Energy (must be a non-negative number)
-        let solar = document.forms["electrificationForm"]['solar'].value;
-        if (solar < 0) {
-            alert("Please enter a positive numbers for Solar Energy ");
-            return false;
-        }
-        // Validate Wind Energy (must be a non-negative number)
-        const wind = document.forms["electrificationForm"]['wind'].value;
-        if (wind < 0) {
-            alert("Please enter a positive numbers for Wind Energy ");
-            return false;
-        }
-        // Validate Coal Energy (must be a non-negative number)
-        const coal = document.forms["electrificationForm"]['coal'].value;
-        if (coal < 0) {
-            alert("Please enter a positive numbers for Coal Energy ");
-            return false;
-        }
-        // Validate Gas Energy (must be a non-negative number)
-        const gas = document.forms["electrificationForm"]['gas'].value;
-        if (gas < 0) {
-            alert("Please enter a positive numbers for Gas Energy ");
-            return false;
-        }
-        // Validate Address
-        let address = document.forms["electrificationForm"]["address"].value;
-        let addressPattern = /^[a-zA-Z0-9\s,.-]{5,}$/;
-        if (address == "" || !addressPattern.test(address)) {
-            alert("Minimum 5 characters, only letters, numbers, spaces, commas, periods, and dashes");
-            return false;
-        }
+        function validateForm() {
+            // Validate  Name
+            let Name = document.forms["electrificationForm"]["name"].value;
+            if (Name == "") {
+                alert("Name must be filled out");
+                return false;
+            }
+            if (Name.trim().length > 20) {
+                alert("Name must be less than 20 characters long");
+                return false;
+            }
+            // Validate Emergency Contact (must be a 10-digit number)
+            // let econtact = document.forms["electrificationForm"]['econtact'].value;
+            // let econtactPattern = /^[0-9]{10}$/;
+            // if (!econtactPattern.test(econtact)) {
+            //     alert("Please enter a valid contact number (10 digits starting with 6-9)");
+            //     return false;
+            // }
+            // Validate Solar Energy (must be a non-negative number)
+            let solar = document.forms["electrificationForm"]['solar'].value;
+            if (solar < 0) {
+                alert("Please enter a positive numbers for Solar Energy ");
+                return false;
+            }
+            // Validate Wind Energy (must be a non-negative number)
+            const wind = document.forms["electrificationForm"]['wind'].value;
+            if (wind < 0) {
+                alert("Please enter a positive numbers for Wind Energy ");
+                return false;
+            }
+            // Validate Coal Energy (must be a non-negative number)
+            const coal = document.forms["electrificationForm"]['coal'].value;
+            if (coal < 0) {
+                alert("Please enter a positive numbers for Coal Energy ");
+                return false;
+            }
+            // Validate Gas Energy (must be a non-negative number)
+            const gas = document.forms["electrificationForm"]['gas'].value;
+            if (gas < 0) {
+                alert("Please enter a positive numbers for Gas Energy ");
+                return false;
+            }
+            // Validate Address
+            let address = document.forms["electrificationForm"]["address"].value;
+            let addressPattern = /^[a-zA-Z0-9\s,.-]{5,}$/;
+            if (address == "" || !addressPattern.test(address)) {
+                alert("Minimum 5 characters, only letters, numbers, spaces, commas, periods, and dashes");
+                return false;
+            }
 
-        // Validate City
-        let city = document.forms["electrificationForm"]["city"].value;
-        if (city == "") {
-            alert("City must be filled out");
-            return false;
-        }
-        if (city.trim().length > 20) {
-            alert("City must be less than 20 characters long");
-            return false;
-        }
-        // Validate Pin Code
-        let pincode = document.forms["electrificationForm"]["pincode"].value;
-        let pincodeRegex = /^[1-9][0-9]{5}$/;
-        if (pincode == "" || !pincodeRegex.test(pincode)) {
-            alert("Please enter a valid Pin Code");
-            return false;
-        }
-        // Validate Email (must follow email format)
-        const email = document.forms["electrificationForm"]["email"].value;
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email)) {
-            alert("Enter valid email");
-            return false;
-        }
-        // Validate Contact No.
-        //  let contactNo = document.forms["electrificationForm"]["contactno"].value;
-        // let contactPattern = /^[6-9]\d{9}$/;
-        // if (!contactPattern.test(contactNo)) {
-        //     alert("Please enter a valid contact number (10 digits starting with 6-9)");
-        //     return false;
-        // }
-        // Validate service area Name
-        let service = document.forms["electrificationForm"]["servicearea"].value;
-        if (service.trim() == "") {
-            alert("Service Area name must be filled out");
-            return false;
-        }
-        // Validate supply chain
-        let supplyChain = document.forms["electrificationForm"]["supplychain"].value;
-        if (supplyChain.trim() == "") {
-            alert("Supply Chain name must be filled out");
-            return false;
-        }
-        // Validate Other Information
-        let description = document.forms["electrificationForm"]["description"].value;
-        if (description == "") {
-            alert("Please provide additional information");
-            return false;
-        }
+            // Validate City
+            let city = document.forms["electrificationForm"]["city"].value;
+            if (city == "") {
+                alert("City must be filled out");
+                return false;
+            }
+            if (city.trim().length > 20) {
+                alert("City must be less than 20 characters long");
+                return false;
+            }
+            // Validate Pin Code
+            let pincode = document.forms["electrificationForm"]["pincode"].value;
+            let pincodeRegex = /^[1-9][0-9]{5}$/;
+            if (pincode == "" || !pincodeRegex.test(pincode)) {
+                alert("Please enter a valid Pin Code");
+                return false;
+            }
+            // Validate Email (must follow email format)
+            const email = document.forms["electrificationForm"]["email"].value;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                alert("Enter valid email");
+                return false;
+            }
+            // Validate Contact No.
+            //  let contactNo = document.forms["electrificationForm"]["contactno"].value;
+            // let contactPattern = /^[6-9]\d{9}$/;
+            // if (!contactPattern.test(contactNo)) {
+            //     alert("Please enter a valid contact number (10 digits starting with 6-9)");
+            //     return false;
+            // }
+            // Validate service area Name
+            let service = document.forms["electrificationForm"]["servicearea"].value;
+            if (service.trim() == "") {
+                alert("Service Area name must be filled out");
+                return false;
+            }
+            // Validate supply chain
+            let supplyChain = document.forms["electrificationForm"]["supplychain"].value;
+            if (supplyChain.trim() == "") {
+                alert("Supply Chain name must be filled out");
+                return false;
+            }
+            // Validate Other Information
+            let description = document.forms["electrificationForm"]["description"].value;
+            if (description == "") {
+                alert("Please provide additional information");
+                return false;
+            }
 
-        var photoInput = document.getElementById('photo');
-        var files = photoInput.files;
-        var maxSize = 5 * 1024 * 1024; // 5MB
+            var photoInput = document.getElementById('photo');
+            var files = photoInput.files;
+            var maxSize = 5 * 1024 * 1024; // 5MB
 
-        // Check if no photo is selected and no existing photos (update mode)
-        var existingPhotos = <?php echo isset($_GET['updateid']) && !empty($data) ? 'true' : 'false'; ?>;
-        if (files.length === 0 && !existingPhotos) {
-            alert("Please select at least one photo.");
-            return false; // Prevent form submission
-        }
-
-        // Check file sizes
-        for (var i = 0; i < files.length; i++) {
-            if (files[i].size > maxSize) {
-                alert("File size of " + files[i].name + " exceeds 5MB.");
+            // Check if no photo is selected and no existing photos (update mode)
+            var existingPhotos = <?php echo isset($_GET['updateid']) && !empty($data) ? 'true' : 'false'; ?>;
+            if (files.length === 0 && !existingPhotos) {
+                alert("Please select at least one photo.");
                 return false; // Prevent form submission
             }
-        }
 
-        return true;
-
-    }
-    </script>
-    <script>
-    function JobickCarousel() {
-
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
-
-                    margin: 10
-                },
-
-                480: {
-                    items: 1
-                },
-
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+            // Check file sizes
+            for (var i = 0; i < files.length; i++) {
+                if (files[i].size > maxSize) {
+                    alert("File size of " + files[i].name + " exceeds 5MB.");
+                    return false; // Prevent form submission
                 }
             }
-        })
-    }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+            return true;
 
+        }
+    </script>
+    <script>
+        function JobickCarousel() {
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.delete-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const imageName = this.getAttribute('data-image');
-                const tableName = "electrification";
-                if (confirm('Are you sure you want to delete this image?')) {
-                    // Redirect to the delete PHP script with the image name as a query parameter
-                    window.location.href =
-                        `delete_image.php?image=${encodeURIComponent(imageName)}&tablename=${encodeURIComponent(tableName)}&updateid=${encodeURIComponent(<?php echo $_GET['updateid'] ?>)}`;
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
+
+                        margin: 10
+                    },
+
+                    480: {
+                        items: 1
+                    },
+
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
+            })
+        }
+
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const imageName = this.getAttribute('data-image');
+                    const tableName = "electrification";
+                    if (confirm('Are you sure you want to delete this image?')) {
+                        // Redirect to the delete PHP script with the image name as a query parameter
+                        window.location.href =
+                            `delete_image.php?image=${encodeURIComponent(imageName)}&tablename=${encodeURIComponent(tableName)}&updateid=${encodeURIComponent(<?php echo $_GET['updateid'] ?>)}`;
+                    }
+                });
             });
         });
-    });
     </script>
 </body>
 

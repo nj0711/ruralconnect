@@ -25,76 +25,90 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <!-- Meta -->
-	<meta charset="utf-8">
-	<meta name="format-detection" content="telephone=no">
-	
-	<!-- Mobile Specific -->
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	
-	<!-- Page Title -->
-	<title>Dashboard | Super Admin Panel</title>
-	
-	<!-- Favicon icon -->
-	<link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
-	
-	<!-- All StyleSheet -->
-	<link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
-	<link href="vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
-	
-	<!-- Globle CSS -->
+    <meta charset="utf-8">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Mobile Specific -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Page Title -->
+    <title>Dashboard | Super Admin Panel</title>
+
+    <!-- Favicon icon -->
+    <link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
+
+    <!-- All StyleSheet -->
+    <link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="vendor/owl-carousel/owl.carousel.css" rel="stylesheet">
+
+    <!-- Globle CSS -->
     <link href="css/style.css" rel="stylesheet">
 
-	<style>
-#typewriter {
-    font-family: monospace;
-    font-size: 18px; /* Default size */
-    display: inline-block;
-    overflow: hidden;
-    border-right: 3px solid black;
-    white-space: nowrap;
-    width: fit-content;
-    animation: blink-caret 0.75s step-end infinite;
-}
+    <style>
+        #typewriter {
+            font-family: monospace;
+            font-size: 18px;
+            /* Default size */
+            display: inline-block;
+            overflow: hidden;
+            border-right: 3px solid black;
+            white-space: nowrap;
+            width: fit-content;
+            animation: blink-caret 0.75s step-end infinite;
+        }
 
 
 
-/* Ensure body takes full height */
-body, html {
-    height: 100%;
-    margin: 0;
-}
+        /* Ensure body takes full height */
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
 
-@keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
-}
+        @keyframes typing {
+            from {
+                width: 0;
+            }
 
-@keyframes blink-caret {
-    from, to { border-color: transparent; }
-    50% { border-color: black; }
-}
+            to {
+                width: 100%;
+            }
+        }
 
-/* For laptops and larger screens (min-width: 1024px) */
-@media screen and (min-width: 1024px) {
-    #typewriter {
-        font-size: 41px;
-    }
-}
+        @keyframes blink-caret {
 
-/* For mobile devices (max-width: 768px) */
-@media screen and (max-width: 768px) {
-    #typewriter {
-        font-size: 15px;
-    }
-}
+            from,
+            to {
+                border-color: transparent;
+            }
 
+            50% {
+                border-color: black;
+            }
+        }
 
-</style>
-	
+        /* For laptops and larger screens (min-width: 1024px) */
+        @media screen and (min-width: 1024px) {
+            #typewriter {
+                font-size: 41px;
+            }
+        }
+
+        /* For mobile devices (max-width: 768px) */
+        @media screen and (max-width: 768px) {
+            #typewriter {
+                font-size: 15px;
+            }
+        }
+    </style>
+
 </head>
+
 <body>
 
 
@@ -103,26 +117,26 @@ body, html {
     ***********************************-->
     <div id="main-wrapper">
 
-		<?php include('header.php'); ?>	
-		
-		<!--**********************************
+        <?php include('header.php'); ?>
+
+        <!--**********************************
             Content body start
         ***********************************-->
-		<div class="content-body">
-			<!-- row -->
-			<div class="container-fluid">
-				<div class="row justify-content-center align-items-center" style="height: 40vh;"> 
-					<h1 id="typewriter"></h1>
-				</div>
-			</div>
-		</div>
+        <div class="content-body">
+            <!-- row -->
+            <div class="container-fluid">
+                <div class="row justify-content-center align-items-center" style="height: 40vh;">
+                    <h1 id="typewriter"></h1>
+                </div>
+            </div>
+        </div>
 
         <!--**********************************
             Content body end
         ***********************************-->
-		
-		
-		
+
+
+
         <!--**********************************
             Footer start
         ***********************************-->
@@ -135,114 +149,113 @@ body, html {
             Footer end
         ***********************************-->
 
-		<!--**********************************
+        <!--**********************************
            Support ticket button start
         ***********************************-->
-		
+
         <!--**********************************
            Support ticket button end
         ***********************************-->
 
 
-	</div>
+    </div>
     <!--**********************************
         Main wrapper end
     ***********************************-->
 
-	
 
-<!--**********************************
+
+    <!--**********************************
 	Scripts
 ***********************************-->
-<!-- Required vendors -->
-<script src="vendor/global/global.min.js"></script>
-<script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <!-- Required vendors -->
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
 
-<!-- Apex Chart -->
-<script src="vendor/apexchart/apexchart.js"></script>
-<script src="vendor/chartjs/chart.bundle.min.js"></script>
+    <!-- Apex Chart -->
+    <script src="vendor/apexchart/apexchart.js"></script>
+    <script src="vendor/chartjs/chart.bundle.min.js"></script>
 
-<!-- Chart piety plugin files -->
-<script src="vendor/peity/jquery.peity.min.js"></script>
+    <!-- Chart piety plugin files -->
+    <script src="vendor/peity/jquery.peity.min.js"></script>
 
-<!-- Dashboard 1 -->
-<script src="js/dashboard/dashboard-1.js"></script>
+    <!-- Dashboard 1 -->
+    <script src="js/dashboard/dashboard-1.js"></script>
 
-<script src="vendor/owl-carousel/owl.carousel.js"></script>
+    <script src="vendor/owl-carousel/owl.carousel.js"></script>
 
-<script src="js/custom.min.js"></script>
-<script src="js/dlabnav-init.js"></script>
-
-
-<script>
-
-const text = "Welcome To Village On Web's Super Admin Panel";
-let index = 0;
-const speed = 150; // Typing speed in milliseconds
-const element = document.getElementById("typewriter");
-
-function typeWriter() {
-  if (index < text.length) {
-    element.innerHTML += text.charAt(index);
-    index++;
-    setTimeout(typeWriter, speed);
-  } else {
-    // Pause for a moment, then restart typing
-    setTimeout(() => {
-      element.innerHTML = ''; // Clear text
-      index = 0; // Reset index
-      typeWriter(); // Restart typing
-    }, 2000); // Wait 2 seconds before restarting
-  }
-}
-
-window.onload = typeWriter;
+    <script src="js/custom.min.js"></script>
+    <script src="js/dlabnav-init.js"></script>
 
 
-function JobickCarousel()
-	{
+    <script>
+        const text = "Welcome To Village On Web's Super Admin Panel";
+        let index = 0;
+        const speed = 150; // Typing speed in milliseconds
+        const element = document.getElementById("typewriter");
 
-		/*  testimonial one function by = owl.carousel.js */
-		jQuery('.front-view-slider').owlCarousel({
-			loop:false,
-			margin:30,
-			nav:true,
-			autoplaySpeed: 3000,
-			navSpeed: 3000,
-			autoWidth:true,
-			paginationSpeed: 3000,
-			slideSpeed: 3000,
-			smartSpeed: 3000,
-			autoplay: false,
-			animateOut: 'fadeOut',
-			dots:true,
-			navText: ['', ''],
-			responsive:{
-				0:{
-					items:1,
-					
-					margin:10
-				},
-				
-				480:{
-					items:1
-				},			
-				
-				767:{
-					items:3
-				},
-				1750:{
-					items:3
-				}
-			}
-		})
-	}
+        function typeWriter() {
+            if (index < text.length) {
+                element.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeWriter, speed);
+            } else {
+                // Pause for a moment, then restart typing
+                setTimeout(() => {
+                    element.innerHTML = ''; // Clear text
+                    index = 0; // Reset index
+                    typeWriter(); // Restart typing
+                }, 2000); // Wait 2 seconds before restarting
+            }
+        }
 
-	jQuery(window).on('load',function(){
-		setTimeout(function(){
-			JobickCarousel();
-		}, 1000); 
-	});
-</script>
+        window.onload = typeWriter;
+
+
+        function JobickCarousel() {
+
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
+
+                        margin: 10
+                    },
+
+                    480: {
+                        items: 1
+                    },
+
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
+                }
+            })
+        }
+
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
+    </script>
 </body>
+
 </html>

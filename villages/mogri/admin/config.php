@@ -6,7 +6,7 @@
             {
                 private $server = "localhost";
                 private $user = "root";
-                private $user_pass = "";
+                private $user_pass = "root";
                 public $mysqli = null;
                 public $conn = false;
                 private $result = array();

@@ -2,8 +2,8 @@
 
 
 
-    include_once('../config.php');
-    
+include_once('../config.php');
+
 session_start();
 if (!isset($_SESSION['village_admin_email'])) {
     header("Location: index.php");
@@ -25,44 +25,44 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 // Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
 
-    $obj = new ConnDb();
+$obj = new ConnDb();
 
-    $SystemCondition = '';
-    $EstablishedDate = '';
-    $LastMaintenanceDate = '';
-    $Capacity = '';
-    $Type = '';
-    $CoverageArea = '';
-    $IssuesReported = '';
-    $MaintenanceHistory = '';
-    $EntityName = '';
-    $EntityType = '';
-    $PrimaryContactPerson = '';
-    $PhoneNo = '';
-    $Address = '';
-    $FundingSource = '';
+$SystemCondition = '';
+$EstablishedDate = '';
+$LastMaintenanceDate = '';
+$Capacity = '';
+$Type = '';
+$CoverageArea = '';
+$IssuesReported = '';
+$MaintenanceHistory = '';
+$EntityName = '';
+$EntityType = '';
+$PrimaryContactPerson = '';
+$PhoneNo = '';
+$Address = '';
+$FundingSource = '';
 
 
-	
-    
+
+
 // Check if the delete ID is set from the previous page
 if (isset($_GET['deleteid'])) {
     // Store the delete ID for use later in PHP
     $deleteId = $_GET['deleteid'];
-    ?>
+?>
 
     <script>
-    // Show the confirmation dialog
-    if (confirm("Are you sure you want to proceed?")) {
-        // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
-        window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
-    } else {
-        // If the user cancels, redirect back to a safe page (e.g., edit form)
-        window.location.href = "editform.php?tablename=drainage";
-    }
+        // Show the confirmation dialog
+        if (confirm("Are you sure you want to proceed?")) {
+            // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
+            window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
+        } else {
+            // If the user cancels, redirect back to a safe page (e.g., edit form)
+            window.location.href = "editform.php?tablename=drainage";
+        }
     </script>
 
-    <?php
+<?php
 }
 
 // After confirmation, handle the deletion process using 'confirmeddeleteid'
@@ -84,102 +84,101 @@ if (isset($_GET['confirmeddeleteid'])) {
 }
 
 
-	
-    if (isset($_POST['insert'])) {
 
-        $SystemCondition = isset($_POST['condition']) ? $obj->escape($_POST['condition']) : '';
-        $EstablishedDate = isset($_POST['establishedDate']) ? $obj->escape($_POST['establishedDate']) : '';
-        $LastMaintenanceDate = isset($_POST['mdate']) ? $obj->escape($_POST['mdate']) : '';
-        $Type = isset($_POST['type']) ? $obj->escape($_POST['type']) : '';
-        $IssuesReported = isset($_POST['issue']) ? $obj->escape($_POST['issue']) : '';
-        $MaintenanceHistory = isset($_POST['history']) ? $obj->escape($_POST['history']) : '';
-        $EntityName = isset($_POST['entityName']) ? $obj->escape($_POST['entityName']) : '';
-        $EntityType = isset($_POST['entity']) ? $obj->escape($_POST['entity']) : '';
-        $PrimaryContactPerson = isset($_POST['primaryContactPerson']) ? $obj->escape($_POST['primaryContactPerson']) : '';
-        $PhoneNo = isset($_POST['entityPhoneNo']) ? $obj->escape($_POST['entityPhoneNo']) : '';
-        $Address = isset($_POST['entityOfficeAddress']) ? $obj->escape($_POST['entityOfficeAddress']) : '';
-        $FundingSource = isset($_POST['fundingSource']) ? $obj->escape($_POST['fundingSource']) : '';
-        $Capacity = isset($_POST['capacity']) ? $obj->escape($_POST['capacity']) : 0;
-        $CoverageArea = isset($_POST['area']) ? $obj->escape($_POST['area']) : 0;
+if (isset($_POST['insert'])) {
 
-        $selQ = "select villageid from villagebasic";
-        $res = $obj->selectdata("villagebasic", $selQ);
-        $village_id = $res[0]['villageid'];
-        //echo $res[0]['villageid'];
+    $SystemCondition = isset($_POST['condition']) ? $obj->escape($_POST['condition']) : '';
+    $EstablishedDate = isset($_POST['establishedDate']) ? $obj->escape($_POST['establishedDate']) : '';
+    $LastMaintenanceDate = isset($_POST['mdate']) ? $obj->escape($_POST['mdate']) : '';
+    $Type = isset($_POST['type']) ? $obj->escape($_POST['type']) : '';
+    $IssuesReported = isset($_POST['issue']) ? $obj->escape($_POST['issue']) : '';
+    $MaintenanceHistory = isset($_POST['history']) ? $obj->escape($_POST['history']) : '';
+    $EntityName = isset($_POST['entityName']) ? $obj->escape($_POST['entityName']) : '';
+    $EntityType = isset($_POST['entity']) ? $obj->escape($_POST['entity']) : '';
+    $PrimaryContactPerson = isset($_POST['primaryContactPerson']) ? $obj->escape($_POST['primaryContactPerson']) : '';
+    $PhoneNo = isset($_POST['entityPhoneNo']) ? $obj->escape($_POST['entityPhoneNo']) : '';
+    $Address = isset($_POST['entityOfficeAddress']) ? $obj->escape($_POST['entityOfficeAddress']) : '';
+    $FundingSource = isset($_POST['fundingSource']) ? $obj->escape($_POST['fundingSource']) : '';
+    $Capacity = isset($_POST['capacity']) ? $obj->escape($_POST['capacity']) : 0;
+    $CoverageArea = isset($_POST['area']) ? $obj->escape($_POST['area']) : 0;
 
-        $query = "INSERT INTO drainage (
+    $selQ = "select villageid from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selQ);
+    $village_id = $res[0]['villageid'];
+    //echo $res[0]['villageid'];
+
+    $query = "INSERT INTO drainage (
             villageid, systemcondition, establisheddate, lastmaintenancedate, capacity, type, coveragearea, issuesreported, maintenancehistory, entityname, entitytype, primarycontactperson, phoneno, address, fundingsource
         ) VALUES (
             $village_id,'$SystemCondition', '$EstablishedDate', '$LastMaintenanceDate', $Capacity, '$Type', $CoverageArea, '$IssuesReported', '$MaintenanceHistory', '$EntityName', '$EntityType', '$PrimaryContactPerson', '$PhoneNo', '$Address', '$FundingSource'
         )";
 
-        $result= $obj->insertdata("drainage", $query);
-        if($result =="Data Inserted."){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Inserted');
+    $result = $obj->insertdata("drainage", $query);
+    if ($result == "Data Inserted.") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Inserted');
             window.location.href = 'editform.php?tablename=drainage';
             </script>";
-            
-        }else{
-            echo "<script>alert('Error: Failed to insert data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to insert data');</script>";
     }
+}
 
 
 
 
-    if (isset($_GET['updateid'])) {
+if (isset($_GET['updateid'])) {
 
-        $selQ = "select * from drainage where drainageid=" . $_GET['updateid'];
+    $selQ = "select * from drainage where drainageid=" . $_GET['updateid'];
 
-        $res = $obj->selectdata("drainage", $selQ);
-        if ($res != null) {
-            $SystemCondition = $res[0]['systemcondition'];
-            $EstablishedDate = $res[0]['establisheddate'];
-            $LastMaintenanceDate = $res[0]['lastmaintenancedate'];
-            $Capacity = $res[0]['capacity'];
-            $Type = $res[0]['type'];
-            $CoverageArea = $res[0]['coveragearea'];
-            $IssuesReported = $res[0]['issuesreported'];
-            $MaintenanceHistory = $res[0]['maintenancehistory'];
-            $EntityName = $res[0]['entityname'];
-            $EntityType = $res[0]['entitytype'];
-            $PrimaryContactPerson = $res[0]['primarycontactperson'];
-            $PhoneNo = $res[0]['phoneno'];
-            $Address = $res[0]['address'];
-            $FundingSource = $res[0]['fundingsource'];
-        } else {
-            header('Location: drainage.php');
-        }
+    $res = $obj->selectdata("drainage", $selQ);
+    if ($res != null) {
+        $SystemCondition = $res[0]['systemcondition'];
+        $EstablishedDate = $res[0]['establisheddate'];
+        $LastMaintenanceDate = $res[0]['lastmaintenancedate'];
+        $Capacity = $res[0]['capacity'];
+        $Type = $res[0]['type'];
+        $CoverageArea = $res[0]['coveragearea'];
+        $IssuesReported = $res[0]['issuesreported'];
+        $MaintenanceHistory = $res[0]['maintenancehistory'];
+        $EntityName = $res[0]['entityname'];
+        $EntityType = $res[0]['entitytype'];
+        $PrimaryContactPerson = $res[0]['primarycontactperson'];
+        $PhoneNo = $res[0]['phoneno'];
+        $Address = $res[0]['address'];
+        $FundingSource = $res[0]['fundingsource'];
+    } else {
+        header('Location: drainage.php');
     }
+}
 
 
 
 
-    if (isset($_POST['update'])) {
-        $SystemCondition = isset($_POST['condition']) ? $obj->escape($_POST['condition']) : '';
-        $EstablishedDate = isset($_POST['establishedDate']) ? $obj->escape($_POST['establishedDate']) : '';
-        $LastMaintenanceDate = isset($_POST['mdate']) ? $obj->escape($_POST['mdate']) : '';
-        $Type = isset($_POST['type']) ? $obj->escape($_POST['type']) : '';
-        $IssuesReported = isset($_POST['issue']) ? $obj->escape($_POST['issue']) : '';
-        $MaintenanceHistory = isset($_POST['history']) ? $obj->escape($_POST['history']) : '';
-        $EntityName = isset($_POST['entityName']) ? $obj->escape($_POST['entityName']) : '';
-        $EntityType = isset($_POST['entity']) ? $obj->escape($_POST['entity']) : '';
-        $PrimaryContactPerson = isset($_POST['primaryContactPerson']) ? $obj->escape($_POST['primaryContactPerson']) : '';
-        $PhoneNo = isset($_POST['entityPhoneNo']) ? $obj->escape($_POST['entityPhoneNo']) : '';
-        $Address = isset($_POST['entityOfficeAddress']) ? $obj->escape($_POST['entityOfficeAddress']) : '';
-        $FundingSource = isset($_POST['fundingSource']) ? $obj->escape($_POST['fundingSource']) : '';
-        $Capacity = isset($_POST['capacity']) ? $obj->escape($_POST['capacity']) : 0;
-        $CoverageArea = isset($_POST['area']) ? $obj->escape($_POST['area']) : 0;
+if (isset($_POST['update'])) {
+    $SystemCondition = isset($_POST['condition']) ? $obj->escape($_POST['condition']) : '';
+    $EstablishedDate = isset($_POST['establishedDate']) ? $obj->escape($_POST['establishedDate']) : '';
+    $LastMaintenanceDate = isset($_POST['mdate']) ? $obj->escape($_POST['mdate']) : '';
+    $Type = isset($_POST['type']) ? $obj->escape($_POST['type']) : '';
+    $IssuesReported = isset($_POST['issue']) ? $obj->escape($_POST['issue']) : '';
+    $MaintenanceHistory = isset($_POST['history']) ? $obj->escape($_POST['history']) : '';
+    $EntityName = isset($_POST['entityName']) ? $obj->escape($_POST['entityName']) : '';
+    $EntityType = isset($_POST['entity']) ? $obj->escape($_POST['entity']) : '';
+    $PrimaryContactPerson = isset($_POST['primaryContactPerson']) ? $obj->escape($_POST['primaryContactPerson']) : '';
+    $PhoneNo = isset($_POST['entityPhoneNo']) ? $obj->escape($_POST['entityPhoneNo']) : '';
+    $Address = isset($_POST['entityOfficeAddress']) ? $obj->escape($_POST['entityOfficeAddress']) : '';
+    $FundingSource = isset($_POST['fundingSource']) ? $obj->escape($_POST['fundingSource']) : '';
+    $Capacity = isset($_POST['capacity']) ? $obj->escape($_POST['capacity']) : 0;
+    $CoverageArea = isset($_POST['area']) ? $obj->escape($_POST['area']) : 0;
 
 
-        $selQ = "select villageid from villagebasic";
-        $res = $obj->selectdata("villagebasic", $selQ);
-        $village_id = $res[0]['villageid'];
-        //echo $res[0]['villageid'];
+    $selQ = "select villageid from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selQ);
+    $village_id = $res[0]['villageid'];
+    //echo $res[0]['villageid'];
 
 
-        $qupdate = "update drainage set SystemCondition='{$SystemCondition}', 
+    $qupdate = "update drainage set SystemCondition='{$SystemCondition}', 
         establisheddate='{$EstablishedDate}',
         lastMaintenancedate='{$LastMaintenanceDate}',
         capacity={$Capacity},
@@ -197,19 +196,16 @@ if (isset($_GET['confirmeddeleteid'])) {
         where drainageid={$_GET['updateid']}";
 
 
-        $result= $obj->updatedata("drainage", $qupdate);
-        if($result =="Data Updated"){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Updated');
+    $result = $obj->updatedata("drainage", $qupdate);
+    if ($result == "Data Updated") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Updated');
             window.location.href = 'editform.php?tablename=drainage';
             </script>";
-            
-        }else{
-            echo "<script>alert('Error: Failed to update data');</script>";
-        }
-
-        
+    } else {
+        echo "<script>alert('Error: Failed to update data');</script>";
     }
+}
 
 
 
@@ -217,7 +213,7 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 
 
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -226,7 +222,7 @@ if (isset($_GET['confirmeddeleteid'])) {
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -245,8 +241,29 @@ if (isset($_GET['confirmeddeleteid'])) {
     <!-- Globle CSS -->
     <link href="../css/style.css" rel="stylesheet">
     <link href="../css/delete_btn.css" rel="stylesheet">
+    <style>
+        .import-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .import-section h4 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+
+        .template-info {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 10px;
+        }
+    </style>
 
 </head>
+
 <body>
 
 
@@ -295,19 +312,27 @@ if (isset($_GET['confirmeddeleteid'])) {
                                                     <div class="mt-1">
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
                                                                 class="form-check-input" value="Open Drain"
-                                                                <?php if($Type=='Open Drain'){echo 'checked'; } ?> checked> Open
+                                                                <?php if ($Type == 'Open Drain') {
+                                                                    echo 'checked';
+                                                                } ?> checked> Open
                                                             Drain</label>
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
                                                                 class="form-check-input" value="Covered Drain"
-                                                                <?php if($Type=='Covered Drain'){echo 'checked'; } ?>>
+                                                                <?php if ($Type == 'Covered Drain') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Covered Drain</label>
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
                                                                 class="form-check-input" value="Sewer System"
-                                                                <?php if($Type=='Sewer System'){echo 'checked'; } ?>>
+                                                                <?php if ($Type == 'Sewer System') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Sewer System</label>
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
                                                                 class="form-check-input" value="Other"
-                                                                <?php if($Type=='Other'){echo 'checked'; } ?>>
+                                                                <?php if ($Type == 'Other') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Other</label>
                                                     </div>
                                                 </div>
@@ -316,15 +341,21 @@ if (isset($_GET['confirmeddeleteid'])) {
                                                     <div class="mt-1">
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="condition" class="form-check-input" value="Good"
-                                                                <?php if($SystemCondition=='Good'){echo 'checked'; } ?> checked>
+                                                                <?php if ($SystemCondition == 'Good') {
+                                                                    echo 'checked';
+                                                                } ?> checked>
                                                             Good</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="condition" class="form-check-input" value="Fair"
-                                                                <?php if($SystemCondition=='Fair'){echo 'checked'; } ?>>
+                                                                <?php if ($SystemCondition == 'Fair') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Fair</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="condition" class="form-check-input" value="Poor"
-                                                                <?php if($SystemCondition=='Poor'){echo 'checked'; } ?>>
+                                                                <?php if ($SystemCondition == 'Poor') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Poor</label>
                                                     </div>
                                                 </div>
@@ -356,21 +387,29 @@ if (isset($_GET['confirmeddeleteid'])) {
                                                     <div class="mt-1">
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="entity" class="form-check-input" value="NGO"
-                                                                <?php if($EntityType=='NGO'){echo 'checked'; } ?>>
+                                                                <?php if ($EntityType == 'NGO') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             NGO</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="entity" class="form-check-input"
                                                                 value="Government"
-                                                                <?php if($EntityType=='Government'){echo 'checked'; } ?>>
+                                                                <?php if ($EntityType == 'Government') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Government</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="entity" class="form-check-input" value="Private"
-                                                                <?php if($EntityType=='Private'){echo 'checked'; } ?>>
+                                                                <?php if ($EntityType == 'Private') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Private</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="entity" class="form-check-input"
                                                                 value="Semi Government"
-                                                                <?php if($EntityType=='Semi Government'){echo 'checked'; } ?>>
+                                                                <?php if ($EntityType == 'Semi Government') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Semi Government</label>
                                                     </div>
                                                 </div>
@@ -391,7 +430,7 @@ if (isset($_GET['confirmeddeleteid'])) {
                                                 <div class="mb-3 col-md-6">
                                                     <label>Phone No.</label>
                                                     <input type="text" class="form-control" name="entityPhoneNo"
-                                                     value="<?php echo $PhoneNo ?>">
+                                                        value="<?php echo $PhoneNo ?>">
                                                 </div>
                                                 <div class="mb-3 col-md-6">
                                                     <label>Management office Address</label>
@@ -406,11 +445,11 @@ if (isset($_GET['confirmeddeleteid'])) {
                                             </div>
 
                                             <?php if (isset($_GET['updateid'])) { ?>
-                                            <button type="submit" name="update" class="btn btn-primary">Update</button>
+                                                <button type="submit" name="update" class="btn btn-primary">Update</button>
 
                                             <?php } else { ?>
 
-                                            <button type="submit" name="insert" class="btn btn-primary">Submit</button>
+                                                <button type="submit" name="insert" class="btn btn-primary">Submit</button>
 
                                             <?php } ?>
 
@@ -423,13 +462,51 @@ if (isset($_GET['confirmeddeleteid'])) {
 
                     </div>
                 </form>
+                <!-- Import Section -->
+                <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;" id="import-section">
+                    <h4>📊 Bulk Import Drainage Systems</h4>
+                    <p class="text-muted mb-3">
+                        <strong>How it works:</strong> Download the template, fill in the drainage data, and import.
+                        <!-- <strong>Village ID is automatically assigned</strong> - you don't need to fill it. -->
+                    </p>
+
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-4">
+                            <a href="templates/drainage_template.php" class="btn btn-info w-100">
+                                📥 Download Template
+                            </a>
+                        </div>
+                        <div class="col-md-8">
+                            <form action="imports/import_drainage.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                <input type="file" name="excel_file" class="form-control"
+                                    accept=".xls,.xlsx" required style="max-width: 300px;">
+                                <button type="submit" class="btn btn-success">
+                                    📤 Import Excel
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 p-2 border rounded">
+                        <small class="text-muted">
+                            <strong>💡 Required fields:</strong> Entity Name, Type<br>
+                            <strong>📝 Optional fields:</strong> Phone, Address, Capacity, Dates, etc.<br>
+                            <strong>⚠️ Notes:</strong><br>
+                            • <strong>System Condition:</strong> Good, Fair, Poor<br>
+                            • <strong>Type:</strong> Open Drain, Covered Drain, Sewer System<br>
+                            • <strong>Entity Type:</strong> NGO, Government, Private<br>
+                            • <strong>Dates:</strong> Format YYYY-MM-DD (e.g., 2024-01-15)<br>
+                            • <strong>Visibility:</strong> on/off
+                        </small>
+                    </div>
+                </div>
             </div>
             <!--**********************************
             Content body end
         ***********************************-->
 
 
-          
+
             <!--**********************************
            Support ticket button start
         ***********************************-->
@@ -444,15 +521,15 @@ if (isset($_GET['confirmeddeleteid'])) {
         <!--**********************************
             Content body end
         ***********************************-->
-  <!--**********************************
+        <!--**********************************
             Footer start
         ***********************************-->
-           <div class="footer">
-            
-        <?php include('../footer.php'); ?>    
+        <div class="footer">
+
+            <?php include('../footer.php'); ?>
         </div>
-        
-            <!--**********************************
+
+        <!--**********************************
             Footer end
         ***********************************-->
 
@@ -492,20 +569,20 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 
     <script>
-    function validateDrainageForm() {
+        function validateDrainageForm() {
 
 
-    // Contact Number validation (should be a 10-digit number)
-    // let contactNo = document.forms["drainageForm"]["entityPhoneNo"].value;
-    // const contactNoRegex = /^[0-9]{10}$/;
-    // if (!contactNoRegex.test(contactNo)) {
-    //     alert("Please enter a valid 10-digit contact number");
-    //     return false;
-    // }
+            // Contact Number validation (should be a 10-digit number)
+            // let contactNo = document.forms["drainageForm"]["entityPhoneNo"].value;
+            // const contactNoRegex = /^[0-9]{10}$/;
+            // if (!contactNoRegex.test(contactNo)) {
+            //     alert("Please enter a valid 10-digit contact number");
+            //     return false;
+            // }
 
-    return true;
-}
-</script>
+            return true;
+        }
+    </script>
 
 
 
@@ -513,49 +590,49 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 
     <script>
-    function JobickCarousel() {
+        function JobickCarousel() {
 
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
 
-                    margin: 10
-                },
+                        margin: 10
+                    },
 
-                480: {
-                    items: 1
-                },
+                    480: {
+                        items: 1
+                    },
 
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
-            }
-        })
-    }
+            })
+        }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
     </script>
 </body>
 

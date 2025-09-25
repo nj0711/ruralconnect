@@ -41,13 +41,13 @@ $funding_source = '';
 $established_date = '';
 
 
-    // Check if the delete ID is set from the previous page
-    if (isset($_GET['deleteid'])) {
-        // Store the delete ID for use later in PHP
-        $deleteId = $_GET['deleteid'];
-        ?>
-    
-        <script>
+// Check if the delete ID is set from the previous page
+if (isset($_GET['deleteid'])) {
+    // Store the delete ID for use later in PHP
+    $deleteId = $_GET['deleteid'];
+?>
+
+    <script>
         // Show the confirmation dialog
         if (confirm("Are you sure you want to proceed?")) {
             // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
@@ -56,33 +56,33 @@ $established_date = '';
             // If the user cancels, redirect back to a safe page (e.g., edit form)
             window.location.href = "editform.php?tablename=washrooms";
         }
-        </script>
-    
-        <?php
-    }
-    
-    // After confirmation, handle the deletion process using 'confirmeddeleteid'
-    if (isset($_GET['confirmeddeleteid'])) {
-        $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
-    
-        // Perform the deletion logic here
-        $sel = "select * from washrooms where washroomsid=" . $deleteId;
-        $res = $obj->selectdata("washrooms", $sel);
-    
-        
-        // Delete the record from the database
-        $del = "DELETE FROM washrooms WHERE washroomsid=" . $deleteId;
-        $result = $obj->deletedata("washrooms", $del);
-    
-        // Handle success or failure
-        if ($result == "Data Deleted") {
-            echo "<script>alert('Success! Data Deleted');
+    </script>
+
+<?php
+}
+
+// After confirmation, handle the deletion process using 'confirmeddeleteid'
+if (isset($_GET['confirmeddeleteid'])) {
+    $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
+
+    // Perform the deletion logic here
+    $sel = "select * from washrooms where washroomsid=" . $deleteId;
+    $res = $obj->selectdata("washrooms", $sel);
+
+
+    // Delete the record from the database
+    $del = "DELETE FROM washrooms WHERE washroomsid=" . $deleteId;
+    $result = $obj->deletedata("washrooms", $del);
+
+    // Handle success or failure
+    if ($result == "Data Deleted") {
+        echo "<script>alert('Success! Data Deleted');
             window.location.href = 'editform.php?tablename=washrooms';
             </script>";
-        } else {
-            echo "<script>alert('Error: Failed to delete data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to delete data');</script>";
     }
+}
 
 
 
@@ -91,7 +91,7 @@ if (isset($_POST['insert'])) {
     $number_of_washrooms = isset($_POST['numberOfWashrooms']) ? $obj->escape($_POST['numberOfWashrooms']) : 0;
     $location_description = isset($_POST['location']) ? $obj->escape($_POST['location']) : '';
     $facility_type = isset($_POST['type']) ? $obj->escape($_POST['type']) : '';
-     $washroom_condition = isset($_POST['condition']) ? $obj->escape($_POST['condition']) : '';
+    $washroom_condition = isset($_POST['condition']) ? $obj->escape($_POST['condition']) : '';
     $maintenance_schedule = isset($_POST['maintenanceSchedule']) ? $obj->escape($_POST['maintenanceSchedule']) : '';
     $entity_name = isset($_POST['entityName']) ? $obj->escape($_POST['entityName']) : '';
     $entity_type = isset($_POST['entity']) ? $obj->escape($_POST['entity']) : '';
@@ -115,16 +115,15 @@ if (isset($_POST['insert'])) {
         '$village_id', $number_of_washrooms, '$location_description', '$facility_type', '$washroom_condition', '$maintenance_schedule', '$entity_name', '$entity_type', '$primary_contact_person', $phone_no, '$address', '$funding_source', '$established_date'
     )";
 
-    
+
 
     $result = $obj->insertdata("drainage", $query);
-    if($result =="Data Inserted."){
+    if ($result == "Data Inserted.") {
         // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
         echo "<script>alert('Success! Data Inserted');
         window.location.href = 'editform.php?tablename=washrooms';
         </script>";
-        
-    }else{
+    } else {
         echo "<script>alert('Error: Failed to insert data');</script>";
     }
 }
@@ -195,16 +194,14 @@ if (isset($_POST['update'])) {
 
     $result = $obj->updatedata("washrooms", $qupdate);
 
-    if($result =="Data Updated"){
+    if ($result == "Data Updated") {
         // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
         echo "<script>alert('Success! Data Updated');
         window.location.href = 'editform.php?tablename=washrooms';
         </script>";
-        
-    }else{
+    } else {
         echo "<script>alert('Error: Failed to update data');</script>";
     }
-    
 }
 
 
@@ -218,7 +215,7 @@ if (isset($_POST['update'])) {
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -239,9 +236,10 @@ if (isset($_POST['update'])) {
     <link href="../css/delete_btn.css" rel="stylesheet">
 
 </head>
+
 <body>
 
-   
+
 
     <!--**********************************
         Main wrapper start
@@ -284,16 +282,22 @@ if (isset($_POST['update'])) {
                                                     <label class="mt-1">Facility Type</label>
                                                     <div class="mt-1">
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
-                                                                class="form-check-input" value="Free"checked
-                                                                <?php if ($facility_type == "Free") {echo 'checked';} ?>>
+                                                                class="form-check-input" value="Free" checked
+                                                                <?php if ($facility_type == "Free") {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Free</label>
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
-                                                                class="form-check-input" value="Paid" 
-                                                                <?php if ($facility_type == "Paid") {echo 'checked';} ?>>
+                                                                class="form-check-input" value="Paid"
+                                                                <?php if ($facility_type == "Paid") {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Paid</label>
                                                         <label class="radio-inline me-3"><input type="radio" name="type"
                                                                 class="form-check-input" value="Accessible"
-                                                                <?php if ($facility_type == "Accessible") {echo 'checked';} ?>>
+                                                                <?php if ($facility_type == "Accessible") {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Accessible</label>
                                                     </div>
                                                 </div>
@@ -302,12 +306,16 @@ if (isset($_POST['update'])) {
                                                     <div class="mt-1">
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="condition" class="form-check-input" value="Clean" checked
-                                                                <?php if ($washroom_condition == 'Clean') {echo 'checked';} ?>>
+                                                                <?php if ($washroom_condition == 'Clean') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Clean</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="condition" class="form-check-input"
                                                                 value="Needs Repair"
-                                                                <?php if ($washroom_condition == 'Needs Repair') {echo 'checked';} ?>>
+                                                                <?php if ($washroom_condition == 'Needs Repair') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Needs Repair</label>
                                                     </div>
                                                 </div>
@@ -326,19 +334,23 @@ if (isset($_POST['update'])) {
                                                     <label class="mt-1">Who managed the system ?</label>
                                                     <div class="mt-1">
                                                         <label class="radio-inline me-3"><input type="radio"
-                                                                name="entity" class="form-check-input" value="NGO"  checked
-                                                                <?php if ($entity_type == 'NGO') {echo 'checked';} ?>>
+                                                                name="entity" class="form-check-input" value="NGO" checked
+                                                                <?php if ($entity_type == 'NGO') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             NGO</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="entity" class="form-check-input"
                                                                 value="Government"
-                                                                <?php if ($entity_type == 'Government') {echo 'checked';} ?>>
+                                                                <?php if ($entity_type == 'Government') {
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Government</label>
                                                         <label class="radio-inline me-3"><input type="radio"
                                                                 name="entity" class="form-check-input" value="Private"
                                                                 <?php if ($entity_type == 'Private') {
-                                                                                                                                                                        echo 'checked';
-                                                                                                                                                                    } ?>>
+                                                                    echo 'checked';
+                                                                } ?>>
                                                             Private</label>
                                                     </div>
                                                 </div>
@@ -374,20 +386,57 @@ if (isset($_POST['update'])) {
                                             </div>
 
                                             <?php if (isset($_GET['updateid'])) { ?>
-                                            <button type="submit" name="update" class="btn btn-primary">Update</button>
+                                                <button type="submit" name="update" class="btn btn-primary">Update</button>
 
                                             <?php } else { ?>
 
-                                            <button type="submit" name="insert" class="btn btn-primary">Submit</button>
+                                                <button type="submit" name="insert" class="btn btn-primary">Submit</button>
 
                                             <?php } ?>
 
                                         </form>
+                                        <!-- Add this right after <div class="content-body"> and before the existing form -->
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Here Edit End -->
+                        <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;">
+                            <h4>📊 Bulk Import Washrooms</h4>
+                            <p class="text-muted mb-3">
+                                <strong>How it works:</strong> Download the template, fill in the data, and import.
+                                <!-- <strong>Village ID is automatically assigned</strong> - you don't need to fill it. -->
+                            </p>
+
+                            <div class="row align-items-center g-3">
+                                <div class="col-md-4">
+                                    <a href="templates/washrooms_template.php" class="btn btn-info w-100">
+                                        📥 Download Template
+                                    </a>
+                                </div>
+                                <div class="col-md-8">
+                                    <form action="imports/import_washrooms.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                        <input type="file" name="excel_file" class="form-control"
+                                            accept=".xls,.xlsx" required style="max-width: 300px;">
+                                        <button type="submit" class="btn btn-success">
+                                            📤 Import Excel
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="mt-3 p-2 border rounded">
+                                <small class="text-muted">
+                                    <strong>💡 Required fields:</strong> Number of Washrooms, Location Description, Entity Type<br>
+                                    <strong>📝 Optional fields:</strong> Facility Type, Washroom Condition, Maintenance Schedule, Entity Name, Primary Contact Person, Phone No, Address, Funding Source, Established Date, Visibility<br>
+                                    <strong>⚠️ Notes:</strong>
+                                    Facility Type: "Free", "Paid", or "Accessible",<br>
+                                    Washroom Condition: "Clean" or "Needs Repair",<br>
+                                    Entity Type: "NGO", "Government", or "Private"
+                                </small>
+                            </div>
+                        </div>
 
                     </div>
                 </form>
@@ -397,7 +446,7 @@ if (isset($_POST['update'])) {
         ***********************************-->
 
 
-          
+
 
             <!--**********************************
            Support ticket button start
@@ -414,23 +463,23 @@ if (isset($_POST['update'])) {
             Content body end
         ***********************************-->
 
-  <!--**********************************
+        <!--**********************************
             Footer start
         ***********************************-->
-            <div class="footer">
-                <?php include_once('../footer.php'); ?>
-            </div>
-            <!--**********************************
+        <div class="footer">
+            <?php include_once('../footer.php'); ?>
+        </div>
+        <!--**********************************
             Footer end
         ***********************************-->
 
-     
+
 
     </div>
     <!--**********************************
         Main wrapper end
     ***********************************-->
-    
+
 
 
     <!--**********************************
@@ -456,66 +505,66 @@ if (isset($_POST['update'])) {
     <script src="../js/dlabnav-init.js"></script>
 
     <script>
-    function validateWRForm() {
+        function validateWRForm() {
 
 
-    // Contact Number validation (should be a 10-digit number)
-    // let contactNo = document.forms["wrForm"]["entityPhoneNo"].value;
-    // const contactNoRegex = /^[0-9]{10}$/;
-    // if (!contactNoRegex.test(contactNo)) {
-    //     alert("Please enter a valid 10-digit contact number");
-    //     return false;
-    // }
+            // Contact Number validation (should be a 10-digit number)
+            // let contactNo = document.forms["wrForm"]["entityPhoneNo"].value;
+            // const contactNoRegex = /^[0-9]{10}$/;
+            // if (!contactNoRegex.test(contactNo)) {
+            //     alert("Please enter a valid 10-digit contact number");
+            //     return false;
+            // }
 
-    return true;
-}
-</script>
+            return true;
+        }
+    </script>
 
 
     <script>
-    function JobickCarousel() {
+        function JobickCarousel() {
 
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
 
-                    margin: 10
-                },
+                        margin: 10
+                    },
 
-                480: {
-                    items: 1
-                },
+                    480: {
+                        items: 1
+                    },
 
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
-            }
-        })
-    }
+            })
+        }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
     </script>
 </body>
 

@@ -1,6 +1,6 @@
 <?php
-    include('../config.php');
-    
+include('../config.php');
+
 
 session_start();
 if (!isset($_SESSION['village_admin_email'])) {
@@ -23,295 +23,291 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 // Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
 
-    $obj = new ConnDb();
+$obj = new ConnDb();
 
-    $hotel_name = "";
-    $address = "";
-    $city = "";
-    $pincode = "";
-    $booking_process = "";
-    $time_schedule = "";
-    $amenities = "";
-    $customer_reviews = "";
-    $photos = "";
-    $website_link = "";
-    $fullAddress = $address . '@' . $city . '@' . $pincode;
-    $contact_no = "";
+$hotel_name = "";
+$address = "";
+$city = "";
+$pincode = "";
+$booking_process = "";
+$time_schedule = "";
+$amenities = "";
+$customer_reviews = "";
+$photos = "";
+$website_link = "";
+$fullAddress = $address . '@' . $city . '@' . $pincode;
+$contact_no = "";
 
-    
-       // Check if the delete ID is set from the previous page
-       if (isset($_GET['deleteid'])) {
-        // Store the delete ID for use later in PHP
-        $deleteId = $_GET['deleteid'];
-        ?>
 
-<script>
-// Show the confirmation dialog
-if (confirm("Are you sure you want to proceed?")) {
-    // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
-    window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
-} else {
-    // If the user cancels, redirect back to a safe page (e.g., edit form)
-    window.location.href = "editform.php?tablename=hotels";
-}
-</script>
+// Check if the delete ID is set from the previous page
+if (isset($_GET['deleteid'])) {
+    // Store the delete ID for use later in PHP
+    $deleteId = $_GET['deleteid'];
+?>
+
+    <script>
+        // Show the confirmation dialog
+        if (confirm("Are you sure you want to proceed?")) {
+            // If confirmed, reload the page with the 'confirmeddeleteid' query string to proceed with deletion
+            window.location.href = "?confirmeddeleteid=<?php echo $deleteId; ?>";
+        } else {
+            // If the user cancels, redirect back to a safe page (e.g., edit form)
+            window.location.href = "editform.php?tablename=hotels";
+        }
+    </script>
 
 <?php
-    }
-    
-    // After confirmation, handle the deletion process using 'confirmeddeleteid'
-    if (isset($_GET['confirmeddeleteid'])) {
-        $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
-    
-        // Perform the deletion logic here
-        $sel = "select * from hotels where hotelsid=" . $deleteId;
-        $res = $obj->selectdata("hotels", $sel);
-    
-        $p = $res[0]['photo'];
-        $array = json_decode($p, true);  // Decode the JSON into an array
-    
-        // Directory for uploaded images
-        $uploadDir = './uploadedimages/'; 
-        foreach ($array as $image) {
-            $filePath = $uploadDir . $image;  // Full path to the image
-            if (file_exists($filePath)) {  // Check if the file exists
-                if (unlink($filePath)) {  // Attempt to delete the file
-                    // echo "Deleted: $image<br>";
-                } else {
-                    // echo "Failed to delete: $image<br>";
-                }
+}
+
+// After confirmation, handle the deletion process using 'confirmeddeleteid'
+if (isset($_GET['confirmeddeleteid'])) {
+    $deleteId = $_GET['confirmeddeleteid'];  // Get the confirmed delete ID
+
+    // Perform the deletion logic here
+    $sel = "select * from hotels where hotelsid=" . $deleteId;
+    $res = $obj->selectdata("hotels", $sel);
+
+    $p = $res[0]['photo'];
+    $array = json_decode($p, true);  // Decode the JSON into an array
+
+    // Directory for uploaded images
+    $uploadDir = './uploadedimages/';
+    foreach ($array as $image) {
+        $filePath = $uploadDir . $image;  // Full path to the image
+        if (file_exists($filePath)) {  // Check if the file exists
+            if (unlink($filePath)) {  // Attempt to delete the file
+                // echo "Deleted: $image<br>";
             } else {
-                // echo "File does not exist: $image<br>";
+                // echo "Failed to delete: $image<br>";
             }
+        } else {
+            // echo "File does not exist: $image<br>";
         }
-    
-        // Delete the record from the database
-        $del = "DELETE FROM hotels WHERE hotelsid=" . $deleteId;
-        $result = $obj->deletedata("hotels", $del);
-    
-        // Handle success or failure
-        if ($result == "Data Deleted") {
-            echo "<script>alert('Success! Data Deleted');
+    }
+
+    // Delete the record from the database
+    $del = "DELETE FROM hotels WHERE hotelsid=" . $deleteId;
+    $result = $obj->deletedata("hotels", $del);
+
+    // Handle success or failure
+    if ($result == "Data Deleted") {
+        echo "<script>alert('Success! Data Deleted');
             window.location.href = 'editform.php?tablename=hotels';
             </script>";
-        } else {
-            echo "<script>alert('Error: Failed to delete data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to delete data');</script>";
+    }
+}
+
+
+if (isset($_POST['insert'])) {
+
+    $hotel_name = isset($_POST['HotelName']) ? $obj->escape($_POST['HotelName']) : "";
+    $address = isset($_POST['Address']) ? $obj->escape($_POST['Address']) : '';
+    $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : "";
+    $pincode = isset($_POST['zip']) ? $obj->escape($_POST['zip']) : "";
+    $contact_no = isset($_POST['ContactNo']) ? $obj->escape($_POST['ContactNo']) : "";
+    $booking_process = isset($_POST['booking']) ? $obj->escape($_POST['booking']) : "";
+    $time_schedule_open = isset($_POST['TimeDurationOpen']) ? $obj->escape($_POST['TimeDurationOpen']) : "";
+    $time_schedule_close = isset($_POST['TimeDurationClose']) ? $obj->escape($_POST['TimeDurationClose']) : "";
+    $amenities = isset($_POST['Amenities']) ? $obj->escape($_POST['Amenities']) : "";
+    $customer_reviews = isset($_POST['CustomerReviews']) ? $obj->escape($_POST['CustomerReviews']) : "";
+    $website_link = isset($_POST['link']) ? $obj->escape($_POST['link']) : "";
+    $fullAddress = $address . '@' . $city . '@' . $pincode;
+
+
+    $time = json_encode([
+        'open' => $time_schedule_open,
+        'close' => $time_schedule_close
+    ]);
+
+
+    $filesJson = json_encode('');
+    $uploadDir = './uploadedimages/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
 
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
+    $maxFileSize = 5 * 1024 * 1024; // 5 MB
+    // Array to store filenames
+    $uploadedFiles = [];
 
-    if (isset($_POST['insert'])) {
+    if (isset($_FILES['photo']) && !empty($_FILES['photo']['name'][0])) {
 
-        $hotel_name = isset($_POST['HotelName']) ? $obj->escape($_POST['HotelName']) : "";
-        $address = isset($_POST['Address']) ? $obj->escape($_POST['Address']) : '';
-        $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : "";
-        $pincode = isset($_POST['zip']) ? $obj->escape($_POST['zip']) : "";
-        $contact_no = isset($_POST['ContactNo']) ? $obj->escape($_POST['ContactNo']) : "";
-        $booking_process = isset($_POST['booking']) ? $obj->escape($_POST['booking']) : "";
-        $time_schedule_open = isset($_POST['TimeDurationOpen']) ? $obj->escape($_POST['TimeDurationOpen']) : "";
-        $time_schedule_close = isset($_POST['TimeDurationClose']) ? $obj->escape($_POST['TimeDurationClose']) : "";
-        $amenities = isset($_POST['Amenities']) ? $obj->escape($_POST['Amenities']) : "";
-        $customer_reviews = isset($_POST['CustomerReviews']) ? $obj->escape($_POST['CustomerReviews']) : "";
-        $website_link = isset($_POST['link']) ? $obj->escape($_POST['link']) : "";
-        $fullAddress = $address . '@' . $city . '@' . $pincode;
+        $fileCount = count($_FILES['photo']['name']);
 
+        for ($i = 0; $i < $fileCount; $i++) {
+            $fileName = $_FILES['photo']['name'][$i];
+            $fileTmpName = $_FILES['photo']['tmp_name'][$i];
+            $fileError = $_FILES['photo']['error'][$i];
+            $fileSize = $_FILES['photo']['size'][$i];
 
-        $time = json_encode([
-            'open' => $time_schedule_open,
-            'close' => $time_schedule_close
-        ]);
+            if ($fileError === UPLOAD_ERR_OK) {
+                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $newFileName = time() . $hotel_name . 'hotels' . $i . '.' . $fileExtension;
+                $destination = $uploadDir . $newFileName;
+                if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
+                    if (move_uploaded_file($fileTmpName, $destination)) {
+                        // Store the filename in the array
 
-
-        $filesJson = json_encode('');
-        $uploadDir = './uploadedimages/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
-        $maxFileSize = 5 * 1024 * 1024; // 5 MB
-        // Array to store filenames
-        $uploadedFiles = [];
-
-        if (isset($_FILES['photo']) && !empty($_FILES['photo']['name'][0])) {
-
-            $fileCount = count($_FILES['photo']['name']);
-
-            for ($i = 0; $i < $fileCount; $i++) {
-                $fileName = $_FILES['photo']['name'][$i];
-                $fileTmpName = $_FILES['photo']['tmp_name'][$i];
-                $fileError = $_FILES['photo']['error'][$i];
-                $fileSize = $_FILES['photo']['size'][$i];
-
-                if ($fileError === UPLOAD_ERR_OK) {
-                    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-                    $newFileName = time().$hotel_name . 'hotels' . $i . '.' . $fileExtension;
-                    $destination = $uploadDir . $newFileName;
-                    if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
-                        if (move_uploaded_file($fileTmpName, $destination)) {
-                            // Store the filename in the array
-
-                            $uploadedFiles[] = $newFileName;
-                        } else {
-                            // echo "Failed to move file: $fileName<br>";
-                        }
+                        $uploadedFiles[] = $newFileName;
                     } else {
-                        // echo "File Formate or Size is invalid";
+                        // echo "Failed to move file: $fileName<br>";
                     }
+                } else {
+                    // echo "File Formate or Size is invalid";
                 }
             }
-         } 
-         //else {
-        //     echo "No files selected.";
-        // }
-        $filesJson = json_encode($uploadedFiles);
+        }
+    }
+    //else {
+    //     echo "No files selected.";
+    // }
+    $filesJson = json_encode($uploadedFiles);
 
-        $selQ = "select villageid from villagebasic";
-        $res = $obj->selectdata("villagebasic", $selQ);
-        $village_id = $res[0]['villageid'];
-        $res[0]['villageid'];
+    $selQ = "select villageid from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selQ);
+    $village_id = $res[0]['villageid'];
+    $res[0]['villageid'];
 
-        $query = "INSERT INTO hotels (
+    $query = "INSERT INTO hotels (
 			villageid,hotelname, photo, timeschedule, contactno, address, amenities, bookingprocess, websitelink, customerreviews
 		) VALUES (
 			'$village_id','$hotel_name', '$filesJson', '$time', $contact_no, ' $fullAddress', '$amenities', '$booking_process', '$website_link', '$customer_reviews'
 		)";
-        
-         $result = $obj->insertdata("hotels", $query);
-         if($result =="Data Inserted."){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Inserted');
+
+    $result = $obj->insertdata("hotels", $query);
+    if ($result == "Data Inserted.") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Inserted');
             window.location.href = 'editform.php?tablename=hotels';
             </script>";
-            
-        }else{
-            echo "<script>alert('Error: Failed to insert data');</script>";
-        }
+    } else {
+        echo "<script>alert('Error: Failed to insert data');</script>";
+    }
+}
+
+if (isset($_GET['updateid'])) {
+
+    $selQ = "select * from hotels where hotelsid=" . $_GET['updateid'];
+
+    $res = $obj->selectdata("hotels", $selQ);
+    if ($res != null) {
+        $hotel_name = $res[0]['hotelname'];
+        $amenities = $res[0]['amenities'];
+        $timeJson = $res[0]['timeschedule'];
+        $timeArray = json_decode($timeJson, true);
+        $time_schedule_open = $timeArray['open'];
+        $time_schedule_close = $timeArray['close'];
+        $contact_no = $res[0]['contactno'];
+        $booking_process = $res[0]['bookingprocess'];
+        $website_link = $res[0]['websitelink'];
+        $customer_reviews = $res[0]['customerreviews'];
+        $fullAddress = array_map('trim', explode('@', $res[0]['address']));
+        $address = $fullAddress[0];
+        $city =  $fullAddress[1];
+        $pincode =  $fullAddress[2];
+        $photo = $res[0]['photo'];
+        $data = json_decode($photo, true);
+    } else {
+        header('Location: hotels.php');
+    }
+}
+
+if (isset($_POST['update'])) {
+    $hotel_name = isset($_POST['HotelName']) ? $obj->escape($_POST['HotelName']) : '';
+    $address = isset($_POST['Address']) ? $obj->escape($_POST['Address']) : '';
+    $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : '';
+    $pincode = isset($_POST['zip']) ? $obj->escape($_POST['zip']) : '';
+    $fullAddress = $address . '@' . $city . '@' . $pincode;
+    $time_schedule_open = isset($_POST['TimeDurationOpen']) ? $obj->escape($_POST['TimeDurationOpen']) : "";
+    $time_schedule_close = isset($_POST['TimeDurationClose']) ? $obj->escape($_POST['TimeDurationClose']) : "";
+    $contact_no = isset($_POST['ContactNo']) ? $obj->escape($_POST['ContactNo']) : '';
+    $amenities = isset($_POST['Amenities']) ? $obj->escape($_POST['Amenities']) : '';
+    $booking_process = isset($_POST['booking']) ? $obj->escape($_POST['booking']) : '';
+    $website_link = isset($_POST['link']) ? $obj->escape($_POST['link']) : '';
+    $customer_reviews = isset($_POST['CustomerReviews']) ? $obj->escape($_POST['CustomerReviews']) : '';
+
+    $time = json_encode([
+        'open' => $time_schedule_open,
+        'close' => $time_schedule_close
+    ]);
+
+    $selQ = "select photo from hotels  where hotelsid = " . $_GET['updateid'];
+    $res = $obj->selectdata("hotels", $selQ);
+    $p = $res[0]['photo'];
+    $array = json_decode($p);
+    $count = count($array);
+
+
+    $filesJson = json_encode('');
+    $uploadDir = './uploadedimages/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
     }
 
-    if (isset($_GET['updateid'])) {
+    $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
+    $maxFileSize = 5 * 1024 * 1024; // 5 MB
+    // Array to store filenames
+    $uploadedFiles = [];
+    $uploadedFiles = $array;
 
-        $selQ = "select * from hotels where hotelsid=" . $_GET['updateid'];
+    if (isset($_FILES['photo']) && !empty($_FILES['photo']['name'][0])) {
 
-        $res = $obj->selectdata("hotels", $selQ);
-        if ($res != null) {
-            $hotel_name = $res[0]['hotelname'];
-            $amenities = $res[0]['amenities'];
-            $timeJson = $res[0]['timeschedule'];
-            $timeArray = json_decode($timeJson, true);
-            $time_schedule_open = $timeArray['open'];
-            $time_schedule_close = $timeArray['close'];
-            $contact_no = $res[0]['contactno'];
-            $booking_process = $res[0]['bookingprocess'];
-            $website_link = $res[0]['websitelink'];
-            $customer_reviews = $res[0]['customerreviews'];
-            $fullAddress = array_map('trim', explode('@', $res[0]['address']));
-            $address = $fullAddress[0];
-            $city =  $fullAddress[1];
-            $pincode =  $fullAddress[2];
-            $photo = $res[0]['photo'];
-            $data = json_decode($photo, true);
-        } else {
-            header('Location: hotels.php');
-        }
-    }
+        $fileCount = count($_FILES['photo']['name']);
 
-    if (isset($_POST['update'])) {
-        $hotel_name = isset($_POST['HotelName']) ? $obj->escape($_POST['HotelName']) : '';
-        $address = isset($_POST['Address']) ? $obj->escape($_POST['Address']) : '';
-        $city = isset($_POST['city']) ? $obj->escape($_POST['city']) : '';
-        $pincode = isset($_POST['zip']) ? $obj->escape($_POST['zip']) : '';
-        $fullAddress = $address . '@' . $city . '@' . $pincode;
-        $time_schedule_open = isset($_POST['TimeDurationOpen']) ? $obj->escape($_POST['TimeDurationOpen']) : "";
-        $time_schedule_close = isset($_POST['TimeDurationClose']) ? $obj->escape($_POST['TimeDurationClose']) : "";
-        $contact_no = isset($_POST['ContactNo']) ? $obj->escape($_POST['ContactNo']) : '';
-        $amenities = isset($_POST['Amenities']) ? $obj->escape($_POST['Amenities']) : '';
-        $booking_process = isset($_POST['booking']) ? $obj->escape($_POST['booking']) : '';
-        $website_link = isset($_POST['link']) ? $obj->escape($_POST['link']) : '';
-        $customer_reviews = isset($_POST['CustomerReviews']) ? $obj->escape($_POST['CustomerReviews']) : '';
+        for ($i = 0; $i < $fileCount; $i++) {
+            $fileName = $_FILES['photo']['name'][$i];
+            $fileTmpName = $_FILES['photo']['tmp_name'][$i];
+            $fileError = $_FILES['photo']['error'][$i];
+            $fileSize = $_FILES['photo']['size'][$i];
 
-        $time = json_encode([
-            'open' => $time_schedule_open,
-            'close' => $time_schedule_close
-        ]);
+            if ($fileError === UPLOAD_ERR_OK) {
+                $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+                $newFileName = time() . $hotel_name . 'hotels' . $count + $i . '.' . $fileExtension;
+                $destination = $uploadDir . $newFileName;
+                if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
+                    if (move_uploaded_file($fileTmpName, $destination)) {
+                        // Store the filename in the array
 
-        $selQ = "select photo from hotels  where hotelsid = " . $_GET['updateid'];
-        $res = $obj->selectdata("hotels", $selQ);
-        $p = $res[0]['photo'];
-        $array = json_decode($p);
-        $count = count($array);
-
-
-        $filesJson = json_encode('');
-        $uploadDir = './uploadedimages/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'jfif', 'pjpeg', 'pjp', 'svg', 'webp'];
-        $maxFileSize = 5 * 1024 * 1024; // 5 MB
-        // Array to store filenames
-        $uploadedFiles = [];
-        $uploadedFiles = $array;
-
-        if (isset($_FILES['photo']) && !empty($_FILES['photo']['name'][0])) {
-
-            $fileCount = count($_FILES['photo']['name']);
-
-            for ($i = 0; $i < $fileCount; $i++) {
-                $fileName = $_FILES['photo']['name'][$i];
-                $fileTmpName = $_FILES['photo']['tmp_name'][$i];
-                $fileError = $_FILES['photo']['error'][$i];
-                $fileSize = $_FILES['photo']['size'][$i];
-
-                if ($fileError === UPLOAD_ERR_OK) {
-                    $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
-                    $newFileName = time().$hotel_name . 'hotels' . $count + $i . '.' . $fileExtension;
-                    $destination = $uploadDir . $newFileName;
-                    if (in_array($fileExtension, $allowedExtensions) && $fileSize <= $maxFileSize) {
-                        if (move_uploaded_file($fileTmpName, $destination)) {
-                            // Store the filename in the array
-
-                            $uploadedFiles[] = $newFileName;
-                        } else {
-                            // echo "Failed to move file: $fileName<br>";
-                        }
+                        $uploadedFiles[] = $newFileName;
                     } else {
-                        // echo "File Formate or Size is invalid";
+                        // echo "Failed to move file: $fileName<br>";
                     }
+                } else {
+                    // echo "File Formate or Size is invalid";
                 }
             }
-        } 
-        // else {
-        //     echo "No files selected.";
-        // }
-         $filesJson = json_encode($uploadedFiles); //echo
+        }
+    }
+    // else {
+    //     echo "No files selected.";
+    // }
+    $filesJson = json_encode($uploadedFiles); //echo
 
-        $selQ = "select villageid from villagebasic";
-        $res = $obj->selectdata("villagebasic", $selQ);
-        $village_id = $res[0]['villageid'];
-        $res[0]['villageid'];
+    $selQ = "select villageid from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selQ);
+    $village_id = $res[0]['villageid'];
+    $res[0]['villageid'];
 
 
-        $qupdate = "update hotels set hotelname='{$hotel_name}',address='{$fullAddress}',amenities='{$amenities}',timeschedule='{$time}', contactno='{$contact_no}'
+    $qupdate = "update hotels set hotelname='{$hotel_name}',address='{$fullAddress}',amenities='{$amenities}',timeschedule='{$time}', contactno='{$contact_no}'
     ,bookingProcess='{$booking_process}',photo='{$filesJson}',customerreviews='{$customer_reviews}', websitelink ='{$website_link}' where hotelsid={$_GET['updateid']}";
 
 
-        $result = $obj->updatedata("hotels", $qupdate);
-        if($result =="Data Updated"){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Updated');
+    $result = $obj->updatedata("hotels", $qupdate);
+    if ($result == "Data Updated") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Updated');
             window.location.href = 'editform.php?tablename=hotels';
             </script>";
-            
-        }else{
-            echo "<script>alert('Error: Failed to update data');</script>";
-        }
-
-        
+    } else {
+        echo "<script>alert('Error: Failed to update data');</script>";
     }
+}
 
-    ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -320,7 +316,7 @@ if (confirm("Are you sure you want to proceed?")) {
 
     <!-- Meta -->
     <meta charset="utf-8">
-    
+
     <meta name="format-detection" content="telephone=no">
 
     <!-- Mobile Specific -->
@@ -341,6 +337,7 @@ if (confirm("Are you sure you want to proceed?")) {
     <link href="../css/delete_btn.css" rel="stylesheet">
 
 </head>
+
 <body>
 
 
@@ -393,18 +390,18 @@ if (confirm("Are you sure you want to proceed?")) {
                                                                 <div class="mb-3 mb-0">
                                                                     <label class="radio-inline me-3"><input type="radio"
                                                                             name="booking" value="online" <?php if ($booking_process == 'online') {
-                                                                                echo 'checked';
-                                                                            } ?> class="form-check-input">
+                                                                                                                echo 'checked';
+                                                                                                            } ?> class="form-check-input">
                                                                         Online</label>
                                                                     <label class="radio-inline me-3"><input type="radio"
                                                                             name="booking" value="offline" <?php if ($booking_process == 'offline') {
-                                                                                echo 'checked';
-                                                                            } ?> class="form-check-input">
+                                                                                                                echo 'checked';
+                                                                                                            } ?> class="form-check-input">
                                                                         Offline</label>
                                                                     <label class="radio-inline me-3"><input type="radio"
                                                                             name="booking" value="both" <?php if ($booking_process == 'both') {
-                                                                                echo 'checked';
-                                                                            } ?> class="form-check-input" required>
+                                                                                                            echo 'checked';
+                                                                                                        } ?> class="form-check-input" required>
                                                                         Both</label>
                                                                 </div>
                                                             </div>
@@ -514,111 +511,158 @@ if (confirm("Are you sure you want to proceed?")) {
                                                                 <input class="form-control" type="file" name="photo[]"
                                                                     id="photo" multiple>
                                                                 <?php if (isset($_GET['updateid'])) { ?>
-                                                                <div class="col-xl-6">
-                                                                    <div class="card">
-                                                                        <div class="card-body p-4">
-                                                                            <h4 class="card-intro-title">Slides only
-                                                                            </h4>
-                                                                            <div id="carouselExampleIndicators"
-                                                                                class="carousel slide"
-                                                                                data-bs-ride="carousel">
-                                                                                <div class="carousel-indicators">
+                                                                    <div class="col-xl-6">
+                                                                        <div class="card">
+                                                                            <div class="card-body p-4">
+                                                                                <h4 class="card-intro-title">Slides only
+                                                                                </h4>
+                                                                                <div id="carouselExampleIndicators"
+                                                                                    class="carousel slide"
+                                                                                    data-bs-ride="carousel">
+                                                                                    <div class="carousel-indicators">
 
-                                                                                    <?php
+                                                                                        <?php
 
                                                                                         foreach ($data as $index => $person) { ?>
-                                                                                    <button type="button"
-                                                                                        data-bs-target="#carouselExampleIndicators"
-                                                                                        data-bs-slide-to="<?php echo $index; ?>"
-                                                                                        <?php if ($index == 0) { ?>
-                                                                                        class="active"
-                                                                                        aria-current="true" <?php } ?>
-                                                                                        aria-label="Slide <?php echo ($index + 1); ?>">
-                                                                                    </button>
-                                                                                    <?php } ?>
-                                                                                </div>
-                                                                                <div class="carousel-inner">
-                                                                                    <?php
+                                                                                            <button type="button"
+                                                                                                data-bs-target="#carouselExampleIndicators"
+                                                                                                data-bs-slide-to="<?php echo $index; ?>"
+                                                                                                <?php if ($index == 0) { ?>
+                                                                                                class="active"
+                                                                                                aria-current="true" <?php } ?>
+                                                                                                aria-label="Slide <?php echo ($index + 1); ?>">
+                                                                                            </button>
+                                                                                        <?php } ?>
+                                                                                    </div>
+                                                                                    <div class="carousel-inner">
+                                                                                        <?php
                                                                                         $active = true;
                                                                                         foreach ($data as $index => $person) { ?>
-                                                                                    <div
-                                                                                        class="carousel-item <?php echo $active ? 'active' : ''; ?>">
-                                                                                        <img class="d-block w-100"
-                                                                                            style="width:200px; height:200px"
-                                                                                            src="uploadedimages/<?php echo $person; ?>"
-                                                                                            alt="Slide image">
-                                                                                        <div class="button-container">
-                                                                                            <?php 
-                                                                                            if(count($data)>1){?>
-                                                                                            <button type="button"
-                                                                                                class="btn btn-danger delete-btn"
-                                                                                                data-image="<?php echo $person; ?>">
-                                                                                                <span>Delete</span>
-                                                                                            </button>
-                                                                                            <?php }
-                                                                                            ?>
+                                                                                            <div
+                                                                                                class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+                                                                                                <img class="d-block w-100"
+                                                                                                    style="width:200px; height:200px"
+                                                                                                    src="uploadedimages/<?php echo $person; ?>"
+                                                                                                    alt="Slide image">
+                                                                                                <div class="button-container">
+                                                                                                    <?php
+                                                                                                    if (count($data) > 1) { ?>
+                                                                                                        <button type="button"
+                                                                                                            class="btn btn-danger delete-btn"
+                                                                                                            data-image="<?php echo $person; ?>">
+                                                                                                            <span>Delete</span>
+                                                                                                        </button>
+                                                                                                    <?php }
+                                                                                                    ?>
 
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <?php
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        <?php
                                                                                             $active = false;
                                                                                         } ?>
+                                                                                    </div>
+
+
+                                                                                    <!-- Previous Button -->
+                                                                                    <button class="carousel-control-prev"
+                                                                                        type="button"
+                                                                                        data-bs-target="#carouselExampleIndicators"
+                                                                                        data-bs-slide="prev">
+                                                                                        <span
+                                                                                            class="carousel-control-prev-icon"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <span>Previous</span>
+                                                                                    </button>
+
+                                                                                    <!-- Next Button -->
+                                                                                    <button class="carousel-control-next"
+                                                                                        type="button"
+                                                                                        data-bs-target="#carouselExampleIndicators"
+                                                                                        data-bs-slide="next">
+                                                                                        <span
+                                                                                            class="carousel-control-next-icon"
+                                                                                            aria-hidden="true"></span>
+                                                                                        <span>Next</span>
+                                                                                    </button>
+
                                                                                 </div>
-
-
-                                                                                <!-- Previous Button -->
-                                                                                <button class="carousel-control-prev"
-                                                                                    type="button"
-                                                                                    data-bs-target="#carouselExampleIndicators"
-                                                                                    data-bs-slide="prev">
-                                                                                    <span
-                                                                                        class="carousel-control-prev-icon"
-                                                                                        aria-hidden="true"></span>
-                                                                                    <span>Previous</span>
-                                                                                </button>
-
-                                                                                <!-- Next Button -->
-                                                                                <button class="carousel-control-next"
-                                                                                    type="button"
-                                                                                    data-bs-target="#carouselExampleIndicators"
-                                                                                    data-bs-slide="next">
-                                                                                    <span
-                                                                                        class="carousel-control-next-icon"
-                                                                                        aria-hidden="true"></span>
-                                                                                    <span>Next</span>
-                                                                                </button>
-
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
                                                         <div class="row" style="margin-top:50px;">
                                                             <div class="col-lg-1 ms-auto">
                                                                 <?php if (isset($_GET['updateid'])) { ?>
-                                                                <button type="submit" name="update"
-                                                                    class="btn btn-primary">Update</button>
+                                                                    <button type="submit" name="update"
+                                                                        class="btn btn-primary">Update</button>
                                                                 <?php } else { ?>
-                                                                <button type="submit" name="insert"
-                                                                    class="btn btn-primary">Submit</button>
+                                                                    <button type="submit" name="insert"
+                                                                        class="btn btn-primary">Submit</button>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
                                 </div>
                                 </form>
+
+
+
+
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Here Edit End -->
+                <!-- Import Section -->
+                <div class="import-section" style="margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f8f9fa;" id="import-section">
+                    <h4>🏨 Bulk Import Hotels & Accommodations</h4>
+                    <p class="text-muted mb-3">
+                        <strong>How it works:</strong> Download the template, fill in the hotel data, and import.
+                        <strong>Village ID is automatically assigned</strong> - you don't need to fill it.
+                        <strong>Photos will be empty</strong> - add them later via the edit form.
+                    </p>
+
+                    <div class="row align-items-center g-3">
+                        <div class="col-md-4">
+                            <a href="templates/hotels_template.php" class="btn btn-info w-100">
+                                📥 Download Template
+                            </a>
+                        </div>
+                        <div class="col-md-8">
+                            <form action="imports/import_hotels.php" method="post" enctype="multipart/form-data" class="d-flex gap-2">
+                                <input type="file" name="excel_file" class="form-control"
+                                    accept=".xls,.xlsx" required style="max-width: 300px;">
+                                <button type="submit" class="btn btn-success">
+                                    📤 Import Excel
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 p-2  border rounded">
+                        <small class="text-muted">
+                            <strong>💡 Required field:</strong> Hotel Name<br>
+                            <strong>📝 Optional fields:</strong> Address, City, Zip, Contact, Amenities, Booking Process, Website, Reviews<br>
+                            <strong>⚠️ Notes:</strong><br>
+                            • <strong>Booking Process:</strong> online, offline, both - defaults to both<br>
+                            • <strong>Contact Number:</strong> 10-digit phone number<br>
+                            • <strong>Zip Code:</strong> 6-digit number (e.g., 388001)<br>
+                            • <strong>Time Schedule:</strong> JSON format <code>{"open":"07:00","close":"23:00"}</code><br>
+                            • <strong>Amenities:</strong> Comma-separated (AC Rooms, Restaurant, WiFi, etc.)<br>
+                            • <strong>Address Format:</strong> Full address in Address column, City and Zip in separate columns<br>
+                            • <strong>Website:</strong> Valid URL format (http:// or https://)<br>
+                            • <strong>Visibility:</strong> on/off - defaults to off<br>
+                            • <strong>Photos:</strong> Will be empty - add via edit form later
+                        </small>
+                    </div>
+                </div>
             </div>
         </div>
         <!--**********************************
@@ -671,173 +715,173 @@ if (confirm("Are you sure you want to proceed?")) {
     <script src="../js/dlabnav-init.js"></script>
 
     <script>
-    function validateHotelForm() {
+        function validateHotelForm() {
 
-        // Hotel Name validation
-        let hotelName = document.forms["hotelForm"]["HotelName"].value;
-        if (hotelName === "") {
-            alert("Hotel Name must be filled out");
-            return false;
-        }
-        if (hotelName.trim().length > 20) {
-            alert("Hotel Name must be less than 20 characters long");
-            return false;
-        }
-
-        // Booking Process validation (ensure one radio button is selected)
-        let booking = document.forms["hotelForm"]["booking"].value;
-        if (booking === "") {
-            alert("Booking process must be selected");
-            return false;
-        }
-
-        // Address validation
-        let address = document.forms["hotelForm"]["Address"].value;
-        let addressPattern = /^[a-zA-Z0-9\s,.-]{5,}$/;
-        if (address === "" || !addressPattern.test(address)) {
-            alert("Minimum 5 characters, only letters, numbers, spaces, commas, periods, and dashes");
-            return false;
-        }
-
-        // City validation
-        let city = document.forms["hotelForm"]["city"].value;
-        if (city === "") {
-            alert("City must be filled out");
-            return false;
-        }
-        if (city.trim().length > 20) {
-            alert("City must be less than 20 characters long");
-            return false;
-        }
-
-        // Pincode validation (should be a 6-digit number)
-        let pincode = document.forms["hotelForm"]["zip"].value;
-        const pincodeRegex = /^[1-9][0-9]{5}$/;
-        if (!pincodeRegex.test(pincode)) {
-            alert("Please enter a valid 6-digit pincode");
-            return false;
-        }
-
-        // Contact Number validation (should be a 10-digit number)
-        // let contactNo = document.forms["hotelForm"]["ContactNo"].value;
-        // const contactNoRegex = /^[0-9]{10}$/;
-        // if (!contactNoRegex.test(contactNo)) {
-        //     alert("Please enter a valid 10-digit contact number");
-        //     return false;
-        // }
-
-        // Website link validation (if present, must be a valid URL)
-        let websiteLink = document.forms["hotelForm"]["link"].value;
-        if (websiteLink !== "") {
-            const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
-            if (!urlRegex.test(websiteLink)) {
-                alert("Please enter a valid website link");
+            // Hotel Name validation
+            let hotelName = document.forms["hotelForm"]["HotelName"].value;
+            if (hotelName === "") {
+                alert("Hotel Name must be filled out");
                 return false;
             }
-        }
+            if (hotelName.trim().length > 20) {
+                alert("Hotel Name must be less than 20 characters long");
+                return false;
+            }
 
-        // Validate Time Duration
-        let timeOpen = document.forms["hotelForm"]["TimeDurationOpen"].value;
-        let timeClose = document.forms["hotelForm"]["TimeDurationClose"].value;
-        if (timeOpen == "" || timeClose == "") {
-            alert("Please select both opening and closing times");
-            return false;
-        }
+            // Booking Process validation (ensure one radio button is selected)
+            let booking = document.forms["hotelForm"]["booking"].value;
+            if (booking === "") {
+                alert("Booking process must be selected");
+                return false;
+            }
 
-        // Amenities validation
-        let amenities = document.forms["hotelForm"]["Amenities"].value;
-        if (amenities === "") {
-            alert("Amenities must be filled out");
-            return false;
-        }
+            // Address validation
+            let address = document.forms["hotelForm"]["Address"].value;
+            let addressPattern = /^[a-zA-Z0-9\s,.-]{5,}$/;
+            if (address === "" || !addressPattern.test(address)) {
+                alert("Minimum 5 characters, only letters, numbers, spaces, commas, periods, and dashes");
+                return false;
+            }
 
-        // Customer Reviews validation
-        let customerReviews = document.forms["hotelForm"]["CustomerReviews"].value;
-        if (customerReviews === "") {
-            alert("Customer Reviews must be filled out");
-            return false;
-        }
+            // City validation
+            let city = document.forms["hotelForm"]["city"].value;
+            if (city === "") {
+                alert("City must be filled out");
+                return false;
+            }
+            if (city.trim().length > 20) {
+                alert("City must be less than 20 characters long");
+                return false;
+            }
 
-        var photoInput = document.getElementById('photo');
-        var files = photoInput.files;
-        var maxSize = 5 * 1024 * 1024; // 5MB
+            // Pincode validation (should be a 6-digit number)
+            let pincode = document.forms["hotelForm"]["zip"].value;
+            const pincodeRegex = /^[1-9][0-9]{5}$/;
+            if (!pincodeRegex.test(pincode)) {
+                alert("Please enter a valid 6-digit pincode");
+                return false;
+            }
 
-        // Check if no photo is selected and no existing photos (update mode)
-        var existingPhotos = <?php echo isset($_GET['updateid']) && !empty($data) ? 'true' : 'false'; ?>;
-        if (files.length === 0 && !existingPhotos) {
-            alert("Please select at least one photo.");
-            return false; // Prevent form submission
-        }
+            // Contact Number validation (should be a 10-digit number)
+            // let contactNo = document.forms["hotelForm"]["ContactNo"].value;
+            // const contactNoRegex = /^[0-9]{10}$/;
+            // if (!contactNoRegex.test(contactNo)) {
+            //     alert("Please enter a valid 10-digit contact number");
+            //     return false;
+            // }
 
-        // Check file sizes
-        for (var i = 0; i < files.length; i++) {
-            if (files[i].size > maxSize) {
-                alert("File size of " + files[i].name + " exceeds 5MB.");
+            // Website link validation (if present, must be a valid URL)
+            let websiteLink = document.forms["hotelForm"]["link"].value;
+            if (websiteLink !== "") {
+                const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+                if (!urlRegex.test(websiteLink)) {
+                    alert("Please enter a valid website link");
+                    return false;
+                }
+            }
+
+            // Validate Time Duration
+            let timeOpen = document.forms["hotelForm"]["TimeDurationOpen"].value;
+            let timeClose = document.forms["hotelForm"]["TimeDurationClose"].value;
+            if (timeOpen == "" || timeClose == "") {
+                alert("Please select both opening and closing times");
+                return false;
+            }
+
+            // Amenities validation
+            let amenities = document.forms["hotelForm"]["Amenities"].value;
+            if (amenities === "") {
+                alert("Amenities must be filled out");
+                return false;
+            }
+
+            // Customer Reviews validation
+            let customerReviews = document.forms["hotelForm"]["CustomerReviews"].value;
+            if (customerReviews === "") {
+                alert("Customer Reviews must be filled out");
+                return false;
+            }
+
+            var photoInput = document.getElementById('photo');
+            var files = photoInput.files;
+            var maxSize = 5 * 1024 * 1024; // 5MB
+
+            // Check if no photo is selected and no existing photos (update mode)
+            var existingPhotos = <?php echo isset($_GET['updateid']) && !empty($data) ? 'true' : 'false'; ?>;
+            if (files.length === 0 && !existingPhotos) {
+                alert("Please select at least one photo.");
                 return false; // Prevent form submission
             }
-        }
 
-        return true;
-    }
-    </script>
-    <script>
-    function JobickCarousel() {
-
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
-
-                    margin: 10
-                },
-
-                480: {
-                    items: 1
-                },
-
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+            // Check file sizes
+            for (var i = 0; i < files.length; i++) {
+                if (files[i].size > maxSize) {
+                    alert("File size of " + files[i].name + " exceeds 5MB.");
+                    return false; // Prevent form submission
                 }
             }
-        })
-    }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+            return true;
+        }
+    </script>
+    <script>
+        function JobickCarousel() {
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.delete-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const imageName = this.getAttribute('data-image');
-                const tableName = "hotels";
-                if (confirm('Are you sure you want to delete this image?')) {
-                    // Redirect to the delete PHP script with the image name as a query parameter
-                    window.location.href =
-                        `delete_image.php?image=${encodeURIComponent(imageName)}&tablename=${encodeURIComponent(tableName)}&updateid=${encodeURIComponent(<?php echo $_GET['updateid'] ?>)}`;
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
+
+                        margin: 10
+                    },
+
+                    480: {
+                        items: 1
+                    },
+
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
+            })
+        }
+
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.delete-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const imageName = this.getAttribute('data-image');
+                    const tableName = "hotels";
+                    if (confirm('Are you sure you want to delete this image?')) {
+                        // Redirect to the delete PHP script with the image name as a query parameter
+                        window.location.href =
+                            `delete_image.php?image=${encodeURIComponent(imageName)}&tablename=${encodeURIComponent(tableName)}&updateid=${encodeURIComponent(<?php echo $_GET['updateid'] ?>)}`;
+                    }
+                });
             });
         });
-    });
     </script>
 </body>
 

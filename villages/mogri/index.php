@@ -1,7 +1,7 @@
-<?php 
+<?php
 include_once('admin/config.php');
 $obj = new ConnDb();
-$temp_db = explode('_',$db);
+$temp_db = explode('_', $db);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,39 +41,39 @@ $temp_db = explode('_',$db);
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
-    google.charts.load('current', {
-        'packages': ['corechart']
-    });
-    google.charts.setOnLoadCallback(drawChart);
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(drawChart);
 
-    function drawChart() {
+        function drawChart() {
 
-        var data = google.visualization.arrayToDataTable([
-            ['Gender', 'Ratio'],
-            ['Male', 55],
-            ['Female', 45],
-        ]);
+            var data = google.visualization.arrayToDataTable([
+                ['Gender', 'Ratio'],
+                ['Male', 55],
+                ['Female', 45],
+            ]);
 
-        var data2 = google.visualization.arrayToDataTable([
-            ['Religion', 'Ratio'],
-            ['Hindu', 55],
-            ['muslim', 45],
-        ]);
+            var data2 = google.visualization.arrayToDataTable([
+                ['Religion', 'Ratio'],
+                ['Hindu', 55],
+                ['muslim', 45],
+            ]);
 
-        var options = {
-            pieHole: 0,
-            pieSliceTextStyle: {
-                color: 'white',
+            var options = {
+                pieHole: 0,
+                pieSliceTextStyle: {
+                    color: 'white',
 
-            },
-            // legend: 'none'
-        };
+                },
+                // legend: 'none'
+            };
 
-        var chart = new google.visualization.PieChart(document.getElementById('donut_single'));
-        chart.draw(data, options);
-        var chart2 = new google.visualization.PieChart(document.getElementById('donut_single2'));
-        chart2.draw(data2, options);
-    }
+            var chart = new google.visualization.PieChart(document.getElementById('donut_single'));
+            chart.draw(data, options);
+            var chart2 = new google.visualization.PieChart(document.getElementById('donut_single2'));
+            chart2.draw(data2, options);
+        }
     </script>
 
 </head>
@@ -320,162 +320,162 @@ $temp_db = explode('_',$db);
 
 
         <section class="team-details-section" style="margin-top:-50px">
-            <?php 
-        $val= $obj->selectdata("pillarofcommunity","select * from pillarofcommunity limit 1");
-if($val=="No Data Found!"){
-    echo 'No Datafound';
-}
-else{
+            <?php
+            $val = $obj->selectdata("pillarofcommunity", "select * from pillarofcommunity limit 1");
+            if ($val == "No Data Found!") {
+                echo 'No Datafound';
+            } else {
 
-    $rows = count($val);
-    for($i=0;$i<$rows;$i++){
+                $rows = count($val);
+                for ($i = 0; $i < $rows; $i++) {
 
-$name = $val[$i]['name'];
-$bdy =$val[$i]['birthdate'];
-$ddy = $val[$i]['dateofpassing'];
-$datediff= $obj->selectdata("pillarofcommunity",'select DATEDIFF(dateofpassing,birthdate) from pillarofcommunity');
+                    $name = $val[$i]['name'] ?? '';
+                    $bdy = $val[$i]['birthdate']    ?? '';
+                    $ddy = $val[$i]['dateofpassing']    ?? '';
+                    $datediff = $obj->selectdata("pillarofcommunity", 'select DATEDIFF(dateofpassing,birthdate) from pillarofcommunity');
 
-$description = $val[$i]['description'];
-$edu = $val[$i]['education'];
-$plcarrier = $val[$i]['politicalcareer'];
-$positionsheld = $val[$i]['positionsheld'];
-$role = $val[$i]['roleinindependencemovement'];
-$profession = $val[$i]['profession'];
-$typeofleader = $val[$i]['typeofleader'];
+                    $description = $val[$i]['description']  ?? '';
+                    $edu = $val[$i]['education']    ?? '';
+                    $plcarrier = $val[$i]['politicalcareer']  ?? '';
+                    $positionsheld = $val[$i]['positionsheld']  ?? '';
+                    $role = $val[$i]['roleinindependencemovement'] ?? '';
+                    $profession = $val[$i]['profession'] ?? '';
+                    $typeofleader = $val[$i]['typeofleader'] ?? '';
 
-$img = $val[$i]['photo'];
+                    $img = $val[$i]['photo']    ?? '';
 
-$uploadedFiles = json_decode($img, true);
-$fileCount = count($uploadedFiles);
-if($fileCount>1){
-     $firstImage = $uploadedFiles[1];
-}
-else{
-    $firstImage = $uploadedFiles[0];
-}
-// Fetch the first image
+                    $uploadedFiles = json_decode($img, true) ?? [];
+                    $fileCount = count($uploadedFiles);
+                    if ($fileCount > 1 && isset($uploadedFiles[1])) {
+                        $firstImage = $uploadedFiles[1];
+                    } elseif (isset($uploadedFiles[0])) {
+                        $firstImage = $uploadedFiles[0];
+                    } else {
+                        $firstImage = '/default_pic.jpg'; // fallback image
+                    }
+                    // Fetch the first image
 
-// Construct the full image path
-$imagePath = 'admin/pages/uploadedimages/' . $firstImage;
-?>
+                    // Construct the full image path
+                    $imagePath = 'admin/pages/uploadedimages/' . $firstImage;
+            ?>
 
-            <section class="team-details-section" style="margin-top: -150px">
-                <div class="container">
-                    <div class="row justify-content-between">
-                        <div class="col-12 col-lg-6">
-                            <div class="team-details-image">
-                                <?php 
-                        
-                         ?>
-                                <img src=<?php echo $imagePath; ?> class="img-fluid" alt="img-93"
-                                    style="height:600px;width:100%;">
+                    <section class="team-details-section" style="margin-top: -150px">
+                        <div class="container">
+                            <div class="row justify-content-between">
+                                <div class="col-12 col-lg-6">
+                                    <div class="team-details-image">
+                                        <?php
 
-                            </div>
-                            <!--team-details-image-->
-                        </div>
-                        <!--col-12 col-lg-6-->
-                        <div class="col-12 col-lg-5">
-                            <div class="team-details-title-one">
-                                <h2><?php echo $name; ?></h2>
-                                <span>one of India's greatest leaders</span>
-                            </div>
-                            <!--team-details-title-one-->
-                            <!--team-details-socials-->
-                            <div class="team-details-info">
-                                <ul class="list-unstyled">
-                                    <!--<li>years of live: <span><?php echo implode($datediff[0]); ?> Years-->
-                                    <!--        (<?php echo $bdy; ?>-->
-                                    <!--        – <?php echo $ddy; ?>)</span></li>-->
-                                </ul><!-- list-unstyled -->
-                            </div>
-                            <!--team-details-info-->
-                            <div class="team-details-text">
+                                        ?>
+                                        <img src=<?php echo $imagePath; ?> class="img-fluid" alt="img-93"
+                                            style="height:600px;width:100%;">
 
-                                <p style="margin-top:-40px"><?php $description;?></p>
-                            </div>
-                            <!--team-details-text-->
-                            <div class="team-details-list" style="margin-top:-30px">
-                                <h3>Education</h3>
-                                <div class="team-details-list-item">
-                                    <div class="row" style="margin-top:-20px">
-                                        <div class="col-sm-12 col-lg-6 col-xl-6">
+                                    </div>
+                                    <!--team-details-image-->
+                                </div>
+                                <!--col-12 col-lg-6-->
+                                <div class="col-12 col-lg-5">
+                                    <div class="team-details-title-one">
+                                        <h2><?php echo $name; ?></h2>
+                                        <span>one of India's greatest leaders</span>
+                                    </div>
+                                    <!--team-details-title-one-->
+                                    <!--team-details-socials-->
+                                    <div class="team-details-info">
+                                        <ul class="list-unstyled">
+                                            <!--<li>years of live: <span><?php echo implode($datediff[0]); ?> Years-->
+                                            <!--        (<?php echo $bdy; ?>-->
+                                            <!--        – <?php echo $ddy; ?>)</span></li>-->
+                                        </ul><!-- list-unstyled -->
+                                    </div>
+                                    <!--team-details-info-->
+                                    <div class="team-details-text">
+
+                                        <p style="margin-top:-40px"><?php $description; ?></p>
+                                    </div>
+                                    <!--team-details-text-->
+                                    <div class="team-details-list" style="margin-top:-30px">
+                                        <h3>Education</h3>
+                                        <div class="team-details-list-item">
+                                            <div class="row" style="margin-top:-20px">
+                                                <div class="col-sm-12 col-lg-6 col-xl-6">
+                                                    <div class="team-details-box">
+                                                        <div class="team-details-year"></div>
+                                                        <p><?php echo $edu; ?></p>
+                                                        <!-- <p>Columbia University, CL</p> -->
+                                                    </div>
+                                                    <!--team-details-box-->
+                                                </div>
+                                                <!--col-sm-6 col-lg-6 col-xl-6-->
+
+                                                <!--col-sm-6 col-lg-6 col-xl-6-->
+                                            </div><!-- row -->
+                                        </div>
+                                        <!--team-details-list-item--><br><br>
+                                        <h3 style="margin-top:-30px">Political Carrier</h3>
+                                        <div class="team-details-list-item" style="margin-top:-20px">
+
+                                            <!-- <div class="col-sm-12 col-lg-6 col-xl-6"> -->
                                             <div class="team-details-box">
                                                 <div class="team-details-year"></div>
-                                                <p><?php echo $edu; ?></p>
+                                                <p><?php echo $plcarrier; ?>
+                                                </p>
                                                 <!-- <p>Columbia University, CL</p> -->
                                             </div>
                                             <!--team-details-box-->
+                                            <!-- </div> -->
+                                            <!--col-sm-6 col-lg-6 col-xl-6-->
+
+
                                         </div>
-                                        <!--col-sm-6 col-lg-6 col-xl-6-->
+                                        <h3 style="margin-top:30px">Role In Independence Movement</h3>
+                                        <div class="team-details-list-item" style="margin-top:-30px">
 
-                                        <!--col-sm-6 col-lg-6 col-xl-6-->
-                                    </div><!-- row -->
-                                </div>
-                                <!--team-details-list-item--><br><br>
-                                <h3 style="margin-top:-30px">Political Carrier</h3>
-                                <div class="team-details-list-item" style="margin-top:-20px">
-
-                                    <!-- <div class="col-sm-12 col-lg-6 col-xl-6"> -->
-                                    <div class="team-details-box">
-                                        <div class="team-details-year"></div>
-                                        <p><?php echo $plcarrier; ?>
-                                        </p>
-                                        <!-- <p>Columbia University, CL</p> -->
-                                    </div>
-                                    <!--team-details-box-->
-                                    <!-- </div> -->
-                                    <!--col-sm-6 col-lg-6 col-xl-6-->
-
-
-                                </div>
-                                <h3 style="margin-top:30px">Role In Independence Movement</h3>
-                                <div class="team-details-list-item" style="margin-top:-30px">
-
-                                    <!-- <div class="col-sm-12 col-lg-6 col-xl-6"> -->
-                                    <div class="team-details-box">
-                                        <div class="team-details-year"></div>
-                                        <p><?php echo $role; ?>
-                                        </p>
-                                        <!-- <p>Columbia University, CL</p> -->
-                                    </div>
-                                    <!--team-details-box-->
-                                    <!-- </div> -->
-                                    <!--col-sm-6 col-lg-6 col-xl-6-->
-
-
-                                </div>
-                                <h3 style="margin-top:30px">Details</h3>
-                                <div class="team-details-list-item">
-                                    <div class="row" style="margin-top:-20px">
-                                        <div class="col-sm-12 col-lg-6 col-xl-6">
+                                            <!-- <div class="col-sm-12 col-lg-6 col-xl-6"> -->
                                             <div class="team-details-box">
                                                 <div class="team-details-year"></div>
-                                                <p><?php echo $description; ?></p>
+                                                <p><?php echo $role; ?>
+                                                </p>
                                                 <!-- <p>Columbia University, CL</p> -->
                                             </div>
                                             <!--team-details-box-->
+                                            <!-- </div> -->
+                                            <!--col-sm-6 col-lg-6 col-xl-6-->
+
+
                                         </div>
-                                        <!--col-sm-6 col-lg-6 col-xl-6-->
+                                        <h3 style="margin-top:30px">Details</h3>
+                                        <div class="team-details-list-item">
+                                            <div class="row" style="margin-top:-20px">
+                                                <div class="col-sm-12 col-lg-6 col-xl-6">
+                                                    <div class="team-details-box">
+                                                        <div class="team-details-year"></div>
+                                                        <p><?php echo $description; ?></p>
+                                                        <!-- <p>Columbia University, CL</p> -->
+                                                    </div>
+                                                    <!--team-details-box-->
+                                                </div>
+                                                <!--col-sm-6 col-lg-6 col-xl-6-->
 
-                                        <!--col-sm-6 col-lg-6 col-xl-6-->
-                                    </div><!-- row -->
+                                                <!--col-sm-6 col-lg-6 col-xl-6-->
+                                            </div><!-- row -->
+                                        </div>
+
+                                        <!--team-details-list-item-->
+                                    </div>
+                                    <!--team-details-list-->
                                 </div>
+                                <!--col-12 col-lg-12-->
+                            </div><!-- row -->
+                        </div><!-- container -->
 
-                                <!--team-details-list-item-->
-                            </div>
-                            <!--team-details-list-->
-                        </div>
-                        <!--col-12 col-lg-12-->
-                    </div><!-- row -->
-                </div><!-- container -->
-
-                <br><br>
-                <!--department-section-->
-            </section>
-            <!--team-details-section-->
+                        <br><br>
+                        <!--department-section-->
+                    </section>
+                    <!--team-details-section-->
 
             <?php }
- } ?>
+            } ?>
 
 
             <br><br>
@@ -483,103 +483,103 @@ $imagePath = 'admin/pages/uploadedimages/' . $firstImage;
             <!--department-section-->
             <?php
 
-$value= $obj->selectdata("pillarofcommunity","select * from pillarofcommunity");
-if($value=="No Data Found!"){
-    echo 'No Datafound';
-}
-else{?>
+            $value = $obj->selectdata("pillarofcommunity", "select * from pillarofcommunity");
+            if ($value == "No Data Found!") {
+                echo 'No Datafound';
+            } else { ?>
 
-            <section class="funfact-section" style="background:whitesmoke">
-                <!--department-section-->
-                <div class="event-details-gallery-box" style="margin-top:-80px">
-                    <div class="event-details-carousel owl-carousel owl-theme"
-                        style="padding-left:5%; padding-right:5%;">
+                <section class="funfact-section" style="background:whitesmoke">
+                    <!--department-section-->
+                    <div class="event-details-gallery-box" style="margin-top:-80px">
+                        <div class="event-details-carousel owl-carousel owl-theme"
+                            style="padding-left:5%; padding-right:5%;">
 
-                        <?php $rows = count($value);
-    for($i=0;$i<$rows;$i++){
-    $name = $value[$i]['name'];
-    $bdy =$value[$i]['birthdate'];
-    $ddy = $value[$i]['dateofpassing'];
-    $datediff= $obj->selectdata("pillarofcommunity",'select DATEDIFF(dateofpassing,birthdate) from pillarofcommunity');
-    $profession = $value[$i]['profession'];
-    $description = $value[$i]['description'];
-    $positionsheld=$value[$i]['positionsheld'];
-    $edu = $value[$i]['education'];
-    $plcarrier = $value[$i]['politicalcareer'];
-    $roleinindependencemovement=$value[$i]['roleinindependencemovement'];
+                            <?php $rows = count($value);
+                            for ($i = 0; $i < $rows; $i++) {
+                                $name = $value[$i]['name'] ?? '';
+                                $bdy = $value[$i]['birthdate'] ?? '';
+                                $ddy = $value[$i]['dateofpassing'] ?? '';
+                                $datediff = $obj->selectdata("pillarofcommunity", 'select DATEDIFF(dateofpassing,birthdate) from pillarofcommunity') ?? '';
+                                $profession = $value[$i]['profession'] ?? '';
+                                $description = $value[$i]['description'] ?? '';
+                                $positionsheld = $value[$i]['positionsheld'] ?? '';
+                                $edu = $value[$i]['education'] ?? '';
+                                $plcarrier = $value[$i]['politicalcareer'] ?? '';
+                                $roleinindependencemovement = $value[$i]['roleinindependencemovement'] ?? '';
 
-    $img = $value[$i]['photo'];
-    $uploadedFiles = json_decode($img, true);
-    // Fetch the first image
-    $fileCount = count($uploadedFiles);
-if($fileCount>1){
- $firstImage = $uploadedFiles[1];
-}
-else{
-$firstImage = $uploadedFiles[0];
-}
-    
-    // Construct the full image path
-    $imagePath = 'admin/pages/uploadedimages/' . $firstImage;
-    ?>
-                        <div class="row row-gutter-30" style="margin-right:20px">
-                            <div class="col-lg-6">
-                                <!-- <div class="department-details-benefits-box-image"> -->
-                                <img src="<?php echo $imagePath; ?>" class="img-fluid" alt="160" style="height:200px">
-                                <!-- </div>department-details-benefits-box-image -->
-                            </div>
-                            <!--col-lg-6-->
-
-                            <div class="department-details-benefits-box">
-                                <h3><?php echo $name; ?></h3>
-                                <?php
-                                
-                                ?>
-                                <p> <?php echo $profession; ?>
-                                    <!--<br><span><?php echo implode($datediff[0]); ?> Years-->
-                                    <!--    (<?php echo $bdy; ?>-->
-                                    <!--    – <?php echo $ddy; ?>)</span>-->
-                                <ul class="list-unstyled list-style">
-                                    <?php $ts1 = explode('.',$positionsheld); 
-                                    foreach($ts1 as $s1){ ?>
-                                    <li>
-                                        <i class="fa-solid fa-circle-arrow-right"></i>
-                                        <h5 style="margin-top:30px"><?php echo $s1; ?></h5>
-                                    </li><!-- li -->
-                                    <?php }
-                                    ?>
-                                    <?php $ts2 = explode('.',$roleinindependencemovement); 
-                                    foreach($ts2 as $s2){ ?>
-                                    <li>
-                                        <i class="fa-solid fa-circle-arrow-right"></i>
-                                        <h5 style="margin-top:30px"><?php echo $s2; ?></h5>
-                                    </li><!-- li -->
-                                    <?php }
-                                    ?>
+                                $img = $value[$i]['photo'] ?? '';
+                                $uploadedFiles = json_decode($img, true) ?? [];
+                                $fileCount = count($uploadedFiles);
+                                if ($fileCount > 1 && isset($uploadedFiles[1])) {
+                                    $firstImage = $uploadedFiles[1];
+                                } elseif (isset($uploadedFiles[0])) {
+                                    $firstImage = $uploadedFiles[0];
+                                } else {
+                                    $firstImage = '/default_pic.jpg'; // fallback image
+                                }
 
 
-                                </ul><!-- ul -->
-                            </div><!-- department-details-benefits-box -->
+                                // Construct the full image path
+                                $imagePath = 'admin/pages/uploadedimages/' . $firstImage;
+                            ?>
+                                <div class="row row-gutter-30" style="margin-right:20px">
+                                    <div class="col-lg-6">
+                                        <!-- <div class="department-details-benefits-box-image"> -->
+                                        <img src="<?php echo $imagePath; ?>" class="img-fluid" alt="160" style="height:200px">
+                                        <!-- </div>department-details-benefits-box-image -->
+                                    </div>
+                                    <!--col-lg-6-->
 
-                        </div>
+                                    <div class="department-details-benefits-box">
+                                        <h3><?php echo $name; ?></h3>
+                                        <?php
 
-                        <!--item-->
+                                        ?>
+                                        <p> <?php echo $profession; ?>
+                                            <!--<br><span><?php echo implode($datediff[0]); ?> Years-->
+                                            <!--    (<?php echo $bdy; ?>-->
+                                            <!--    – <?php echo $ddy; ?>)</span>-->
+                                        <ul class="list-unstyled list-style">
+                                            <?php $ts1 = explode('.', $positionsheld);
+                                            foreach ($ts1 as $s1) { ?>
+                                                <li>
+                                                    <i class="fa-solid fa-circle-arrow-right"></i>
+                                                    <h5 style="margin-top:30px"><?php echo $s1; ?></h5>
+                                                </li><!-- li -->
+                                            <?php }
+                                            ?>
+                                            <?php $ts2 = explode('.', $roleinindependencemovement);
+                                            foreach ($ts2 as $s2) { ?>
+                                                <li>
+                                                    <i class="fa-solid fa-circle-arrow-right"></i>
+                                                    <h5 style="margin-top:30px"><?php echo $s2; ?></h5>
+                                                </li><!-- li -->
+                                            <?php }
+                                            ?>
 
 
-                        <?php }?>
+                                        </ul><!-- ul -->
+                                    </div><!-- department-details-benefits-box -->
+
+                                </div>
+
+                                <!--item-->
 
 
-                    </div><!-- event-details-carousel -->
+                            <?php } ?>
 
-                </div><!-- event-details-gallery-box -->
 
-                <button class="btn btn-primary" style="margin-left:50px"><a href="leaders.php" style="color:white">View
-                        More</a></button>
-            </section>
+                        </div><!-- event-details-carousel -->
+
+                    </div><!-- event-details-gallery-box -->
+
+                    <button class="btn btn-primary" style="margin-left:50px"><a href="leaders.php" style="color:white">View
+                            More</a></button>
+                </section>
 
 
             <?php }
-?>
+            ?>
 
 
 
@@ -587,14 +587,14 @@ $firstImage = $uploadedFiles[0];
 
         <section class="funfact-section">
 
-            <?php 
-        $data = $obj->selectdata("population","select * from population");
-        $m = $data[0]['totalnoofmale'];
-        $f = $data[0]['totalnooffemale'];
-        $tot = floor(($m+$f)/1000);
-        $dataedu = $obj->selectdata("education","select * from education");
-        $dataarea= $obj->selectdata('villagebasic',"select * from villagebasic");
-        ?>
+            <?php
+            $data = $obj->selectdata("population", "select * from population");
+            $m = $data[0]['totalnoofmale'];
+            $f = $data[0]['totalnooffemale'];
+            $tot = floor(($m + $f) / 1000);
+            $dataedu = $obj->selectdata("education", "select * from education");
+            $dataarea = $obj->selectdata('villagebasic', "select * from villagebasic");
+            ?>
             <!--department-section-->
             <div class="event-details-gallery-box">
                 <div class="event-details-carousel owl-carousel owl-theme" style="padding-left:5%; padding-right:5%;">
@@ -630,11 +630,11 @@ $firstImage = $uploadedFiles[0];
                                         <i class="flaticon-university"></i>
                                     </div><!-- funfact-counter-icon -->
                                     <div class="funfact-counter-number">
-                                        <?php if($dataedu!='No Data Found!'){?>
-                                        <h3 class="counter-number"><?php echo count($dataedu); ?></h3>
-                                        <?php }else{
+                                        <?php if ($dataedu != 'No Data Found!') { ?>
+                                            <h3 class="counter-number"><?php echo count($dataedu); ?></h3>
+                                        <?php } else {
                                             echo '<h3> No Data </h3>';
-                                    }
+                                        }
                                         ?>
 
                                         <span class="funfact-counter-number-postfix"></span>
@@ -673,7 +673,7 @@ $firstImage = $uploadedFiles[0];
                                     <div class="funfact-counter-icon">
                                         <i class="flaticon-landscape"></i>
                                     </div><!-- funfact-counter-icon -->
-                                    <div class="funfact-counter-number">                                        
+                                    <div class="funfact-counter-number">
                                         <h3 class="counter-number"><?php echo $dataarea[0]['area']; ?></h3>
                                         <span class="funfact-counter-number-postfix">sq.km</span>
                                     </div><!-- funfact-counter-number -->
@@ -797,7 +797,7 @@ $firstImage = $uploadedFiles[0];
     <!-- Mobile Nav in Footer.php page-->
 
 
-    
+
     <a href="#" class="scroll-to-top scroll-to-target" data-target="html"><i class="fa-solid fa-arrow-up"></i></a>
     <!-- plugins js -->
     <script src="assets/vendor/jquery/jquery.min.js"></script>

@@ -1,7 +1,7 @@
-<?php 
-   
-   include_once('../config.php');
-   
+<?php
+
+include_once('../config.php');
+
 session_start();
 if (!isset($_SESSION['village_admin_email'])) {
     header("Location: index.php");
@@ -23,87 +23,83 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 // Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
 
-    $obj = new ConnDb();
+$obj = new ConnDb();
 
 
 
-    $selAdmin= "select * from admin";
-    $admin=$obj->selectdata("admin",$selAdmin);
-    $adminid=$admin[0]['email'];
+$selAdmin = "select * from admin";
+$admin = $obj->selectdata("admin", $selAdmin);
+$adminid = $admin[0]['email'];
 
-    $selVillage="select * from villagebasic";
-    $village=$obj->selectdata("villagebasic",$selVillage);
-    $villagename=$village[0]['name']; 
+$selVillage = "select * from villagebasic";
+$village = $obj->selectdata("villagebasic", $selVillage);
+$villagename = $village[0]['name'];
 
 //    $villagename=isset($_POST['villagename']) ? $obj->escape($_POST['villagename']) : '';
 //    $adminid=isset($_POST['adminid']) ? $obj->escape($_POST['adminid']) : '';
-   $district=isset($_POST['district']) ? $obj->escape($_POST['district']) : '';
-   $state=isset($_POST['state']) ? $obj->escape($_POST['state']) : '';
-   $pincode=isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : '';
-   $mapdes=isset($_POST['mapdes']) ? $obj->escape($_POST['mapdes']) : '';
-   $area=isset($_POST['area']) ? $obj->escape($_POST['area']) : '';
-   $establishedyear=isset($_POST['establishedyear']) ? $obj->escape($_POST['establishedyear']) : '';
-   $sarpanchname=isset($_POST['sarpanchname']) ? $obj->escape($_POST['sarpanchname']) : '';
-   $sarpanchcontact=isset($_POST['sarpanchcontact']) ? $obj->escape($_POST['sarpanchcontact']) : '';
-   $vmap=isset($_POST['vmap']) ? $obj->escape($_POST['vmap']) : '';
-   
-   if(isset($_GET['updateid'])){
+$district = isset($_POST['district']) ? $obj->escape($_POST['district']) : '';
+$state = isset($_POST['state']) ? $obj->escape($_POST['state']) : '';
+$pincode = isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : '';
+$mapdes = isset($_POST['mapdes']) ? $obj->escape($_POST['mapdes']) : '';
+$area = isset($_POST['area']) ? $obj->escape($_POST['area']) : '';
+$establishedyear = isset($_POST['establishedyear']) ? $obj->escape($_POST['establishedyear']) : '';
+$sarpanchname = isset($_POST['sarpanchname']) ? $obj->escape($_POST['sarpanchname']) : '';
+$sarpanchcontact = isset($_POST['sarpanchcontact']) ? $obj->escape($_POST['sarpanchcontact']) : '';
+$vmap = isset($_POST['vmap']) ? $obj->escape($_POST['vmap']) : '';
 
-    $selq= "select * from villagebasic";
-    $res=$obj->selectdata("villagebasic",$selq);
+if (isset($_GET['updateid'])) {
+
+    $selq = "select * from villagebasic";
+    $res = $obj->selectdata("villagebasic", $selq);
 
     // $villagename=$res[0]['Name'];
     // $adminid=$res[0]['AdminID'];;
-    $district=$res[0]['district'];
-    $state=$res[0]['state'];;
-    $pincode=$res[0]['pincode'];
-    $mapdes=$res[0]['mapdes'];
-    $area=$res[0]['area'];
-    $establishedyear=$res[0]['establishedyear'];
-    $sarpanchname=$res[0]['sarpanchname'];
-    $sarpanchcontact=$res[0]['contactnumber'];
-    $vmap= $res[0]['vmap'];
+    $district = $res[0]['district'];
+    $state = $res[0]['state'];;
+    $pincode = $res[0]['pincode'];
+    $mapdes = $res[0]['mapdes'];
+    $area = $res[0]['area'];
+    $establishedyear = $res[0]['establishedyear'];
+    $sarpanchname = $res[0]['sarpanchname'];
+    $sarpanchcontact = $res[0]['contactnumber'];
+    $vmap = $res[0]['vmap'];
+}
 
+if (isset($_POST['update'])) {
+    // $villagename=isset($_POST['villagename']) ? $obj->escape($_POST['villagename']) : '';
+    // $adminid=isset($_POST['adminid']) ? $obj->escape($_POST['adminid']) : '';
+    $district = isset($_POST['district']) ? $obj->escape($_POST['district']) : '';
+    $state = isset($_POST['state']) ? $obj->escape($_POST['state']) : '';
+    $pincode = isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : 'NULL';
+    $mapdes = isset($_POST['mapdes']) ? $obj->escape($_POST['mapdes']) : '';
+    $area = isset($_POST['area']) ? $obj->escape($_POST['area']) : '';
+    $establishedyear = isset($_POST['establishedyear']) ? $obj->escape($_POST['establishedyear']) : '';
+    $sarpanchname = isset($_POST['sarpanchname']) ? $obj->escape($_POST['sarpanchname']) : '';
+    $sarpanchcontact = isset($_POST['sarpanchcontact']) ? $obj->escape($_POST['sarpanchcontact']) : '';
+    $vmap = isset($_POST['vmap']) ? $obj->escape($_POST['vmap']) : '';
 
-   }
-
-   if(isset($_POST['update'])){
-        // $villagename=isset($_POST['villagename']) ? $obj->escape($_POST['villagename']) : '';
-        // $adminid=isset($_POST['adminid']) ? $obj->escape($_POST['adminid']) : '';
-        $district=isset($_POST['district']) ? $obj->escape($_POST['district']) : '';
-        $state=isset($_POST['state']) ? $obj->escape($_POST['state']) : '';
-        $pincode=isset($_POST['pincode']) ? $obj->escape($_POST['pincode']) : 'NULL';
-        $mapdes=isset($_POST['mapdes']) ? $obj->escape($_POST['mapdes']) : '';
-        $area=isset($_POST['area']) ? $obj->escape($_POST['area']) : '';
-        $establishedyear=isset($_POST['establishedyear']) ? $obj->escape($_POST['establishedyear']) : '';
-        $sarpanchname=isset($_POST['sarpanchname']) ? $obj->escape($_POST['sarpanchname']) : '';
-        $sarpanchcontact=isset($_POST['sarpanchcontact']) ? $obj->escape($_POST['sarpanchcontact']) : '';
-        $vmap=isset($_POST['vmap']) ? $obj->escape($_POST['vmap']) : '';
-
-        $updateQ="UPDATE villagebasic SET district='$district',
+    $updateQ = "UPDATE villagebasic SET district='$district',
         state='$state',mapdes='$mapdes',area='$area',
         establishedYear='$establishedyear',pincode='$pincode',
         sarpanchname='$sarpanchname',contactnumber='$sarpanchcontact',vmap='$vmap'";
-        //   WHERE villageid= {$_GET['updateid']}";
+    //   WHERE villageid= {$_GET['updateid']}";
 
-       
-         $result =  $obj->updatedata("villagebasic",$updateQ);
-		if($result =="Data Updated"){
-            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-            echo "<script>alert('Success! Data Updated');
+
+    $result =  $obj->updatedata("villagebasic", $updateQ);
+    if ($result == "Data Updated") {
+        // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+        echo "<script>alert('Success! Data Updated');
             window.location.href = 'editform.php?tablename=villagebasic';
             </script>";
-            
-        }else{
-            // echo $updateQ;
-            echo "<script>alert('Error: Failed to update data');</script>";
-        }
+    } else {
+        // echo $updateQ;
+        echo "<script>alert('Error: Failed to update data');</script>";
+    }
+}
 
-   }
 
-    
 
-   ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -191,15 +187,15 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                     pattern="[0-9]{6}" title="Please enter a valid 6-digit pin code"
                                                     class="form-control" required />
                                             </div>
-                                            
+
                                             <div class="mb-3 col-md-6">
                                                 <label class="form-label">Area (in square kilometers)</label>
-                                                <input type="text" value="<?php echo $area;?>" name="area"
+                                                <input type="text" value="<?php echo $area; ?>" name="area"
                                                     class="form-control">
                                             </div>
                                             <div class="mb-3 col-md-6">
                                                 <label class="form-label">Village-Established-Year</label>
-                                                <input type="text" value="<?php echo $establishedyear;?>"
+                                                <input type="text" value="<?php echo $establishedyear; ?>"
                                                     name="establishedyear" class="form-control" pattern="[0-9]{4}"
                                                     title="Please enter a valid Year" />
                                             </div>
@@ -221,8 +217,8 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                             </div>
                                             <div class="mb-3 col-md-6">
                                                 <label class="form-label">mapdes </label>
-                                                <textarea class="form-control" 
-                                                 placeholder="Distance and directions from a specific location that can be used instead of a map for the village."
+                                                <textarea class="form-control"
+                                                    placeholder="Distance and directions from a specific location that can be used instead of a map for the village."
                                                     name="mapdes"><?php echo $mapdes; ?></textarea>
                                             </div>
 
@@ -244,6 +240,8 @@ $_SESSION['LAST_ACTIVITY'] = time();
                         </div>
                     </div>
                     <!-- Here Edit End -->
+                    <!-- Add this right after <div class="content-body"> and before the existing form -->
+
 
                 </div>
             </div>
@@ -303,49 +301,49 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 
     <script>
-    function JobickCarousel() {
+        function JobickCarousel() {
 
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
 
-                    margin: 10
-                },
+                        margin: 10
+                    },
 
-                480: {
-                    items: 1
-                },
+                    480: {
+                        items: 1
+                    },
 
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
-            }
-        })
-    }
+            })
+        }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
     </script>
 </body>
 
