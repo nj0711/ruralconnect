@@ -26,7 +26,7 @@
         <div class="main-menu-inner">
             <div class="main-menu-left">
                 <div class="main-menu-logo">
-                    <a href="index.php"><img src="assets/image/logo1.png" alt="img-1" width="95" style="margin-left: 10px ;"></a>
+                    <a href="index.php"><img src="assets/image/logo1.png" alt="img-1" width="95" style="margin-left: 10px ;" ></a>
                     <!--  <div id="google_translate_element" class="translate-widget container mt-5  p-3 text-center" class="skiptranslate" style="margin-left:40px;">
                     
                         </div> -->

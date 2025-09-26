@@ -7,8 +7,8 @@
             <div class="main-menu-left">
                 <div class="main-menu-logo">
                     <a href="index.php"><img src="assets/image/logo1.png" alt="img-1" width="80" height="80"></a>
-                     <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center">
-                        </div>
+                    <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center">
+                    </div>
                 </div><!-- main-menu-logo -->
 
                 <div class="navigation" style="margin-left: auto;">
@@ -29,22 +29,22 @@
                                 <li style="margin-top:-15px;"><a href="banking.php">Banking</a></li>
                                 <li style="margin-top:-15px;"><a href="education.php">Education</a></li>
                                 <li style="margin-top:-15px;"><a href="electrification.php">Electrification</a></li>
-                              
+
                                 <li style="margin-top:-15px;"><a href="emergencyservices.php">Emergency Services</a>
                                 </li>
                                 <li style="margin-top:-15px;"><a href="employmentcenters.php">Employment Centers</a>
                                 </li>
-                                  <li style="margin-top:-15px;"><a href="entertainment.php">Entertainment</a></li>
+                                <li style="margin-top:-15px;"><a href="entertainment.php">Entertainment</a></li>
                                 <li style="margin-top:-15px;"><a href="eventsfestivals.php">Events & Festivals</a></li>
                                 <li style="margin-top:-15px;"><a href="fuel.php">Fuel</a></li>
                                 <li style="margin-top:-15px;"><a href="health.php">Health</a></li>
                                 <li style="margin-top:-15px;"><a href="hotels.php">Hotels</a></li>
                                 <li style="margin-top:-15px;"><a href="DrainageDetails.php">Others</a></li>
-                                  <li style="margin-top:-15px;"><a href="placestoworship.php">Places To Worship</a></li>
+                                <li style="margin-top:-15px;"><a href="placestoworship.php">Places To Worship</a></li>
                                 <li style="margin-top:-15px;"><a href="transport.php">Public Transport</a></li>
                                 <li style="margin-top:-15px;"><a href="tourism.php">Tourism</a></li>
-                              
-                                
+
+
                             </ul>
 
 
@@ -58,14 +58,14 @@
                 </div><!-- navigation -->
             </div><!-- main-menu-left -->
 
-<div class="main-menu-right">
+            <div class="main-menu-right">
                 <div class="mobile-menu-button mobile-nav-toggler">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div><!-- mobile-menu-button -->
-                
-                
+
+
             </div><!-- main-menu-right -->
         </div><!-- main-menu-inner -->
     </div><!-- main-menu -->
@@ -83,8 +83,8 @@
             <a href="index.php"><img src="assets/image/logo1.png" width="100" height="100" alt=""></a>
         </div><!-- logo-box -->
         <div class="mobile-nav-container"></div><!-- mobile-nav-container -->
-        
-       
+
+
     </div><!-- mobile-nav-content -->
 </div><!-- mobile-nav-wrapper -->
 
@@ -110,20 +110,28 @@
 
 <!-- Custom CSS to Redesign the Div -->
 <style>
-select.goog-te-combo {
-    padding: 5px 8px;
-    border: 1px solid #afabab;
-    border-radius: 10px;
-}
-.p-3 {
-    padding: 0px !important;
-}
+    select.goog-te-combo {
+        padding: 5px 8px;
+        border: 1px solid #afabab;
+        border-radius: 10px;
+    }
 
-.goog-te-gadget {
-    font-size: 0px;
-    margin-bottom: 20px;
-}
-div.skiptranslate.goog-te-gadget > span{ 
-    display: none;
-}
+    .p-3 {
+        padding: 0px !important;
+    }
+
+    .goog-te-gadget {
+        font-size: 0px;
+        margin-bottom: 20px;
+    }
+
+    div.skiptranslate.goog-te-gadget>span {
+        display: none;
+    }
+
+    .main-menu-logo {
+        padding: 0px;
+        background: #003b49;
+
+    }
 </style>
