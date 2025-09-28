@@ -3515,7 +3515,7 @@ a.search-toggler{
 	align-items: center;
 	color: var(--thm-white);
 	display: inline-block;
-	background-color: var(--thm-dark-black);
+	/* background-color: var(--thm-dark-black); */
 }
 .footer-widget-text {
 	margin-top: 32px;
