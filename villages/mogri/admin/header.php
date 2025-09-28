@@ -48,7 +48,7 @@
                  </div>
                  <ul class="navbar-nav header-right">
                      <li class="nav-item dropdown header-profile">
-                         <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center">
+                         <!-- <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center"> -->
                          </div>
                      </li>
 
@@ -244,7 +244,7 @@
                  </div>
                  <ul class="navbar-nav header-right">
                      <li class="nav-item dropdown header-profile">
-                         <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center">
+                         <!-- <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center"> -->
                          </div>
                      </li>
 
