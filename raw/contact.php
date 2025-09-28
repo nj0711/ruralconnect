@@ -1,25 +1,33 @@
 <?php
 include_once('admin/config.php');
-$obj=new ConnDb();
-$temp_db = explode('_',$db);
+$obj = new ConnDb();
+$temp_db = explode('_', $db);
 $selQ = "select villageid from villagebasic";
 $res = $obj->selectdata("villagebasic", $selQ);
-$village_id = $res[0]['villageid'];
-if(isset($_POST['submit'])){
-	$name = $_POST['name'];
-	$email = $_POST['email'];
-	$phone_no=$_POST['phone'];
-	$sub=$_POST['subject'];
-	$msg=$_POST['message'];
+if (isset($res[0]['villageid'])) {
+    $village_id = $res[0]['villageid'];
+} else {
+    $village_id = null;
+}
+if (isset($_POST['submit'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone_no = $_POST['phone'];
+    $sub = $_POST['subject'];
+    $msg = $_POST['message'];
 
-	$q="INSERT INTO contacts (vid,name,email,phoneno,subject,msg) values ($village_id,'$name','$email','$phone_no','$sub','$msg')";
+    $q = "INSERT INTO contacts (vid,name,email,phoneno,subject,msg) values ($village_id,'$name','$email','$phone_no','$sub','$msg')";
 
-	$result = $obj->insertdata("contacts",$q);
-if($result=='Data Inserted.'){?>
-		<script> alert("Thank you for reaching out! Your message has been successfully sent."); </script>
-	<?php }else{ ?>
-		<script> alert("Your message was not sent successfully. Please try again!!"); </script>
-	<?php }
+    $result = $obj->insertdata("contacts", $q);
+    if ($result == 'Data Inserted.') { ?>
+        <script>
+            alert("Thank you for reaching out! Your message has been successfully sent.");
+        </script>
+    <?php } else { ?>
+        <script>
+            alert("Your message was not sent successfully. Please try again!!");
+        </script>
+<?php }
 }
 ?>
 <!DOCTYPE html>
@@ -52,7 +60,7 @@ if($result=='Data Inserted.'){?>
 <body>
 
 
-    <!--header--> <?php include"header.php"; ?>
+    <!--header--> <?php include "header.php"; ?>
     <!-- Header Ends Here -->
 
     <div class="page-wrapper">
@@ -151,11 +159,11 @@ if($result=='Data Inserted.'){?>
     </div>
     <!--page-wrapper-->
 
-    <!-- Footer Starts Here   --> <?php include"footer.php"; ?>
+    <!-- Footer Starts Here   --> <?php include "footer.php"; ?>
     <!-- Footer Ends Here -->
 
 
-    
+
     <a href="#" class="scroll-to-top scroll-to-target" data-target="html"><i class="fa-solid fa-arrow-up"></i></a>
     <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/jquery/jquery.min.js"></script>
