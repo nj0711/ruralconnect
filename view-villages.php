@@ -314,16 +314,14 @@
                                 $villageName = htmlspecialchars($row['village_name']); // Sanitize output
                                 $vName = ucfirst($villageName);
                                 $villageSlug = strtolower(str_replace(' ', '-', $villageName)); // Better URL slug
+                                $villageImg = !empty($row['village_img']) ? htmlspecialchars($row['village_img']) : 'assets/image/bg/vlg1.jpg'; // Fallback image
+
                     ?>
                                 <div class="col">
                                     <div class="village-card">
-                                        <div class="village-card-image">
-                                            <img src="assets/image/event/km.jpeg" alt="<?php echo $vName; ?>" class="img-fluid">
+                                        <div class="village-card-image"><img src="<?php echo $villageImg; ?>" alt="<?php echo $vName; ?>" class="card-img-top">
                                             <div class="card-overlay">
-                                                <div class="card-hover-content">
-                                                    <i class="fas fa-map-marker-alt"></i>
-                                                    <span>Explore Village</span>
-                                                </div>
+                                                <div class="card-hover-content"><i class="fas fa-map-marker-alt"></i><span>Explore Village</span></div>
                                             </div>
                                         </div>
                                         <div class="village-card-content">

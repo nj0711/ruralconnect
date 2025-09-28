@@ -306,7 +306,8 @@
 					<h2 class="section-title">Our Villages</h2>
 					<p class="section-subtitle">Discover the charm of rural Gujarat</p>
 				</div>
-				<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"><?php
+				<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+					<?php
 																			$table = mysqli_query($conn, "select * from villages");
 																			while ($row = mysqli_fetch_array($table)) {
 																				$villageName = htmlspecialchars($row['village_name']); // Secure output
