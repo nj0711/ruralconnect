@@ -97,27 +97,27 @@ $_SESSION['last_activity'] = time();
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>Message</th>
-                                            <th>Date</th>
+                                            <!-- <th>Date</th> -->
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $table = mysqli_query($conn, "select * from contact");
+                                        $table = mysqli_query($conn, "select * from contacts");
                                         while ($row = mysqli_fetch_array($table)) {
                                         ?>
                                             <tr>
-                                                <td><?php echo "$row[id]"; ?></td>
+                                                <td><?php echo "$row[vid]"; ?></td>
                                                 <td><?php echo "$row[name]"; ?></td>
                                                 <td><?php echo "$row[subject]"; ?></td>
                                                 <td><?php echo "$row[email]"; ?></td>
-                                                <td><?php echo "$row[pno]"; ?></td>
+                                                <td><?php echo "$row[phoneno]"; ?></td>
                                                 <td><textarea id="" disabled><?php echo "$row[message]"; ?></textarea></td>
-                                                <td><?php echo "$row[date]"; ?></a></td>
+                                                <!-- <td><?php echo "$row[date]"; ?></a></td> -->
                                                 <td>
                                                     <div class="d-flex">
                                                         <a href="mailto:<?php echo "$row[email]"; ?>" class="btn btn-primary shadow btn-xs sharp me-1"><i class="fa-regular fa-envelope"></i></a>
-                                                        <a href="delete-contact.php?id=<?php echo "$row[id]"; ?>" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash" onclick='return remove()'></i></a>
+                                                        <a href="delete-contact.php?id=<?php echo "$row[vid]"; ?>" class="btn btn-danger shadow btn-xs sharp"><i class="fa fa-trash" onclick='return remove()'></i></a>
                                                     </div>
                                                 </td>
                                             </tr>
