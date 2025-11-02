@@ -112,7 +112,7 @@ $_SESSION['last_activity'] = time();
                                                 <td><?php echo "$row[subject]"; ?></td>
                                                 <td><?php echo "$row[email]"; ?></td>
                                                 <td><?php echo "$row[phoneno]"; ?></td>
-                                                <td><textarea id="" disabled><?php echo "$row[message]"; ?></textarea></td>
+                                                <td><textarea id="" disabled><?php echo "$row[msg]"; ?></textarea></td>
                                                 <!-- <td><?php echo "$row[date]"; ?></a></td> -->
                                                 <td>
                                                     <div class="d-flex">
