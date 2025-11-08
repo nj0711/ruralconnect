@@ -1,64 +1,33 @@
 <?php
 set_time_limit(0);
-// Include database connection for the admin panel
 include('config.php');
-session_start(); // Start the session at the beginning
+session_start();
 
 if (!isset($_SESSION['admin_email'])) {
     header("Location: index.php");
     exit();
 }
 
-//Session management code
-
-// Set the timeout duration (in seconds)
-$timeout_duration = 600; // 10 minutes
-
-// Check if last activity is set and calculate the inactivity period
+// Session timeout
+$timeout_duration = 600;
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
-    // Last request was over 10 minutes ago, so destroy the session
-    session_unset();     // Unset session variables
-    session_destroy();   // Destroy the session
-    header("Location: index.php"); // Redirect to login page
+    session_unset();
+    session_destroy();
+    header("Location: index.php");
     exit();
 }
-
-// Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
-
-//session code ends
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Start output buffering
 ob_start();
 
-//------------- Function to recursiv8ely copy files and subdirectories
-/*function copyDirectory($source, $destination) {
-    $dir = opendir($source);
-    @mkdir($destination);
-    while (($file = readdir($dir)) !== false) {
-        if ($file != '.' && $file != '..') {
-            if (is_dir($source . '/' . $file)) {
-                copyDirectory($source . '/' . $file, $destination . '/' . $file);
-            } else {
-                copy($source . '/' . $file, $destination . '/' . $file);
-            }
-        }
-    }
-
-    closedir($dir);
-}*/
-
-// Function to recursively copy files and subdirectories safely
+// Function to recursively copy files and subdirectories
 function copyDirectory($source, $destination)
 {
-    if (!is_dir($source)) {
-        return false;
-    }
-
+    if (!is_dir($source)) return false;
     @mkdir($destination, 0777, true);
 
     $iterator = new RecursiveIteratorIterator(
@@ -68,46 +37,67 @@ function copyDirectory($source, $destination)
 
     foreach ($iterator as $item) {
         $destPath = $destination . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
-
         if ($item->isDir()) {
             @mkdir($destPath, 0777, true);
         } else {
-            copy($item, $destPath);
+            copy($item->getPathname(), $destPath);
         }
     }
-
     return true;
 }
 
-// Function to execute SQL file to create tables
-function executeSqlFile($conn, $filePath)
+// Function to execute only selected tables from SQL file
+function executeSelectedTablesFromSql($conn, $filePath, $allowedTables = [])
 {
+    if (!file_exists($filePath)) {
+        echo "<script>alert('SQL file not found: $filePath');</script>";
+        return;
+    }
+
     $sql = file_get_contents($filePath);
-    if (mysqli_multi_query($conn, $sql)) {
-        do {
-            if ($result = mysqli_store_result($conn)) {
-                mysqli_free_result($result);
+    $queries = array_filter(array_map('trim', explode(';', $sql)));
+
+    $createdCount = 0;
+    foreach ($queries as $query) {
+        if (empty($query)) continue;
+
+        if (preg_match('/CREATE\s+TABLE\s+(IF\s+NOT\s+EXISTS\s+)?[`"]?([a-zA-Z0-9_]+)[`"]?/i', $query, $matches)) {
+            $tableName = strtolower($matches[2]);
+
+            if (in_array($tableName, array_map('strtolower', $allowedTables))) {
+                if (!mysqli_query($conn, $query . ';')) {
+                    echo "<script>console.log('Error creating table $tableName: " . mysqli_error($conn) . "');</script>";
+                } else {
+                    $createdCount++;
+                }
+
+                if ($createdCount >= count($allowedTables)) break;
             }
-        } while (mysqli_next_result($conn));
-    } else {
-        echo "<script>alert('Error executing SQL file: " . mysqli_error($conn) . "');</script>";
+        }
     }
 }
 
-// Check if the form is submitted
+// ========== FORM SUBMISSION ==========
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize inputs
     $villageName = strtolower(trim(mysqli_real_escape_string($conn, $_POST['village_name'])));
-    $dbHost = trim(mysqli_real_escape_string($conn, $_POST['db_host']));
-    $dbName = trim(mysqli_real_escape_string($conn, $_POST['db_name']));
-    $dbUser = trim(mysqli_real_escape_string($conn, $_POST['db_user']));
-    $dbPass = trim($_POST['db_pass']);
-    $adminEmail = trim(mysqli_real_escape_string($conn, $_POST['admin_email']));
-    $adminPass = trim($_POST['admin_pass']);
+    $dbHost      = trim(mysqli_real_escape_string($conn, $_POST['db_host']));
+    $dbName      = trim(mysqli_real_escape_string($conn, $_POST['db_name']));
+    $dbUser      = trim(mysqli_real_escape_string($conn, $_POST['db_user']));
+    $dbPass      = trim($_POST['db_pass']); // Password not escaped (can contain special chars)
+    $adminEmail  = trim(mysqli_real_escape_string($conn, $_POST['admin_email']));
+    $adminPass   = trim($_POST['admin_pass']);
 
     $salt = "villageonweb";
     $password_encrypted = sha1($adminPass . $salt);
 
-    // Handle file upload for village_img
+    // Validate required fields
+    if (empty($villageName) || empty($dbName) || empty($adminEmail) || empty($adminPass)) {
+        echo "<script>alert('All fields are required.');</script>";
+        goto end_form;
+    }
+
+    // Handle image upload
     $villageImg = '';
     if (isset($_FILES['village_img']) && $_FILES['village_img']['error'] == UPLOAD_ERR_OK) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -117,264 +107,214 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fileTmpName = $_FILES['village_img']['tmp_name'];
         $fileName = $_FILES['village_img']['name'];
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        $newFileName = $villageName . '_' . time() . '.' . $fileExt; // Unique filename
+        $newFileName = $villageName . '_' . time() . '.' . $fileExt;
         $uploadPath = '../assets/image/village_image/' . $newFileName;
 
-        // Validate file type and size
         if (!in_array($fileType, $allowedTypes)) {
-            echo "<script>alert('Invalid file type. Only JPG, PNG, and GIF are allowed.');</script>";
-        } elseif ($fileSize > $maxFileSize) {
-            echo "<script>alert('File size exceeds 5MB limit.');</script>";
-        } else {
-            // Move uploaded file to assets/image/village_image/
-            if (move_uploaded_file($fileTmpName, $uploadPath)) {
-                $villageImg = 'assets/image/village_image/' . $newFileName;
-            } else {
-                echo "<script>alert('Failed to upload image.');</script>";
-            }
+            echo "<script>alert('Invalid file type. Only JPG, PNG, GIF allowed.');</script>";
+            goto end_form;
         }
+        if ($fileSize > $maxFileSize) {
+            echo "<script>alert('File size exceeds 5MB.');</script>";
+            goto end_form;
+        }
+        if (!move_uploaded_file($fileTmpName, $uploadPath)) {
+            echo "<script>alert('Failed to upload image.');</script>";
+            goto end_form;
+        }
+        $villageImg = 'assets/image/village_image/' . $newFileName;
     } else {
         echo "<script>alert('Please upload a village image.');</script>";
+        goto end_form;
     }
 
-    // Create village folder dynamically
+    // Prevent duplicate village
     $villageFolder = '../villages/' . $villageName;
-
-    if (!is_dir($villageFolder)) {
-        if (mkdir($villageFolder, 0755, true)) {
-            // Copy files to the new village folder
-            $source = '../raw/';
-            copyDirectory($source, $villageFolder);
-
-            // Write config.php file for the new village
-            $configContent = "<?php
-            // Define the database name globally
-            \$db = \"$dbName\";  // Replace with your actual database name
-            
-            class ConnDb
-            {
-                private \$server = \"$dbHost\";
-                private \$user = \"$dbUser\";
-                private \$user_pass = \"$dbPass\";
-                public \$mysqli = null;
-                public \$conn = false;
-                private \$result = array();
-                private \$db;
-            
-                // Modify the constructor to use the global \$db
-                public function __construct()
-                {
-                    global \$db;  // Access the global \$db
-                    \$this->db = \$db;
-            
-                    if (!\$this->conn) {
-                        \$this->mysqli = new mysqli(\$this->server, \$this->user, \$this->user_pass);
-                        \$this->conn = true;
-            
-                        if (\$this->mysqli->connect_error) {
-                            array_push(\$this->result, \$this->mysqli->connect_error);
-                            print_r(\$this->result);
-                            \$this->conn = false;
-                        }
-            
-                        if (\$this->databaseExists(\$this->db)) {
-                            \$this->mysqli = new mysqli(\$this->server, \$this->user, \$this->user_pass, \$this->db);
-                        } else {
-                            print_r(\$this->result[0]);
-                        }
-                    }
-                }
-            
-                public function databaseExists(\$db)
-                {
-                    \$sql = \"SHOW DATABASES LIKE '\$db'\";
-                    \$res = \$this->mysqli->query(\$sql);
-                    if (\$res) {
-                        if (\$res->num_rows == 1) {
-                            return true;
-                        } else {
-                            array_push(\$this->result, \$db . \"  does not exist!\");
-                            return false;
-                        }
-                    }
-                }
-            
-                public function insertdata(\$table, \$values)
-                {
-                    if (\$this->tableExists(\$table)) {
-                        \$sql = \$values;
-                        try {
-                            \$this->mysqli->query(\$sql);
-                            return \"Data Inserted.\";
-                        } catch (Exception \$e) {
-                            return \"Data Already Exists!\" . \$e;
-                        }
-                    } else {
-                        print_r(\$this->result[0]);
-                    }
-                }
-            
-                public function insertdata2(\$table, \$values)
-                {
-                    if (\$this->tableExists(\$table)) {
-                        \$sql = \$values;
-                        try {
-                            \$this->mysqli->query(\$sql);
-                            return \$this->mysqli->insert_id;
-                        } catch (Exception \$e) {
-                            return \"Data Already Exists!\";
-                        }
-                    } else {
-                        print_r(\$this->result[0]);
-                    }
-                }
-            
-                public function selectdata(\$table, \$values)
-                {
-                    if (\$this->tableExists(\$table)) {
-                        \$sql = \$values;
-                        if (\$res = \$this->mysqli->query(\$sql)) {
-                            if (\$res->num_rows > 0) {
-                                while (\$row = \$res->fetch_assoc()) {
-                                    \$val[] = \$row;
-                                }
-                                return \$val;
-                            } else {
-                                array_push(\$this->result, \"No Data Found!\");
-                                // print_r(\$this->result[0]);
-                                return 'No Data Found!';
-                            }
-                        }
-                    } else {
-                        print_r(\$this->result[0]);
-                    }
-                }
-            
-                public function updatedata(\$table, \$values)
-                {
-                    if (\$this->tableExists(\$table)) {
-                        \$sql = \$values;
-                        if (\$this->mysqli->query(\$sql)) {
-                            return \"Data Updated\";
-                        } else {
-                            array_push(\$this->result, \" Data updated Failed!\");
-                            print_r(\$this->result[0]);
-                        }
-                    } else {
-                        print_r(\$this->result[0]);
-                    }
-                }
-            
-                public function deletedata(\$table, \$values)
-                {
-                    if (\$this->tableExists(\$table)) {
-                        \$sql = \$values;
-                        if (\$this->mysqli->query(\$sql)) {
-                            return \"Data Deleted\";
-                        }
-                    } else {
-                        print_r(\$this->result[0]);
-                    }
-                }
-            
-                public function tableExists(\$table)
-                {
-                    \$sql = \"SHOW TABLES FROM \$this->db LIKE '\$table'\";
-                    \$res = \$this->mysqli->query(\$sql);
-                    if (\$res->num_rows == 1) {
-                        return true;
-                    } else {
-                        array_push(\$this->result, \$table . \"  does not exist in DB!\");
-                        return false;
-                    }
-                }
-            
-                public function escape(\$value)
-                {
-                    return \$this->mysqli->real_escape_string(\$value);
-                }
-            
-                public function __destruct()
-                {
-                    if (\$this->mysqli) {
-                        if (\$this->mysqli->close()) {
-                            \$this->conn = false;
-                        }
-                    }
-                }
-            }
-            ?>";
-
-            file_put_contents($villageFolder . '/admin/config.php', $configContent);
-
-            // Connect to the new village database and execute the SQL file
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
-            if (!$conn) {
-                die("Failed to connect to village database: " . mysqli_connect_error());
-            }
-
-            $sqlFilePath = __DIR__ . '/schemas/create.sql';
-            executeSqlFile($conn, $sqlFilePath);
-
-            // Insert admin credentials into the village database
-            $insertAdminQuery = "INSERT INTO admin (email, passwordhash) VALUES ('$adminEmail', '$password_encrypted')";
-            mysqli_query($conn, $insertAdminQuery) or die("Error inserting admin: " . mysqli_error($conn));
-
-            mysqli_close($conn);
-
-            // Now connect to the admin panel database
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel'); // Replace with your actual admin database
-            if (!$conn) {
-                die("Failed to connect to admin panel database: " . mysqli_connect_error());
-            }
-
-            // Insert village info into admin panel
-            $query = "INSERT INTO villages (village_name, db_host, db_name, db_user, db_pass, admin_email, admin_pass, village_img) 
-                      VALUES ('$villageName', '$dbHost', '$dbName', '$dbUser', '$dbPass', '$adminEmail', '$password_encrypted', '$villageImg')";
-            mysqli_query($conn, $query) or die("Error inserting village: " . mysqli_error($conn));
-
-            //jagdish code start 
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel');
-            $id_of_admin_query = "select * from villages where village_name='" . $villageName . "'";
-            $id_of_admin = mysqli_query($conn, $id_of_admin_query);
-            $id_a = mysqli_fetch_assoc($id_of_admin)['id'];
-
-            mysqli_close($conn);
-
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
-            $admin_id_query = "UPDATE admin set AdminID= $id_a";
-            $admin_id_res = mysqli_query($conn, $admin_id_query);
-            mysqli_close($conn);
-
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
-            echo $ins = "INSERT INTO villagebasic (AdminID,Name) VALUES ($id_a,'$villageName')";
-            echo "<script>alert($ins);</script>";
-            if (mysqli_query($conn, $ins)) {
-                echo $insp = "INSERT INTO population (populationid,villageid) VALUES (1,1)";
-                echo "<script>alert($ins);</script>";
-                if (mysqli_query($conn, $insp)) {
-                    echo "<script>alert('Now you can insert data');</script>";
-                } else {
-                    echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
-                }
-            } else {
-                // echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
-            }
-
-            mysqli_close($conn);
-
-            // Redirect after village creation
-            header("Location: villages.php");
-            exit;
-        } else {
-            echo "<script>alert('Failed to create village folder.');</script>";
-        }
-    } else {
+    if (is_dir($villageFolder)) {
         echo "<script>alert('Village already exists!');</script>";
+        goto end_form;
     }
-}
-ob_end_flush();
 
+    // ========== STEP 1: Connect to Admin Panel DB ==========
+    $adminPanelConn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel');
+    if (!$adminPanelConn) {
+        die("Admin DB Connection failed: " . mysqli_connect_error());
+    }
+
+    // ========== STEP 2: Insert into `villages` table ==========
+    $insertVillageQuery = "INSERT INTO villages 
+        (village_name, db_host, db_name, db_user, db_pass, admin_email, admin_pass, village_img) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    // Use prepared statement for security
+    $stmt = mysqli_prepare($adminPanelConn, $insertVillageQuery);
+    mysqli_stmt_bind_param($stmt, "ssssssss", $villageName, $dbHost, $dbName, $dbUser, $dbPass, $adminEmail, $password_encrypted, $villageImg);
+    if (!mysqli_stmt_execute($stmt)) {
+        echo "<script>alert('Error saving village info: " . mysqli_error($adminPanelConn) . "');</script>";
+        mysqli_stmt_close($stmt);
+        mysqli_close($adminPanelConn);
+        goto end_form;
+    }
+    $villageId = mysqli_insert_id($adminPanelConn);
+    mysqli_stmt_close($stmt);
+
+    // ========== STEP 3: Create Database (Only Once) ==========
+    $sql = "CREATE DATABASE IF NOT EXISTS `$dbName`";
+    if (!mysqli_query($adminPanelConn, $sql)) {
+        echo "<script>alert('Error creating database: " . mysqli_error($adminPanelConn) . "');</script>";
+        mysqli_close($adminPanelConn);
+        goto end_form;
+    }
+
+    // ========== STEP 4: Switch to Village DB ==========
+    mysqli_close($adminPanelConn);
+    $villageConn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
+    if (!$villageConn) {
+        die("Village DB Connection failed: " . mysqli_connect_error());
+    }
+
+    // ========== STEP 5: Create Required Tables ==========
+    $sqlFilePath = __DIR__ . '/schemas/create.sql';
+    $tablesToCreate = ['admin', 'contacts', 'villagebasic'];
+    executeSelectedTablesFromSql($villageConn, $sqlFilePath, $tablesToCreate);
+
+    // ========== STEP 6: Insert Admin with AdminID ==========
+    $insertAdminQuery = "INSERT INTO admin (email, passwordhash, AdminID) 
+                         VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($villageConn, $insertAdminQuery);
+    mysqli_stmt_bind_param($stmt, "ssi", $adminEmail, $password_encrypted, $villageId);
+    if (!mysqli_stmt_execute($stmt)) {
+        echo "<script>alert('Error inserting admin: " . mysqli_error($villageConn) . "');</script>";
+        mysqli_stmt_close($stmt);
+        mysqli_close($villageConn);
+        goto end_form;
+    }
+    mysqli_stmt_close($stmt);
+
+    // ========== STEP 7: Insert into villagebasic ==========
+    $insertBasic = "INSERT INTO villagebasic (AdminID, Name) VALUES (?, ?)";
+    $stmt = mysqli_prepare($villageConn, $insertBasic);
+    mysqli_stmt_bind_param($stmt, "is", $villageId, $villageName);
+    if (!mysqli_stmt_execute($stmt)) {
+        echo "<script>alert('Error inserting village basic info: " . mysqli_error($villageConn) . "');</script>";
+    }
+    mysqli_stmt_close($stmt);
+
+    // ========== STEP 8: Create Village Folder & Copy Files ==========
+    if (!mkdir($villageFolder, 0755, true)) {
+        echo "<script>alert('Failed to create village folder.');</script>";
+        mysqli_close($villageConn);
+        goto end_form;
+    }
+
+    $source = '../raw/';
+    if (!copyDirectory($source, $villageFolder)) {
+        echo "<script>alert('Failed to copy village files.');</script>";
+        mysqli_close($villageConn);
+        goto end_form;
+    }
+
+    // ========== STEP 9: Write config.php for Village ==========
+    $configContent = "<?php
+    \$db = \"$dbName\";
+
+    class ConnDb {
+        private \$server = \"$dbHost\";
+        private \$user = \"$dbUser\";
+        private \$user_pass = \"$dbPass\";
+        public \$mysqli = null;
+        public \$conn = false;
+        private \$result = array();
+        private \$db;
+
+        public function __construct() {
+            global \$db;
+            \$this->db = \$db;
+
+            if (!\$this->conn) {
+                \$this->mysqli = new mysqli(\$this->server, \$this->user, \$this->user_pass);
+                if (\$this->mysqli->connect_error) {
+                    array_push(\$this->result, \$this->mysqli->connect_error);
+                    \$this->conn = false;
+                    return;
+                }
+
+                if (\$this->databaseExists(\$this->db)) {
+                    \$this->mysqli = new mysqli(\$this->server, \$this->user, \$this->user_pass, \$this->db);
+                    \$this->conn = true;
+                }
+            }
+        }
+
+        public function databaseExists(\$db) {
+            \$sql = \"SHOW DATABASES LIKE '\$db'\";
+            \$res = \$this->mysqli->query(\$sql);
+            return \$res && \$res->num_rows == 1;
+        }
+
+        public function tableExists(\$table) {
+            \$sql = \"SHOW TABLES FROM \$this->db LIKE '\$table'\";
+            \$res = \$this->mysqli->query(\$sql);
+            return \$res && \$res->num_rows == 1;
+        }
+
+        public function insertdata(\$table, \$values) {
+            if (\$this->tableExists(\$table)) {
+                return \$this->mysqli->query(\$values) ? \"Data Inserted.\" : \"Error: \" . \$this->mysqli->error;
+            }
+            return \"Table \$table does not exist!\";
+        }
+
+        public function insertdata2(\$table, \$values) {
+            if (\$this->tableExists(\$table)) {
+                \$this->mysqli->query(\$values);
+                return \$this->mysqli->insert_id;
+            }
+            return 0;
+        }
+
+        public function selectdata(\$table, \$values) {
+            if (\$this->tableExists(\$table) && \$res = \$this->mysqli->query(\$values)) {
+                \$data = [];
+                while (\$row = \$res->fetch_assoc()) \$data[] = \$row;
+                return !empty(\$data) ? \$data : 'No Data Found!';
+            }
+            return 'Table does not exist!';
+        }
+
+        public function updatedata(\$table, \$values) {
+            return \$this->tableExists(\$table) && \$this->mysqli->query(\$values);
+        }
+
+        public function deletedata(\$table, \$values) {
+            return \$this->tableExists(\$table) && \$this->mysqli->query(\$values);
+        }
+
+        public function escape(\$value) {
+            return \$this->mysqli->real_escape_string(\$value);
+        }
+
+        public function __destruct() {
+            if (\$this->mysqli) \$this->mysqli->close();
+        }
+    }
+    ?>";
+
+    if (!file_put_contents($villageFolder . '/admin/config.php', $configContent)) {
+        echo "<script>alert('Failed to write config.php');</script>";
+        mysqli_close($villageConn);
+        goto end_form;
+    }
+
+    mysqli_close($villageConn);
+
+    // Success!
+    echo "<script>alert('Village \"$villageName\" created successfully!'); window.location='villages.php';</script>";
+    exit;
+}
+
+end_form:
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
@@ -382,36 +322,53 @@ ob_end_flush();
 
 <head>
     <meta charset="utf-8">
-    <meta name="format-detection" content="telephone=no">
-    <!-- Mobile Specific -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- PAGE TITLE HERE -->
     <title>Village Creation | Super Admin Panel</title>
-    <!-- Favicon icon -->
     <link rel="shortcut icon" type="image/png" href="images/villagelogo.png">
     <link href="vendor/bootstrap-select/dist/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
-    <!-- Style css -->
     <link href="css/style.css" rel="stylesheet">
 
     <style>
-        /* Loader styles */
-        .loader {
+        .loader,
+        .overlay,
+        .loader-text {
             display: none;
-            /* Hidden by default */
+        }
+
+        .loader {
             position: fixed;
             z-index: 9999;
-            /* Above everything */
             top: 40%;
-            /* Adjust to move loader a bit higher */
             left: 50%;
             transform: translate(-50%, -50%);
             border: 16px solid #f3f3f3;
-            border-radius: 50%;
             border-top: 16px solid #3498db;
+            border-radius: 50%;
             width: 120px;
             height: 120px;
             animation: spin 2s linear infinite;
+        }
+
+        .overlay {
+            position: fixed;
+            z-index: 9998;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .loader-text {
+            position: fixed;
+            z-index: 9999;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
         }
 
         @keyframes spin {
@@ -423,130 +380,80 @@ ob_end_flush();
                 transform: rotate(360deg);
             }
         }
-
-        /* Overlay to disable background interaction */
-        .overlay {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 9998;
-            /* Just below the loader */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Semi-transparent black */
-        }
-
-        /* Warning text for "Do not refresh" */
-        .loader-text {
-            display: none;
-            /* Hidden by default */
-            position: fixed;
-            z-index: 9999;
-            /* Above everything */
-            top: 60%;
-            /* Adjust to appear just below the loader */
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-        }
     </style>
 </head>
 
 <body>
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
     <div id="main-wrapper">
-        <?php include('header.php');  ?>
-        <!--**********************************
-            Content body start
-        ***********************************-->
+        <?php include('header.php'); ?>
+
         <div class="content-body">
-            <!-- row -->
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
                         <div class="basic-form">
                             <h2>Add New Village</h2>
                             <hr>
-                            <form method="POST" class="mb-5" enctype="multipart/form-data">
+                            <form method="POST" enctype="multipart/form-data" id="villageForm">
                                 <h3>Database Details</h3><br>
-                                <label for="db_host">Database Host:</label><br>
-                                <input type="text" id="db_host" class="form-control input-default" value="localhost" name="db_host" required><br><br>
-                                <label for="db_name">Database Name:</label><br>
-                                <input type="text" id="db_name" name="db_name" class="form-control input-default" required><br><br>
-                                <label for="db_user">Database Username:</label><br>
-                                <input type="text" id="db_user" name="db_user" class="form-control input-default" required><br><br>
-                                <label for="db_pass">Database Password:</label><br>
-                                <input type="password" id="db_pass" class="form-control input-default" name="db_pass"><br><br>
+                                <label>Database Host:</label>
+                                <input type="text" class="form-control" name="db_host" value="localhost" required><br><br>
+
+                                <label>Database Name:</label>
+                                <input type="text" class="form-control" name="db_name" required><br><br>
+
+                                <label>Database Username:</label>
+                                <input type="text" class="form-control" name="db_user" required><br><br>
+
+                                <label>Database Password:</label>
+                                <input type="password" class="form-control" name="db_pass"><br><br>
+
                                 <h3>Village Details</h3><br>
-                                <label for="village_name">Village Name:</label><br>
-                                <input type="text" class="form-control input-default" id="village_name" placeholder="Database name and village name will be same" name="village_name" required><br><br>
-                                <label for="admin_email">Village Admin Email:</label><br>
-                                <input type="email" id="admin_email" name="admin_email" class="form-control input-default" required><br><br>
-                                <label for="admin_pass">Village Admin Password:</label><br>
-                                <input type="password" id="admin_pass" name="admin_pass" class="form-control input-default" required><br><br>
-                                <label for="village_img">Village Image:</label><br>
-                                <input type="file" id="village_img" name="village_img" class="form-control input-default" accept="image/jpeg,image/png,image/gif" required><br><br>
-                                <input type="submit" class="btn btn-primary mb-5" value="Create Village">
+                                <label>Village Name:</label>
+                                <input type="text" class="form-control" name="village_name" placeholder="Will be used as folder & DB prefix" required><br><br>
+
+                                <label>Village Admin Email:</label>
+                                <input type="email" class="form-control" name="admin_email" required><br><br>
+
+                                <label>Village Admin Password:</label>
+                                <input type="password" class="form-control" name="admin_pass" required><br><br>
+
+                                <label>Village Image:</label>
+                                <input type="file" class="form-control" name="village_img" accept="image/jpeg,image/png,image/gif" required><br><br>
+
+                                <button type="submit" class="btn btn-primary">Create Village</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Loader and Overlay elements -->
-            <div class="overlay" id="overlay"></div>
-            <div class="loader" id="loader"></div>
-            <div id="loader-text" class="loader-text" style="align-items: center; align-text:center;">Please wait, do not refresh the page...</div>
-            <!--**********************************
-            Content body end
-        ***********************************-->
-            <!--**********************************
-            Footer start
-        ***********************************-->
-            <div class="footer">
-                <div class="copyright">
-                    <p>© Copyright <?php echo date("Y"); ?>by Sadar Patel University</p>
-                </div>
-            </div>
-            <!--**********************************
-            Footer end
-        ***********************************-->
         </div>
-        <!--**********************************
-        Main wrapper end
-    ***********************************-->
-        <!--**********************************
-        Scripts
-    ***********************************-->
-        <script>
-            document.querySelector('form').addEventListener('submit', function(event) {
-                // Show loader, overlay, and "do not refresh" text
-                document.getElementById('loader').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-                document.getElementById('loader-text').style.display = 'block';
-                // Disable form submission (for demo purpose, remove this line in production)
-                // event.preventDefault();
-            });
-        </script>
-        <!-- Required vendors -->
-        <script src="vendor/global/global.min.js"></script>
-        <script src="vendor/chartjs/chart.bundle.min.js"></script>
-        <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
-        <!-- Apex Chart -->
-        <script src="vendor/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
-        <!-- Chart piety plugin files -->
-        <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
-        <script src="js/plugins-init/datatables.init.js"></script>
-        <!-- Dashboard 1 -->
-        <script src="js/custom.min.js"></script>
-        <script src="js/dlabnav-init.js"></script>
+
+        <div class="footer">
+            <div class="copyright">
+                <p>© Copyright <?php echo date("Y"); ?> by Sadar Patel University</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loader Elements -->
+    <div class="overlay" id="overlay"></div>
+    <div class="loader" id="loader"></div>
+    <div class="loader-text" id="loader-text">Please wait, do not refresh the page...</div>
+
+    <script>
+        document.getElementById('villageForm').addEventListener('submit', function() {
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('loader-text').style.display = 'block';
+        });
+    </script>
+
+    <script src="vendor/global/global.min.js"></script>
+    <script src="vendor/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="js/custom.min.js"></script>
+    <script src="js/dlabnav-init.js"></script>
 </body>
 
 </html>

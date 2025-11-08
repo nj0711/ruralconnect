@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `admin` (
-  `adminid` int(11) NOT NULL,
-  `pno` varchar(15) NOT NULL,
+  `adminid` int(11) NOT NULL DEFAULT 0,
+  `pno` varchar(15) NOT NULL DEFAULT '0',
   `passwordhash` varchar(255) NOT NULL,
   `email` varchar(100) DEFAULT NULL,
   `fullname` varchar(100) DEFAULT NULL,
@@ -411,7 +411,7 @@ CREATE TABLE `transport` (
 --
 
 CREATE TABLE `villagebasic` (
-  `villageid` int(11) NOT NULL,
+  `villageid` int(11) NOT NULL AUTO_INCREMENT,
   `adminid` int(11) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `district` varchar(50) DEFAULT NULL,
@@ -422,7 +422,8 @@ CREATE TABLE `villagebasic` (
   `pincode` varchar(10) DEFAULT NULL,
   `sarpanchname` varchar(50) DEFAULT NULL,
   `contactnumber` varchar(15) DEFAULT NULL,
-  `vmap` varchar(500) DEFAULT NULL
+  `vmap` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`villageid`)
 ) ;
 
 -- --------------------------------------------------------
