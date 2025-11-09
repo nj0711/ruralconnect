@@ -100,6 +100,30 @@ if (isset($_GET['confirmeddeleteid'])) {
 }
 
 if (isset($_POST['insert'])) {
+    // Step 1: Create the 'banks' table if it does not exist in this village database
+    $createTableQuery = "
+                       CREATE TABLE `transport` (
+  `transportid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `stationname` varchar(255) DEFAULT NULL,
+  `stationtype` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `contactno` varchar(15) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `ticketingprocess` varchar(255) DEFAULT NULL,
+  `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`photo`)),
+  `description` varchar(255) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+    // Run the create table query once (it won't recreate if already exists)
+    if (!$obj->tableExists('transport')) {
+        if (!$obj->mysqli->query($createTableQuery)) {
+            echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+        }
+    }
+
     $stationName = isset($_POST['StationName']) ? $obj->escape($_POST['StationName']) : '';
     $stationType = isset($_POST['stationType']) ? $obj->escape($_POST['stationType']) : '';
     $address = isset($_POST['Address']) ? $obj->escape($_POST['Address']) : '';

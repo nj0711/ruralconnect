@@ -955,9 +955,23 @@
     include_once('admin/config.php');
     $obj = new ConnDb();
 
-    $table = 'eventsfestivals';
-    $values = 'SELECT * FROM eventsfestivals WHERE visibility = "on" ORDER BY startdate ASC';
-    $events_result = $obj->selectdata($table, $values);
+    // Initialize as empty array to prevent foreach/array_filter errors
+    $events_result = [];
+
+    try {
+        $table = 'eventsfestivals';
+        $sql   = 'SELECT * FROM eventsfestivals WHERE visibility = "on" ORDER BY startdate ASC';
+
+        $events_result = $obj->selectdata($table, $sql);
+
+        // Ensure it's always an array (even if selectdata returns string like "No Data Found!")
+        if (!is_array($events_result)) {
+            $events_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $events_result = [];
+    }
     ?>
 
     <div class="page-wrapper">
@@ -965,7 +979,7 @@
             <div class="container">
                 <div class="page-banner-title">
                     <h3>Events & Festivals</h3>
-                  
+
                 </div><!-- page-banner-title -->
             </div><!-- container -->
         </section>

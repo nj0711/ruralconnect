@@ -795,14 +795,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'hospitals';
-    $values = 'SELECT * FROM hospitals';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $hospitals   = [];   // All hospitals and clinics
+    $facility_result  = [];   // Same data — can be used for filtering by type (PHC, CHC, etc.)
 
-    // Health Facility Data
-    $facility_values = 'SELECT * FROM hospitals';
-    $facility_result = $obj->selectdata($table, $facility_values);
+    try {
+        $table = 'hospitals';
+        $sql   = 'SELECT * FROM hospitals';
+
+        // Fetch all hospitals and healthcare facility_result
+        $hospitals = $obj->selectdata($table, $sql);
+        if (!is_array($hospitals)) {
+            $hospitals = [];
+        }
+
+        // Fetch again (same data — safe for future filtering by type, ownership, etc.)
+        $facility_result = $obj->selectdata($table, $sql);
+        if (!is_array($facility_result)) {
+            $facility_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $hospitals  = [];
+        $facility_result = [];
+    }
     ?>
 
     <div class="page-wrapper">
@@ -810,7 +827,7 @@
             <div class="container">
                 <div class="page-banner-title">
                     <h3>Health Services</h3>
-                    
+
                 </div><!-- page-banner-title -->
             </div><!-- container -->
         </section>

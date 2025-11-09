@@ -138,6 +138,29 @@ $_SESSION['LAST_ACTIVITY'] = time();
                 $Desc = isset($FormData[0]['description']) ? $FormData[0]['description'] : "";
 
                 if (isset($_POST['submit'])) {
+
+                    // Step 1: Create the 'banks' table if it does not exist in this village database
+                    $createTableQuery = "
+                        CREATE TABLE `eventsfestivals` (
+  `eventsfestivalsid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `eventname` varchar(100) NOT NULL,
+  `eventtype` varchar(40) NOT NULL,
+  `startdate` date DEFAULT NULL,
+  `enddate` date DEFAULT NULL,
+  `contactnumber` varchar(15) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `villageid` int(11) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+                    // Run the create table query once (it won't recreate if already exists)
+                    if (!$Event->tableExists('eventsfestivals')) {
+                        if (!$Event->mysqli->query($createTableQuery)) {
+                            echo "<script>alert('Error creating table: " . $Event->mysqli->error . "');</script>";
+                        }
+                    }
+                    
                     $id = isset($_POST['eventsfestivalsID']) ? $_POST['eventsfestivalsID'] : "";
                     $VillageID = $villageid;
                     $EventName = isset($_POST['EventName']) ? $Event->escape($_POST['EventName']) : "";

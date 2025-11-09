@@ -103,36 +103,54 @@
                                     </thead>
                                     <tbody>
                                         <?php
-
                                         $obj = new ConnDb();
                                         $table = 'contacts';
-                                        $values = 'SELECT * FROM  contacts';
+                                        $values = 'SELECT * FROM contacts';   // <-- no space before table name
 
+                                        // Execute query
                                         $result = $obj->selectdata($table, $values);
 
-                                        foreach ($result as $r => $row) {
+                                        // ---- NORMALISE RESULT: always an array ----
+                                        if (!is_array($result)) {
+                                            $result = [];   // handles "No Data Found!" or any other string
+                                        }
 
+                                        // Optional: show friendly message when empty
+                                        if (empty($result)) {
+                                            echo '<tr><td colspan="7" class="text-center text-muted py-3">No contact messages found.</td></tr>';
+                                            // Adjust colspan=7 to match your <td> count
+                                        }
+
+                                        foreach ($result as $row) {
+                                            // $row is now guaranteed to be an associative array
                                         ?>
                                             <tr>
-                                                <td><?php echo "$row[contactid]"; ?></td>
-                                                <td><?php echo "$row[name]"; ?></td>
-                                                <td><?php echo "$row[subject]"; ?></td>
-                                                <td><?php echo "$row[email]"; ?></td>
-                                                <td><?php echo "$row[phoneno]"; ?></td>
-                                                <td><textarea id="" disabled><?php echo "$row[msg]"; ?></textarea></td>
-
+                                                <td><?php echo htmlspecialchars($row['contactid']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['subject']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                                <td><?php echo htmlspecialchars($row['phoneno']); ?></td>
+                                                <td>
+                                                    <textarea disabled class="form-control" style="height:60px;"><?php echo htmlspecialchars($row['msg']); ?></textarea>
+                                                </td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        <a href="mailto:<?php echo "$row[email]"; ?>"
-                                                            class="btn btn-primary shadow btn-xs sharp me-1"><i
-                                                                class="fa-regular fa-envelope"></i></a>
-                                                        <a href="delete-contact.php?id=<?php echo "$row[contactid]"; ?>"
-                                                            class="btn btn-danger shadow btn-xs sharp"><i
-                                                                class="fa fa-trash" onclick='return remove()'></i></a>
+                                                        <a href="mailto:<?php echo urlencode($row['email']); ?>"
+                                                            class="btn btn-primary shadow btn-xs sharp me-1"
+                                                            title="Send Email">
+                                                            <i class="fa-regular fa-envelope"></i>
+                                                        </a>
+                                                        <a href="delete-contact.php?id=<?php echo $row['contactid']; ?>"
+                                                            class="btn btn-danger shadow btn-xs sharp"
+                                                            onclick="return confirm('Are you sure you want to delete this message?');">
+                                                            <i class="fa fa-trash"></i>
+                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>
-                                        <?php } ?>
+                                        <?php
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

@@ -109,6 +109,36 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 if (isset($_POST['insert'])) {
 
+    // Step 1: Create the 'banks' table if it does not exist in this village database
+    $createTableQuery = "
+                        CREATE TABLE `electrification` (
+  `electrificationid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `companyname` varchar(255) NOT NULL,
+  `emergencycontactno` varchar(15) DEFAULT NULL,
+  `energyresourcessolar` tinyint(1) NOT NULL,
+  `energyresourceswind` tinyint(1) NOT NULL,
+  `energyresourcescoal` tinyint(1) NOT NULL,
+  `energyresourcesgas` tinyint(1) NOT NULL,
+  `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`photo`)),
+  `officeaddress` varchar(255) NOT NULL,
+  `servicearea` varchar(255) NOT NULL,
+  `contactno` varchar(15) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `supplychain` varchar(255) DEFAULT NULL,
+  `villageid` int(11) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'on'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+    // Run the create table query once (it won't recreate if already exists)
+    if (!$obj->tableExists('electrification')) {
+        if (!$obj->mysqli->query($createTableQuery)) {
+            echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+        }
+    }
+
+
     $name = isset($_POST['name']) ? $obj->escape($_POST['name']) : "";
     $econtact = isset($_POST['econtact']) ? $obj->escape($_POST['econtact']) : "";
     $solar = isset($_POST['solar']) ? $obj->escape($_POST['solar']) : "";

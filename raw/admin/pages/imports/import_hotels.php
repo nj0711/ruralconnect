@@ -39,6 +39,30 @@ $expected_headers = [
     'visibility'
 ];
 
+$createTableQuery = "
+                       CREATE TABLE `hotels` (
+  `hotelsid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `hotelname` varchar(255) NOT NULL,
+  `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`photo`)),
+  `timeschedule` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`timeschedule`)),
+  `contactno` bigint(20) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `amenities` varchar(255) DEFAULT NULL,
+  `bookingprocess` varchar(255) DEFAULT NULL,
+  `websitelink` varchar(255) DEFAULT NULL,
+  `customerreviews` varchar(255) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+// Run the create table query once (it won't recreate if already exists)
+if (!$obj->tableExists('hotels')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+    }
+}
+
 $table_name = 'hotels';
 
 if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == 0) {

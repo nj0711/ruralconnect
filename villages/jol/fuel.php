@@ -795,14 +795,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'fuelstation';
-    $values = 'SELECT * FROM fuelstation';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $fuelstations = [];   // All fuel stations
+    $station_result     = [];   // Same data — can be used for filtering or future use
 
-    // Fuel Station Data
-    $station_values = 'SELECT * FROM fuelstation';
-    $station_result = $obj->selectdata($table, $station_values);
+    try {
+        $table = 'fuelstation';
+        $sql   = 'SELECT * FROM fuelstation';
+
+        // Fetch all fuel stations
+        $fuelstations = $obj->selectdata($table, $sql);
+        if (!is_array($fuelstations)) {
+            $fuelstations = [];
+        }
+
+        // Fetch again (same data — safe for future filtering by type, fuel, etc.)
+        $station_result = $obj->selectdata($table, $sql);
+        if (!is_array($station_result)) {
+            $station_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $fuelstations = [];
+        $station_result     = [];
+    }
     ?>
 
     <div class="page-wrapper">
@@ -810,7 +827,7 @@
             <div class="container">
                 <div class="page-banner-title">
                     <h3>Fuel Services</h3>
-                   
+
                 </div><!-- page-banner-title -->
             </div><!-- container -->
         </section>

@@ -816,18 +816,39 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'emergencyservices';
-    $values = 'SELECT * FROM emergencyservices';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $emergency   = [];   // General emergency services
+    $police_result      = [];   // Police stations
+    $fire        = [];   // Fire stations
 
-    // Police Services Data
-    $police_values = 'SELECT * FROM emergencyservices';
-    $police_result = $obj->selectdata($table, $police_values);
+    try {
+        $table = 'emergencyservices';
+        $sql   = 'SELECT * FROM emergencyservices';
 
-    // Fire Services Data
-    $fire_values = 'SELECT * FROM emergencyservices';
-    $fire_result = $obj->selectdata($table, $fire_values);
+        // Fetch all emergency services
+        $emergency = $obj->selectdata($table, $sql);
+        if (!is_array($emergency)) {
+            $emergency = [];
+        }
+
+        // Police Services (same table — filter by type)
+        $police_result = $obj->selectdata($table, $sql);
+        if (!is_array($police_result)) {
+            $police_result = [];
+        }
+
+        // Fire Services (same table — filter by type)
+        $fire = $obj->selectdata($table, $sql);
+        if (!is_array($fire)) {
+            $fire = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $emergency = [];
+        $police_result    = [];
+        $fire      = [];
+    }
     ?>
 
     <div class="page-wrapper">

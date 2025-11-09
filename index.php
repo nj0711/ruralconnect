@@ -244,7 +244,7 @@
 
 				<?php
 				// Fetch the last 2 villages 
-				$query = "SELECT * FROM villages ORDER BY id DESC LIMIT 2";
+				$query = "SELECT * FROM villages ORDER BY id DESC LIMIT 6";
 				$result = mysqli_query($conn, $query);
 
 				// Define the two default background images

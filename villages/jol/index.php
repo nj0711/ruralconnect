@@ -2,7 +2,65 @@
 include_once('admin/config.php');
 $obj = new ConnDb();
 $temp_db = explode('_', $db);
+
+/* --------------------------------------------------------------
+   SAFE DATA FETCH – ONE TRY/CATCH
+   -------------------------------------------------------------- */
+$pillarsFirst   = [];   // First leader (LIMIT 1)
+$pillarsAll     = [];   // All leaders (carousel)
+$population     = [];   // population row
+$education      = [];   // education count
+$villageBasic   = [];   // villagebasic area
+
+try {
+    // 1. First leader
+    $sql = "SELECT * FROM pillarofcommunity WHERE visibility = 'on' LIMIT 1";
+    $pillarsFirst = $obj->selectdata('pillarofcommunity', $sql);
+    if (!is_array($pillarsFirst)) $pillarsFirst = [];
+
+    // 2. All leaders
+    $sql = "SELECT * FROM pillarofcommunity WHERE visibility = 'on'";
+    $pillarsAll = $obj->selectdata('pillarofcommunity', $sql);
+    if (!is_array($pillarsAll)) $pillarsAll = [];
+
+    // 3. Population
+    $population = $obj->selectdata('population', 'SELECT * FROM population');
+    if (!is_array($population)) $population = [];
+
+    // 4. Education
+    $education = $obj->selectdata('education', 'SELECT * FROM education');
+    if (!is_array($education)) $education = [];
+
+    // 5. Village basic
+    $villageBasic = $obj->selectdata('villagebasic', 'SELECT * FROM villagebasic');
+    if (!is_array($villageBasic)) $villageBasic = [];
+} catch (Exception $e) {
+    $pillarsFirst = $pillarsAll = $population = $education = $villageBasic = [];
+}
+
+/* --------------------------------------------------------------
+   HELPER: first image from JSON
+   -------------------------------------------------------------- */
+function firstImage($json, $fallback = 'assets/image/no-leader.jpg')
+{
+    $photos = json_decode($json ?? '[]', true) ?: [];
+    $first = $photos[0] ?? '';
+    return $first ? "admin/pages/uploadedimages/{$first}" : $fallback;
+}
+
+/* --------------------------------------------------------------
+   POPULATION STATS
+   -------------------------------------------------------------- */
+$male = $female = 0;
+if (!empty($population)) {
+    $male = (int)($population[0]['totalnoofmale'] ?? 0);
+    $female = (int)($population[0]['totalnooffemale'] ?? 0);
+}
+$totalPop = $male + $female;
+$totalK = $totalPop > 0 ? floor($totalPop / 1000) : 0;
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -319,378 +377,108 @@ $temp_db = explode('_', $db);
             Community</h5><!-- client-text -->
 
 
-        <section class="team-details-section" style="margin-top:-50px">
-            <?php
-            $val = $obj->selectdata("pillarofcommunity", "select * from pillarofcommunity limit 1");
-            if ($val == "No Data Found!") {
-                echo 'No Datafound';
-            } else {
-
-                $rows = count($val);
-                for ($i = 0; $i < $rows; $i++) {
-
-                    $name = $val[$i]['name'] ?? '';
-                    $bdy = $val[$i]['birthdate']    ?? '';
-                    $ddy = $val[$i]['dateofpassing']    ?? '';
-                    $datediff = $obj->selectdata("pillarofcommunity", 'select DATEDIFF(dateofpassing,birthdate) from pillarofcommunity');
-
-                    $description = $val[$i]['description']  ?? '';
-                    $edu = $val[$i]['education']    ?? '';
-                    $plcarrier = $val[$i]['politicalcareer']  ?? '';
-                    $positionsheld = $val[$i]['positionsheld']  ?? '';
-                    $role = $val[$i]['roleinindependencemovement'] ?? '';
-                    $profession = $val[$i]['profession'] ?? '';
-                    $typeofleader = $val[$i]['typeofleader'] ?? '';
-
-                    $img = $val[$i]['photo']    ?? '';
-
-                    $uploadedFiles = json_decode($img, true) ?? [];
-                    $fileCount = count($uploadedFiles);
-                    if ($fileCount > 1 && isset($uploadedFiles[1])) {
-                        $firstImage = $uploadedFiles[1];
-                    } elseif (isset($uploadedFiles[0])) {
-                        $firstImage = $uploadedFiles[0];
-                    } else {
-                        $firstImage = '/default_pic.jpg'; // fallback image
-                    }
-                    // Fetch the first image
-
-                    // Construct the full image path
-                    $imagePath = 'admin/pages/uploadedimages/' . $firstImage;
-            ?>
-
-                    <section class="team-details-section" style="margin-top: -150px">
-                        <div class="container">
-                            <div class="row justify-content-between">
-                                <div class="col-12 col-lg-6">
-                                    <div class="team-details-image">
-                                        <?php
-
-                                        ?>
-                                        <img src=<?php echo $imagePath; ?> class="img-fluid" alt="img-93"
-                                            style="height:600px;width:100%;">
-
-                                    </div>
-                                    <!--team-details-image-->
-                                </div>
-                                <!--col-12 col-lg-6-->
-                                <div class="col-12 col-lg-5">
-                                    <div class="team-details-title-one">
-                                        <h2><?php echo $name; ?></h2>
-                                        <span>one of India's greatest leaders</span>
-                                    </div>
-                                    <!--team-details-title-one-->
-                                    <!--team-details-socials-->
-                                    <div class="team-details-info">
-                                        <ul class="list-unstyled">
-                                            <!--<li>years of live: <span><?php echo implode($datediff[0]); ?> Years-->
-                                            <!--        (<?php echo $bdy; ?>-->
-                                            <!--        – <?php echo $ddy; ?>)</span></li>-->
-                                        </ul><!-- list-unstyled -->
-                                    </div>
-                                    <!--team-details-info-->
-                                    <div class="team-details-text">
-
-                                        <p style="margin-top:-40px"><?php $description; ?></p>
-                                    </div>
-                                    <!--team-details-text-->
-                                    <div class="team-details-list" style="margin-top:-30px">
-                                        <h3>Education</h3>
-                                        <div class="team-details-list-item">
-                                            <div class="row" style="margin-top:-20px">
-                                                <div class="col-sm-12 col-lg-6 col-xl-6">
-                                                    <div class="team-details-box">
-                                                        <div class="team-details-year"></div>
-                                                        <p><?php echo $edu; ?></p>
-                                                        <!-- <p>Columbia University, CL</p> -->
-                                                    </div>
-                                                    <!--team-details-box-->
-                                                </div>
-                                                <!--col-sm-6 col-lg-6 col-xl-6-->
-
-                                                <!--col-sm-6 col-lg-6 col-xl-6-->
-                                            </div><!-- row -->
-                                        </div>
-                                        <!--team-details-list-item--><br><br>
-                                        <h3 style="margin-top:-30px">Political Carrier</h3>
-                                        <div class="team-details-list-item" style="margin-top:-20px">
-
-                                            <!-- <div class="col-sm-12 col-lg-6 col-xl-6"> -->
+        <?php if (empty($pillarsFirst)): ?>
+            <p style="text-align:center; margin-top:20px;">No leader data available.</p>
+        <?php else: $p = $pillarsFirst[0];
+            $img = firstImage($p['photo'] ?? ''); ?>
+            <section class="team-details-section" style="margin-top: -150px">
+                <div class="container">
+                    <div class="row justify-content-between">
+                        <div class="col-12 col-lg-6">
+                            <div class="team-details-image">
+                                <img src="<?= $img ?>" class="img-fluid" alt="<?= htmlspecialchars($p['name']); ?>"
+                                    style="height:600px;width:100%;">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-5">
+                            <div class="team-details-title-one">
+                                <h2><?= htmlspecialchars($p['name']); ?></h2>
+                                <span>one of India's greatest leaders</span>
+                            </div>
+                            <div class="team-details-text">
+                                <p style="margin-top:-40px"><?= nl2br(htmlspecialchars($p['description'])); ?></p>
+                            </div>
+                            <div class="team-details-list" style="margin-top:-30px">
+                                <h3>Education</h3>
+                                <div class="team-details-list-item">
+                                    <div class="row" style="margin-top:-20px">
+                                        <div class="col-sm-12 col-lg-6 col-xl-6">
                                             <div class="team-details-box">
                                                 <div class="team-details-year"></div>
-                                                <p><?php echo $plcarrier; ?>
-                                                </p>
-                                                <!-- <p>Columbia University, CL</p> -->
+                                                <p><?= nl2br(htmlspecialchars($p['education'])); ?></p>
                                             </div>
-                                            <!--team-details-box-->
-                                            <!-- </div> -->
-                                            <!--col-sm-6 col-lg-6 col-xl-6-->
-
-
                                         </div>
-                                        <h3 style="margin-top:30px">Role In Independence Movement</h3>
-                                        <div class="team-details-list-item" style="margin-top:-30px">
-
-                                            <!-- <div class="col-sm-12 col-lg-6 col-xl-6"> -->
+                                    </div>
+                                </div>
+                                <h3 style="margin-top:-30px">Political Carrier</h3>
+                                <div class="team-details-list-item" style="margin-top:-20px">
+                                    <div class="team-details-box">
+                                        <div class="team-details-year"></div>
+                                        <p><?= nl2br(htmlspecialchars($p['politicalcareer'])); ?></p>
+                                        <p><?= nl2br(htmlspecialchars($p['positionsheld'])); ?></p>
+                                    </div>
+                                </div>
+                                <h3 style="margin-top:30px">Role In Independence Movement</h3>
+                                <div class="team-details-list-item" style="margin-top:-30px">
+                                    <div class="team-details-box">
+                                        <div class="team-details-year"></div>
+                                        <p><?= nl2br(htmlspecialchars($p['roleinindependencemovement'])); ?></p>
+                                    </div>
+                                </div>
+                                <h3 style="margin-top:30px">Details</h3>
+                                <div class="team-details-list-item">
+                                    <div class="row" style="margin-top:-20px">
+                                        <div class="col-sm-12 col-lg-6 col-xl-6">
                                             <div class="team-details-box">
                                                 <div class="team-details-year"></div>
-                                                <p><?php echo $role; ?>
-                                                </p>
-                                                <!-- <p>Columbia University, CL</p> -->
+                                                <p><?= nl2br(htmlspecialchars($p['description'])); ?></p>
                                             </div>
-                                            <!--team-details-box-->
-                                            <!-- </div> -->
-                                            <!--col-sm-6 col-lg-6 col-xl-6-->
-
-
                                         </div>
-                                        <h3 style="margin-top:30px">Details</h3>
-                                        <div class="team-details-list-item">
-                                            <div class="row" style="margin-top:-20px">
-                                                <div class="col-sm-12 col-lg-6 col-xl-6">
-                                                    <div class="team-details-box">
-                                                        <div class="team-details-year"></div>
-                                                        <p><?php echo $description; ?></p>
-                                                        <!-- <p>Columbia University, CL</p> -->
-                                                    </div>
-                                                    <!--team-details-box-->
-                                                </div>
-                                                <!--col-sm-6 col-lg-6 col-xl-6-->
-
-                                                <!--col-sm-6 col-lg-6 col-xl-6-->
-                                            </div><!-- row -->
-                                        </div>
-
-                                        <!--team-details-list-item-->
-                                    </div>
-                                    <!--team-details-list-->
-                                </div>
-                                <!--col-12 col-lg-12-->
-                            </div><!-- row -->
-                        </div><!-- container -->
-
-                        <br><br>
-                        <!--department-section-->
-                    </section>
-                    <!--team-details-section-->
-
-            <?php }
-            } ?>
-
-
-            <br><br>
-
-            <!--department-section-->
-            <?php
-
-            $value = $obj->selectdata("pillarofcommunity", "select * from pillarofcommunity");
-            if ($value == "No Data Found!") {
-                echo 'No Datafound';
-            } else { ?>
-
-                <section class="funfact-section" style="background:whitesmoke">
-                    <!--department-section-->
-                    <div class="event-details-gallery-box" style="margin-top:-80px">
-                        <div class="event-details-carousel owl-carousel owl-theme"
-                            style="padding-left:5%; padding-right:5%;">
-
-                            <?php $rows = count($value);
-                            for ($i = 0; $i < $rows; $i++) {
-                                $name = $value[$i]['name'] ?? '';
-                                $bdy = $value[$i]['birthdate'] ?? '';
-                                $ddy = $value[$i]['dateofpassing'] ?? '';
-                                $datediff = $obj->selectdata("pillarofcommunity", 'select DATEDIFF(dateofpassing,birthdate) from pillarofcommunity') ?? '';
-                                $profession = $value[$i]['profession'] ?? '';
-                                $description = $value[$i]['description'] ?? '';
-                                $positionsheld = $value[$i]['positionsheld'] ?? '';
-                                $edu = $value[$i]['education'] ?? '';
-                                $plcarrier = $value[$i]['politicalcareer'] ?? '';
-                                $roleinindependencemovement = $value[$i]['roleinindependencemovement'] ?? '';
-
-                                $img = $value[$i]['photo'] ?? '';
-                                $uploadedFiles = json_decode($img, true) ?? [];
-                                $fileCount = count($uploadedFiles);
-                                if ($fileCount > 1 && isset($uploadedFiles[1])) {
-                                    $firstImage = $uploadedFiles[1];
-                                } elseif (isset($uploadedFiles[0])) {
-                                    $firstImage = $uploadedFiles[0];
-                                } else {
-                                    $firstImage = '/default_pic.jpg'; // fallback image
-                                }
-
-
-                                // Construct the full image path
-                                $imagePath = 'admin/pages/uploadedimages/' . $firstImage;
-                            ?>
-                                <div class="row row-gutter-30" style="margin-right:20px">
-                                    <div class="col-lg-6">
-                                        <!-- <div class="department-details-benefits-box-image"> -->
-                                        <img src="<?php echo $imagePath; ?>" class="img-fluid" alt="160" style="height:200px">
-                                        <!-- </div>department-details-benefits-box-image -->
-                                    </div>
-                                    <!--col-lg-6-->
-
-                                    <div class="department-details-benefits-box">
-                                        <h3><?php echo $name; ?></h3>
-                                        <?php
-
-                                        ?>
-                                        <p> <?php echo $profession; ?>
-                                            <!--<br><span><?php echo implode($datediff[0]); ?> Years-->
-                                            <!--    (<?php echo $bdy; ?>-->
-                                            <!--    – <?php echo $ddy; ?>)</span>-->
-                                        <ul class="list-unstyled list-style">
-                                            <?php $ts1 = explode('.', $positionsheld);
-                                            foreach ($ts1 as $s1) { ?>
-                                                <li>
-                                                    <i class="fa-solid fa-circle-arrow-right"></i>
-                                                    <h5 style="margin-top:30px"><?php echo $s1; ?></h5>
-                                                </li><!-- li -->
-                                            <?php }
-                                            ?>
-                                            <?php $ts2 = explode('.', $roleinindependencemovement);
-                                            foreach ($ts2 as $s2) { ?>
-                                                <li>
-                                                    <i class="fa-solid fa-circle-arrow-right"></i>
-                                                    <h5 style="margin-top:30px"><?php echo $s2; ?></h5>
-                                                </li><!-- li -->
-                                            <?php }
-                                            ?>
-
-
-                                        </ul><!-- ul -->
-                                    </div><!-- department-details-benefits-box -->
-
-                                </div>
-
-                                <!--item-->
-
-
-                            <?php } ?>
-
-
-                        </div><!-- event-details-carousel -->
-
-                    </div><!-- event-details-gallery-box -->
-
-                    <button class="btn btn-primary" style="margin-left:50px"><a href="leaders.php" style="color:white">View
-                            More</a></button>
-                </section>
-
-
-            <?php }
-            ?>
-
-
-
-        </section>
-
-        <section class="funfact-section">
-
-            <?php
-            $data = $obj->selectdata("population", "select * from population");
-            $m = $data[0]['totalnoofmale'];
-            $f = $data[0]['totalnooffemale'];
-            $tot = floor(($m + $f) / 1000);
-            $dataedu = $obj->selectdata("education", "select * from education");
-            $dataarea = $obj->selectdata('villagebasic', "select * from villagebasic");
-            ?>
-            <!--department-section-->
-            <div class="event-details-gallery-box">
-                <div class="event-details-carousel owl-carousel owl-theme" style="padding-left:5%; padding-right:5%;">
-                    <div class="item" style="height: 25%;width: 25%;">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="funfact-counter-item">
-                                <div class="funfact-counter-box">
-                                    <div class="funfact-counter-icon">
-                                        <i class="flaticon-running-man"></i>
-                                    </div><!-- funfact-counter-icon -->
-                                    <div class="funfact-counter-number">
-                                        <h3 class="counter-number"><?php echo $tot; ?></h3>
-                                        <span class="funfact-counter-number-postfix">k</span>
-                                    </div><!-- funfact-counter-number -->
-                                </div><!-- funfact-counter-box -->
-                                <p class="funfact-text" style="width:250px; margin-top:25px;">Total Population<br>In
-                                    <?php echo ucwords($temp_db[1]); ?></p>
-
-
-
-                            </div>
-
-                            <!--funfact-counter-item-->
-                        </div>
-
-                    </div>
-
-                    <div class="item" style="height: 25%;width: 25%;">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="funfact-counter-item">
-                                <div class="funfact-counter-box">
-                                    <div class="funfact-counter-icon">
-                                        <i class="flaticon-university"></i>
-                                    </div><!-- funfact-counter-icon -->
-                                    <div class="funfact-counter-number">
-                                        <?php if ($dataedu != 'No Data Found!') { ?>
-                                            <h3 class="counter-number"><?php echo count($dataedu); ?></h3>
-                                        <?php } else {
-                                            echo '<h3> No Data </h3>';
-                                        }
-                                        ?>
-
-                                        <span class="funfact-counter-number-postfix"></span>
-                                    </div><!-- funfact-counter-number -->
-                                </div><!-- funfact-counter-box -->
-                                <p class="funfact-text" style="width:250px; margin-top:25px;">Number of<br>Schools &
-                                    Colleges</p>
-                            </div>
-                            <!--funfact-counter-item-->
-                        </div>
-                        <!--col-xl-3 col-md-6-->
-                    </div>
-                    <!--item-->
-                    <!-- <div class="item" style="height: 25%;width: 25%;">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="funfact-counter-item">
-                                <div class="funfact-counter-box">
-                                    <div class="funfact-counter-icon">
-                                        <i class="flaticon-education"></i>
-                                    </div>
-                                    <div class="funfact-counter-number">
-                                        <h3 class="counter-number">70</h3>
-                                        <span class="funfact-counter-number-postfix">%</span>
                                     </div>
                                 </div>
-                                <p class="funfact-text" style="width:250px; margin-top:25px;">Literacy</p>
                             </div>
-                          
-                        </div>
-                    </div> -->
-                    <!--item-->
-                    <div class="item" style="height: 25%;width: 25%;">
-                        <div class="col-xl-3 col-md-6">
-                            <div class="funfact-counter-item">
-                                <div class="funfact-counter-box">
-                                    <div class="funfact-counter-icon">
-                                        <i class="flaticon-landscape"></i>
-                                    </div><!-- funfact-counter-icon -->
-                                    <div class="funfact-counter-number">
-                                        <h3 class="counter-number"><?php echo $dataarea[0]['area']; ?></h3>
-                                        <span class="funfact-counter-number-postfix">sq.km</span>
-                                    </div><!-- funfact-counter-number -->
-                                </div><!-- funfact-counter-box -->
-                                <p class="funfact-text" style="width:250px; margin-top:25px;">Area Of <br>
-                                    <?php echo ucwords($temp_db[1]); ?></p>
-                            </div>
-                            <!--funfact-counter-item-->
                         </div>
                     </div>
-                    <!--item-->
+                </div>
+            </section>
+        <?php endif; ?>
 
-                </div><!-- event-details-carousel -->
-            </div><!-- event-details-gallery-box -->
-
-
-        </section>
+        <?php if (empty($pillarsAll)): ?>
+            <p style="text-align:center; margin-top:20px;">No community leaders found.</p>
+        <?php else: ?>
+            <section class="funfact-section" style="background:whitesmoke">
+                <div class="event-details-gallery-box" style="margin-top:-80px">
+                    <div class="event-details-carousel owl-carousel owl-theme" style="padding-left:5%; padding-right:5%;">
+                        <?php foreach ($pillarsAll as $p): $img = firstImage($p['photo'] ?? ''); ?>
+                            <div class="row row-gutter-30" style="margin-right:20px">
+                                <div class="col-lg-6">
+                                    <img src="<?= $img ?>" class="img-fluid" alt="<?= htmlspecialchars($p['name']); ?>" style="height:200px">
+                                </div>
+                                <div class="department-details-benefits-box">
+                                    <h3><?= htmlspecialchars($p['name']); ?></h3>
+                                    <p><?= htmlspecialchars($p['profession']); ?></p>
+                                    <ul class="list-unstyled list-style">
+                                        <?php foreach (explode('.', $p['positionsheld'] ?? '') as $s): if (trim($s)): ?>
+                                                <li><i class="fa-solid fa-circle-arrow-right"></i>
+                                                    <h5 style="margin-top:30px"><?= htmlspecialchars(trim($s)); ?></h5>
+                                                </li>
+                                        <?php endif;
+                                        endforeach; ?>
+                                        <?php foreach (explode('.', $p['roleinindependencemovement'] ?? '') as $s): if (trim($s)): ?>
+                                                <li><i class="fa-solid fa-circle-arrow-right"></i>
+                                                    <h5 style="margin-top:30px"><?= htmlspecialchars(trim($s)); ?></h5>
+                                                </li>
+                                        <?php endif;
+                                        endforeach; ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="margin-left:50px"><a href="leaders.php" style="color:white">View More</a></button>
+            </section>
+        <?php endif; ?>
 
 
 

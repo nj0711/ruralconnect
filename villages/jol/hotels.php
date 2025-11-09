@@ -844,15 +844,33 @@
     include_once('admin/config.php');
     $obj = new ConnDb();
 
-    // Hotels Data
-    $table = 'hotels';
-    $values = 'SELECT * FROM hotels';
-    $hotels_result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $hotels_result     = [];
+    $restaurants_result = [];
 
-    // Restaurants Data
-    $restaurant_table = 'restaurants';
-    $restaurant_values = 'SELECT * FROM restaurants';
-    $restaurants_result = $obj->selectdata($restaurant_table, $restaurant_values);
+    try {
+        // === HOTELS ===
+        $table = 'hotels';
+        $sql   = 'SELECT * FROM hotels';
+
+        $hotels_result = $obj->selectdata($table, $sql);
+        if (!is_array($hotels_result)) {
+            $hotels_result = [];
+        }
+
+        // === RESTAURANTS ===
+        $table = 'restaurants';
+        $sql   = 'SELECT * FROM restaurants';
+
+        $restaurants_result = $obj->selectdata($table, $sql);
+        if (!is_array($restaurants_result)) {
+            $restaurants_result = [];
+        }
+    } catch (Exception $e) {
+        // If any table doesn't exist or query fails → treat as empty
+        $hotels_result      = [];
+        $restaurants_result = [];
+    }
     ?>
 
     <div class="page-wrapper">
@@ -860,7 +878,7 @@
             <div class="container">
                 <div class="page-banner-title">
                     <h3>Hospitality Services</h3>
-                   
+
                 </div><!-- page-banner-title -->
             </div><!-- container -->
         </section>

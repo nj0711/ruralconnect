@@ -47,6 +47,35 @@ $expected_headers = [
     'visibility'
 ];
 
+$createTableQuery = "
+                        CREATE TABLE `watersupply` (
+  `watersupplyid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `systemdescription` varchar(255) NOT NULL,
+  `sourcetype` varchar(255) NOT NULL,
+  `sourcedescription` varchar(255) NOT NULL,
+  `installationdate` date NOT NULL,
+  `capacity` bigint(20) NOT NULL,
+  `lastmaintenancedate` date DEFAULT NULL,
+  `systemcondition` varchar(255) DEFAULT NULL,
+  `watersupplyschedule` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`watersupplyschedule`)),
+  `entityname` varchar(255) NOT NULL,
+  `entitytype` varchar(255) DEFAULT NULL,
+  `contactphone` bigint(20) DEFAULT NULL,
+  `contactperson` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `fundingsource` varchar(255) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+// Run the create table query once (it won't recreate if already exists)
+if (!$obj->tableExists('watersupply')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+    }
+}
+
 $table_name = 'watersupply';
 
 if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == 0) {

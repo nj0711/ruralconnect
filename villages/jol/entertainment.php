@@ -766,14 +766,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'entertainment';
-    $values = 'SELECT * FROM entertainment';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $entertainment = [];   // All entertainment venues (theaters, parks, events)
+    $schedule_result     = [];   // Same data — can be used for event schedules or filtered by type
 
-    // Venue Schedule Data
-    $schedule_values = 'SELECT * FROM entertainment';
-    $schedule_result = $obj->selectdata($table, $schedule_values);
+    try {
+        $table = 'entertainment';
+        $sql   = 'SELECT * FROM entertainment';
+
+        // Fetch all entertainment data
+        $entertainment = $obj->selectdata($table, $sql);
+        if (!is_array($entertainment)) {
+            $entertainment = [];
+        }
+
+        // Fetch again for schedules (same table — filter by type or status later)
+        $schedule_result = $obj->selectdata($table, $sql);
+        if (!is_array($schedule_result)) {
+            $schedule_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $entertainment = [];
+        $schedule_result     = [];
+    }
     ?>
 
     <div class="page-wrapper">
@@ -781,7 +798,7 @@
             <div class="container">
                 <div class="page-banner-title">
                     <h3>Entertainment Services</h3>
-                  
+
                 </div><!-- page-banner-title -->
             </div><!-- container -->
         </section>

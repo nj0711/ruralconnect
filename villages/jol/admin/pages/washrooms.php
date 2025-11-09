@@ -88,6 +88,35 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 if (isset($_POST['insert'])) {
 
+    // Step 1: Create the 'banks' table if it does not exist in this village database
+    $createTableQuery = "
+                       CREATE TABLE `washrooms` (
+  `washroomsid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `numberofwashrooms` int(11) NOT NULL,
+  `locationdescription` varchar(255) NOT NULL,
+  `facilitytype` enum('Free','Paid','Accessible') DEFAULT NULL,
+  `washroomcondition` enum('Clean','Needs Repair') DEFAULT NULL,
+  `maintenanceschedule` varchar(255) DEFAULT NULL,
+  `entityname` varchar(255) DEFAULT NULL,
+  `entitytype` enum('NGO','Government','Private') NOT NULL,
+  `primarycontactperson` varchar(255) DEFAULT NULL,
+  `phoneno` varchar(15) DEFAULT NULL,
+  `address` varchar(300) DEFAULT NULL,
+  `fundingsource` varchar(255) DEFAULT NULL,
+  `establisheddate` date DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+    // Run the create table query once (it won't recreate if already exists)
+    if (!$obj->tableExists('washrooms')) {
+        if (!$obj->mysqli->query($createTableQuery)) {
+            echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+        }
+    }
+
+
     $number_of_washrooms = isset($_POST['numberOfWashrooms']) ? $obj->escape($_POST['numberOfWashrooms']) : 0;
     $location_description = isset($_POST['location']) ? $obj->escape($_POST['location']) : '';
     $facility_type = isset($_POST['type']) ? $obj->escape($_POST['type']) : '';

@@ -37,6 +37,30 @@ $expected_headers = [
     'agewisefemale',
 ];
 
+$createTableQuery = "
+                        CREATE TABLE `population` (
+  `populationid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `totalnoofmale` int(11) DEFAULT NULL,
+  `totalnooffemale` int(11) DEFAULT NULL,
+  `totalnoofchildren` int(11) DEFAULT NULL,
+  `religionandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`religionandpopulation`)),
+  `occupationandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`occupationandpopulation`)),
+  `educationandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`educationandpopulation`)),
+  `salaryandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`salaryandpopulation`)),
+  `birthanddeathratio` varchar(10) DEFAULT NULL,
+  `agewisemale` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`agewisemale`)),
+  `agewisefemale` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`agewisefemale`))
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+// Run the create table query once (it won't recreate if already exists)
+if (!$obj->tableExists('population')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+    }
+}
+
 $table_name = 'population';
 
 if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == 0) {

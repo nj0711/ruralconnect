@@ -876,17 +876,44 @@
     include_once('admin/config.php');
     $obj = new ConnDb();
 
-    // Drainage Data
-    $drainage_query = "SELECT * FROM drainage WHERE visibility = 'on'";
-    $drainage_result = $obj->selectdata("drainage", $drainage_query);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $drainage_result    = [];
+    $watersupply_result = [];
+    $washrooms_result   = [];
 
-    // Water Supply Data
-    $watersupply_query = "SELECT * FROM watersupply WHERE visibility = 'on'";
-    $watersupply_result = $obj->selectdata("watersupply", $watersupply_query);
+    try {
+        // === DRAINAGE ===
+        $table = 'drainage';
+        $sql   = "SELECT * FROM drainage WHERE visibility = 'on'";
 
-    // Washrooms Data
-    $washrooms_query = "SELECT * FROM washrooms WHERE visibility = 'on'";
-    $washrooms_result = $obj->selectdata("washrooms", $washrooms_query);
+        $drainage_result = $obj->selectdata($table, $sql);
+        if (!is_array($drainage_result)) {
+            $drainage_result = [];
+        }
+
+        // === WATER SUPPLY ===
+        $table = 'watersupply';
+        $sql   = "SELECT * FROM watersupply WHERE visibility = 'on'";
+
+        $watersupply_result = $obj->selectdata($table, $sql);
+        if (!is_array($watersupply_result)) {
+            $watersupply_result = [];
+        }
+
+        // === WASHROOMS ===
+        $table = 'washrooms';
+        $sql   = "SELECT * FROM washrooms WHERE visibility = 'on'";
+
+        $washrooms_result = $obj->selectdata($table, $sql);
+        if (!is_array($washrooms_result)) {
+            $washrooms_result = [];
+        }
+    } catch (Exception $e) {
+        // If any table doesn't exist or query fails → treat as empty
+        $drainage_result    = [];
+        $watersupply_result = [];
+        $washrooms_result   = [];
+    }
     ?>
 
     <div class="page-wrapper">

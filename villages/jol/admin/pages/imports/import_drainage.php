@@ -42,6 +42,35 @@ $expected_headers = [
     'visibility'
 ];
 
+$createTableQuery = "
+   CREATE TABLE `drainage` (
+  `drainageid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `systemcondition` enum('Good','Fair','Poor') NOT NULL,
+  `lastmaintenancedate` date DEFAULT NULL,
+  `capacity` decimal(10,2) DEFAULT NULL,
+  `type` enum('Open Drain','Covered Drain','Sewer System') NOT NULL,
+  `coveragearea` decimal(12,2) DEFAULT NULL,
+  `issuesreported` varchar(255) DEFAULT NULL,
+  `maintenancehistory` varchar(255) DEFAULT NULL,
+  `entityname` varchar(255) DEFAULT NULL,
+  `entitytype` enum('NGO','Government','Private') NOT NULL,
+  `primarycontactperson` varchar(255) DEFAULT NULL,
+  `phoneno` varchar(15) DEFAULT NULL,
+  `address` varchar(300) DEFAULT NULL,
+  `fundingsource` varchar(255) DEFAULT NULL,
+  `establisheddate` date DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+// Run the create table query once (it won't recreate if already exists)
+if (!$obj->tableExists('drainage')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+    }
+}
+
 $table_name = 'drainage';
 
 if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == 0) {

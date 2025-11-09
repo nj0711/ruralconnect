@@ -842,14 +842,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'transport';
-    $values = 'SELECT * FROM transport';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $transport    = [];   // All transport options (buses, autos, taxis, etc.)
+    $station_result     = [];   // Same data — can be used for filtering by station/stop
 
-    // Transport Station Data
-    $station_values = 'SELECT * FROM transport';
-    $station_result = $obj->selectdata($table, $station_values);
+    try {
+        $table = 'transport';
+        $sql   = 'SELECT * FROM transport';
+
+        // Fetch all transport services
+        $transport = $obj->selectdata($table, $sql);
+        if (!is_array($transport)) {
+            $transport = [];
+        }
+
+        // Fetch again (same data — safe for future filtering by type, route, etc.)
+        $station_result = $obj->selectdata($table, $sql);
+        if (!is_array($station_result)) {
+            $station_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $transport = [];
+        $station_result  = [];
+    }
     ?>
 
     <div class="page-wrapper">

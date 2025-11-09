@@ -704,14 +704,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'education';
-    $values = 'SELECT * FROM education';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $schools   = [];   // For schools, colleges, etc.
+    $coaching_result  = [];   // For coaching centers
 
-    // Coaching Centers Data
-    $coaching_values = 'SELECT * FROM education';
-    $coaching_result = $obj->selectdata($table, $coaching_values);
+    try {
+        $table = 'education';
+        $sql   = 'SELECT * FROM education';
+
+        // Fetch schools/education institutes
+        $schools = $obj->selectdata($table, $sql);
+        if (!is_array($schools)) {
+            $schools = [];
+        }
+
+        // Fetch coaching centers (same table, but we'll filter by type later if needed)
+        $coaching_result = $obj->selectdata($table, $sql);
+        if (!is_array($coaching_result)) {
+            $coaching_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $schools  = [];
+        $coaching_result = [];
+    }
     ?>
 
     <div class="page-wrapper">

@@ -111,6 +111,36 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 if (isset($_POST['insert'])) {
 
+
+    // Step 1: Create the 'banks' table if it does not exist in this village database
+    $createTableQuery = "
+                        CREATE TABLE `banks` (
+                        `banksid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                        `villageid` int(11) DEFAULT NULL,
+                        `bankname` varchar(50) NOT NULL,
+                        `email` varchar(50) DEFAULT NULL,
+                        `phoneno` bigint(20) DEFAULT NULL,
+                        `address` varchar(300) NOT NULL,
+                        `numberofatms` int(11) DEFAULT NULL,
+                        `branchcode` varchar(20) NOT NULL,
+                        `operationalstatus` enum('Open','Under Renovation','Closed') NOT NULL,
+                        `otherserviceinformation` varchar(255) DEFAULT NULL,
+                        `servicetype` varchar(255) DEFAULT NULL,
+                        `servicedescription` varchar(255) DEFAULT NULL,
+                        `timeschedule` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`timeschedule`)),
+                        `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`photo`)),
+                        `type` varchar(10) DEFAULT NULL,
+                        `visibility` varchar(5) NOT NULL DEFAULT 'off'
+                        ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+    // Run the create table query once (it won't recreate if already exists)
+    if (!$obj->tableExists('banks')) {
+        if (!$obj->mysqli->query($createTableQuery)) {
+            echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+        }
+    }
+
     $bank_name = isset($_POST['bankName']) ? $obj->escape($_POST['bankName']) : '';
     $email = isset($_POST['email']) ? $obj->escape($_POST['email']) : '';
     $phone_no = isset($_POST['cNo']) ? $obj->escape($_POST['cNo']) : 0;

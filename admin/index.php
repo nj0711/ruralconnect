@@ -107,8 +107,8 @@ if (isset($_SESSION['admin_email'])) {
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="login-btn">Login</button>
-            <p style="margin-top:20px"><a href='forget.php'>Forgot Password?</a></p>
-            <p id="error" class="error-message"></p>
+            <!-- <p style="margin-top:20px"><a href='forget.php'>Forgot Password?</a></p>
+            <p id="error" class="error-message"></p> -->
         </form>
     </div>
 

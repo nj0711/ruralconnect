@@ -773,14 +773,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'employmentcenters';
-    $values = 'SELECT * FROM employmentcenters';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $employment  = [];   // All employment centers
+    $center_result     = [];   // Same as above (you can rename or filter by type later)
 
-    // Employment Center Data
-    $center_values = 'SELECT * FROM employmentcenters';
-    $center_result = $obj->selectdata($table, $center_values);
+    try {
+        $table = 'employmentcenters';
+        $sql   = 'SELECT * FROM employmentcenters';
+
+        // Fetch all employment centers
+        $employment = $obj->selectdata($table, $sql);
+        if (!is_array($employment)) {
+            $employment = [];
+        }
+
+        // Fetch again for centers (same data — can be filtered later by type/role)
+        $center_result = $obj->selectdata($table, $sql);
+        if (!is_array($center_result)) {
+            $center_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $employment = [];
+        $center_result    = [];
+    }
     ?>
 
     <div class="page-wrapper">

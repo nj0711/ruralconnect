@@ -703,14 +703,29 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'banks';
-    $values = 'SELECT * FROM banks ';
 
-    $result = $obj->selectdata($table, $values);
+    $result     = [];
+    $atm_result = [];
 
-    // ATM Data
-    $atm_values = 'SELECT * FROM banks';
-    $atm_result = $obj->selectdata($table, $atm_values);
+    try {
+        $table  = 'banks';
+        $sql    = 'SELECT * FROM banks';
+        $result = $obj->selectdata($table, $sql);
+
+        // If selectdata() returns a string like "No Data Found!" or error message
+        if (!is_array($result)) {
+            $result = [];
+        }
+
+        $atm_result = $obj->selectdata($table, $sql);
+        if (!is_array($atm_result)) {
+            $atm_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist or any DB error → treat as empty
+        $result = [];
+        $atm_result = [];
+    }
     ?>
 
     <div class="page-wrapper">

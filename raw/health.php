@@ -795,14 +795,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'hospitals';
-    $values = 'SELECT * FROM hospitals';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $hospitals   = [];   // All hospitals and clinics
+    $facilities  = [];   // Same data — can be used for filtering by type (PHC, CHC, etc.)
 
-    // Health Facility Data
-    $facility_values = 'SELECT * FROM hospitals';
-    $facility_result = $obj->selectdata($table, $facility_values);
+    try {
+        $table = 'hospitals';
+        $sql   = 'SELECT * FROM hospitals';
+
+        // Fetch all hospitals and healthcare facilities
+        $hospitals = $obj->selectdata($table, $sql);
+        if (!is_array($hospitals)) {
+            $hospitals = [];
+        }
+
+        // Fetch again (same data — safe for future filtering by type, ownership, etc.)
+        $facilities = $obj->selectdata($table, $sql);
+        if (!is_array($facilities)) {
+            $facilities = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $hospitals  = [];
+        $facilities = [];
+    }
     ?>
 
     <div class="page-wrapper">

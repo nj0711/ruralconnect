@@ -100,6 +100,29 @@ if (isset($_GET['confirmeddeleteid'])) {
 
 
 if (isset($_POST['insert'])) {
+    // Step 1: Create the 'banks' table if it does not exist in this village database
+    $createTableQuery = "
+            CREATE TABLE `education` (
+            `educationid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `villageid` int(11) DEFAULT NULL,
+            `name` varchar(100) NOT NULL,
+            `address` varchar(300) NOT NULL,
+            `facilityavailable` varchar(255) DEFAULT NULL,
+            `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`photo`)),
+            `contactno` varchar(15) DEFAULT NULL,
+            `emailid` varchar(30) DEFAULT NULL,
+            `description` varchar(255) DEFAULT NULL,
+            `type` varchar(15) DEFAULT NULL,
+            `visibility` varchar(5) NOT NULL DEFAULT 'off'
+            ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+    // Run the create table query once (it won't recreate if already exists)
+    if (!$obj->tableExists('education')) {
+        if (!$obj->mysqli->query($createTableQuery)) {
+            echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+        }
+    }
 
     $name = isset($_POST['name']) ? $obj->escape($_POST['name']) : "";
     $address = isset($_POST['Address']) ? $obj->escape($_POST['Address']) : '';

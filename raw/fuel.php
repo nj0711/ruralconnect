@@ -795,14 +795,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'fuelstation';
-    $values = 'SELECT * FROM fuelstation';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $fuelstations = [];   // All fuel stations
+    $stations     = [];   // Same data — can be used for filtering or future use
 
-    // Fuel Station Data
-    $station_values = 'SELECT * FROM fuelstation';
-    $station_result = $obj->selectdata($table, $station_values);
+    try {
+        $table = 'fuelstation';
+        $sql   = 'SELECT * FROM fuelstation';
+
+        // Fetch all fuel stations
+        $fuelstations = $obj->selectdata($table, $sql);
+        if (!is_array($fuelstations)) {
+            $fuelstations = [];
+        }
+
+        // Fetch again (same data — safe for future filtering by type, fuel, etc.)
+        $stations = $obj->selectdata($table, $sql);
+        if (!is_array($stations)) {
+            $stations = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $fuelstations = [];
+        $stations     = [];
+    }
     ?>
 
     <div class="page-wrapper">

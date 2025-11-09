@@ -844,15 +844,33 @@
     include_once('admin/config.php');
     $obj = new ConnDb();
 
-    // Hotels Data
-    $table = 'hotels';
-    $values = 'SELECT * FROM hotels';
-    $hotels_result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $hotels      = [];
+    $restaurants = [];
 
-    // Restaurants Data
-    $restaurant_table = 'restaurants';
-    $restaurant_values = 'SELECT * FROM restaurants';
-    $restaurants_result = $obj->selectdata($restaurant_table, $restaurant_values);
+    try {
+        // === HOTELS ===
+        $table = 'hotels';
+        $sql   = 'SELECT * FROM hotels';
+
+        $hotels = $obj->selectdata($table, $sql);
+        if (!is_array($hotels)) {
+            $hotels = [];
+        }
+
+        // === RESTAURANTS ===
+        $table = 'restaurants';
+        $sql   = 'SELECT * FROM restaurants';
+
+        $restaurants = $obj->selectdata($table, $sql);
+        if (!is_array($restaurants)) {
+            $restaurants = [];
+        }
+    } catch (Exception $e) {
+        // If any table doesn't exist or query fails → treat as empty
+        $hotels      = [];
+        $restaurants = [];
+    }
     ?>
 
     <div class="page-wrapper">

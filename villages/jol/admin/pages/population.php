@@ -24,7 +24,29 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 $obj = new ConnDb();
 
+$createTableQuery = "
+                        CREATE TABLE `population` (
+  `populationid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `villageid` int(11) DEFAULT NULL,
+  `totalnoofmale` int(11) DEFAULT NULL,
+  `totalnooffemale` int(11) DEFAULT NULL,
+  `totalnoofchildren` int(11) DEFAULT NULL,
+  `religionandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`religionandpopulation`)),
+  `occupationandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`occupationandpopulation`)),
+  `educationandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`educationandpopulation`)),
+  `salaryandpopulation` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`salaryandpopulation`)),
+  `birthanddeathratio` varchar(10) DEFAULT NULL,
+  `agewisemale` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`agewisemale`)),
+  `agewisefemale` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`agewisefemale`))
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
 
+// Run the create table query once (it won't recreate if already exists)
+if (!$obj->tableExists('population')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+    }
+}
 // Retrieve form data
 $tot_males = 0;
 $tot_females = 0;
@@ -193,6 +215,8 @@ $village_id = $res[0]['villageid'];
 if (isset($_POST['update'])) {
 
 
+
+
     $tot_males = isset($_POST['tot_males']) ? intval($_POST['tot_males']) : 0;
     $tot_females = isset($_POST['tot_females']) ? intval($_POST['tot_females']) : 0;
     $tot_childs = isset($_POST['tot_childs']) ? intval($_POST['tot_childs']) : 0;
@@ -335,22 +359,21 @@ if (isset($_POST['update'])) {
         } else {
             echo "<script>alert('Error: Failed to update data');</script>";
         }
+    } else if (isset($_POST['insert'])) {
 
-        // }else if(isset($_POST['insert'])){
-        //      $query = "INSERT INTO population ( villageid, totalnoofmale, totalnooffemale, totalnoofchildren, religionandpopulation, occupationandpopulation, educationandpopulation, salaryandpopulation, birthanddeathratio, agewisemale, agewisefemale) VALUES (
-        //         $village_id, $tot_males, $tot_females, $tot_childs, '$religion_and_population', '$occupation_and_population', '$education_and_population', '$salary_and_population', '$birth_and_death_ratio', '$age_wise_male', '$age_wise_female'
-        //     )";
-        //     $result= $obj->insertdata("population",$query);
-        //     if($result =="Data Inserted."){
-        //         // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
-        //         echo "<script>alert('Success! Data Inserted');
-        //         window.location.href = 'editform.php?tablename=population';
-        //         </script>";
 
-        //     }else{
-        //         echo "<script>alert('Error: Failed to insert data');</script>";
-        //     }
-
+        $query = "INSERT INTO population ( villageid, totalnoofmale, totalnooffemale, totalnoofchildren, religionandpopulation, occupationandpopulation, educationandpopulation, salaryandpopulation, birthanddeathratio, agewisemale, agewisefemale) VALUES (
+                $village_id, $tot_males, $tot_females, $tot_childs, '$religion_and_population', '$occupation_and_population', '$education_and_population', '$salary_and_population', '$birth_and_death_ratio', '$age_wise_male', '$age_wise_female'
+            )";
+        $result = $obj->insertdata("population", $query);
+        if ($result == "Data Inserted.") {
+            // echo '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success!</strong> '.$result.' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+            echo "<script>alert('Success! Data Inserted');
+                window.location.href = 'editform.php?tablename=population';
+                </script>";
+        } else {
+            echo "<script>alert('Error: Failed to insert data');</script>";
+        }
     }
 }
 

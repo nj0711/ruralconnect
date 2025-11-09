@@ -41,6 +41,34 @@ $expected_headers = [
     'visibility'
 ];
 
+$createTableQuery = "
+    CREATE TABLE IF NOT EXISTS `banks` (
+        `banksid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `villageid` int(11) DEFAULT NULL,
+        `bankname` varchar(50) NOT NULL,
+        `email` varchar(50) DEFAULT NULL,
+        `phoneno` bigint(20) DEFAULT NULL,
+        `address` varchar(300) NOT NULL,
+        `numberofatms` int(11) DEFAULT NULL,
+        `branchcode` varchar(20) NOT NULL,
+        `operationalstatus` enum('Open','Under Renovation','Closed') NOT NULL,
+        `otherserviceinformation` varchar(255) DEFAULT NULL,
+        `servicetype` varchar(255) DEFAULT NULL,
+        `servicedescription` varchar(255) DEFAULT NULL,
+        `timeschedule` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`timeschedule`)),
+        `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`photo`)),
+        `type` varchar(10) DEFAULT NULL,
+        `visibility` varchar(5) NOT NULL DEFAULT 'off'
+    ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+";
+
+if (!$obj->tableExists('banks')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<div class='alert alert-danger'>Error creating table: " . htmlspecialchars($obj->mysqli->error) . "</div>";
+        exit();
+    }
+}
+
 $table_name = 'banks';
 
 if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == 0) {

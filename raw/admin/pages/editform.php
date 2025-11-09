@@ -127,62 +127,102 @@ $_SESSION['LAST_ACTIVITY'] = time();
                                                         </thead>
                                                         <tbody>
                                                             <?php
-                                                            $selQ = "SELECT * FROM $tableName";
-                                                            $result = $obj->selectdata($tableName, $selQ);
+                                                                    /* --------------------------------------------------------------
+   1. SELECT ALL RECORDS
+   -------------------------------------------------------------- */
+                                                                    $selQ   = "SELECT * FROM `$tableName`";
+                                                                    $result = $obj->selectdata($tableName, $selQ);
 
-                                                            if ($result) {
-                                                                for ($i = 0; $i < count($result); $i++) {
-                                                                    $res = array_values($result[$i]);
-                                                                    echo '<tr>';
-                                                                    echo '<td>' . $res[0] . '</td>';
-                                                                    echo '<td>' . $res[2] . '</td>';
-                                                                    if($tableName != 'villagebasic' && $tableName != 'population'){
-                                                                    $tableNameID = $tableName.'id';
-                                                                    $vr = $obj->selectdata($tableName,"select visibility from $tableName where $tableNameID = $res[0]");
-                                                                    $visi = $vr[0]['visibility'];
-                                                                    
-                                                                    
-                                                                    // echo '<td>' .$visi. '</td>';
-                                                                    if ($visi=="off") 
-				  	                                                    $ls="on";
-                                                                    elseif ($visi=="on") 
-                                                                          $ls="off";
-                                                                    echo '<td>
-                                                                        <a href="update_visibility.php?tablename=' . $tableName . '&updateid=' . $res[0] . '&vi='.$ls.'"  class="btn btn-danger">' . $visi . '</a>
-                                                                    </td>';
+                                                                    /* --------------------------------------------------------------
+   2. NORMALISE: make sure $result is ALWAYS an array
+   -------------------------------------------------------------- */
+                                                                    if (!is_array($result)) {
+                                                                        // $obj->selectdata() returns the string "No Data Found!" when empty
+                                                                        $result = [];
                                                                     }
-                                                                    echo '<td>
-                                                                            <a href="' . $tableName . '.php?updateid=' . $res[0] . '" class="btn btn-primary shadow btn-xs sharp me-1" style="padding:0.2rem;">
-                                                                                <i class="fas fa-pencil-alt"></i>
-                                                                            </a>
-                                                                          </td>';
-                                                                    
-                                                                    if ($tableName != 'villagebasic' && $tableName != 'population') {
+
+                                                                    /* --------------------------------------------------------------
+   3. LOOP – safe because $result is now an array
+   -------------------------------------------------------------- */
+                                                                    foreach ($result as $row) {
+                                                                        // $row is already an associative array (or numeric if you prefer)
+                                                                        // We keep the numeric indexes you used before:
+                                                                        $res = array_values($row);   // $res[0] = primary key, $res[1] = …, $res[2] = …
+
+                                                                        echo '<tr>';
+                                                                        echo '<td>' . htmlspecialchars($res[0]) . '</td>';   // primary key
+                                                                        echo '<td>' . htmlspecialchars($res[2]) . '</td>';   // column you display
+
+                                                                        /* ----------------------------------------------------------
+       VISIBILITY TOGGLE (skip for villagebasic & population)
+       ---------------------------------------------------------- */
+                                                                        if ($tableName !== 'villagebasic' && $tableName !== 'population') {
+                                                                            $pkCol = $tableName . 'id';                     // e.g. banksid, schoolsid …
+                                                                            $visQ  = "SELECT visibility FROM `$tableName` WHERE `$pkCol` = " . intval($res[0]);
+                                                                            $visR  = $obj->selectdata($tableName, $visQ);
+
+                                                                            $visi = (!is_array($visR) || empty($visR)) ? 'off' : $visR[0]['visibility'];
+
+                                                                            $newVis = ($visi === 'off') ? 'on' : 'off';
+
+                                                                            echo '<td>
+                <a href="update_visibility.php?tablename=' . urlencode($tableName) .
+                                                                                '&updateid=' . $res[0] .
+                                                                                '&vi=' . $newVis .
+                                                                                '" class="btn btn-' . ($visi === 'off' ? 'danger' : 'success') . '">' .
+                                                                                htmlspecialchars($visi) . '</a>
+              </td>';
+                                                                        }
+
+                                                                        /* ----------------------------------------------------------
+       EDIT BUTTON
+       ---------------------------------------------------------- */
                                                                         echo '<td>
-                                                                                <a href="' . $tableName . '.php?deleteid=' . $res[0] . '" class="btn btn-danger shadow btn-xs sharp">
-                                                                                    <i class="fa fa-trash"></i>
-                                                                                </a>
-                                                                              </td>';
+            <a href="' . $tableName . '.php?updateid=' . $res[0] .
+                                                                            '" class="btn btn-primary shadow btn-xs sharp me-1" style="padding:0.2rem;">
+                <i class="fas fa-pencil-alt"></i>
+            </a>
+          </td>';
+
+                                                                        /* ----------------------------------------------------------
+       DELETE BUTTON (skip for villagebasic & population)
+       ---------------------------------------------------------- */
+                                                                        if ($tableName !== 'villagebasic' && $tableName !== 'population') {
+                                                                            echo '<td>
+                <a href="' . $tableName . '.php?deleteid=' . $res[0] .
+                                                                                '" class="btn btn-danger shadow btn-xs sharp">
+                    <i class="fa fa-trash"></i>
+                </a>
+              </td>';
+                                                                        }
+
+                                                                        echo '</tr>';
                                                                     }
-                                                                    echo '</tr>';
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </tbody>
-                                                    </table>
+
+                                                                    /* --------------------------------------------------------------
+   OPTIONAL: show a friendly message when the table is empty
+   -------------------------------------------------------------- */
+                                                                    if (empty($result)) {
+                                                                        echo '<tr><td colspan="10" class="text-center text-muted py-4">
+            No records found.
+          </td></tr>';
+                                                                    }
+                                                                    ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
         <!--**********************************
             Content body end

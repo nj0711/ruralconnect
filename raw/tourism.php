@@ -786,10 +786,24 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'tourismplaces';
-    $values = 'SELECT * FROM tourismplaces';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty array to prevent foreach/array_filter errors
+    $result = [];
+
+    try {
+        $table = 'tourismplaces';
+        $sql   = 'SELECT * FROM tourismplaces';
+
+        $result = $obj->selectdata($table, $sql);
+
+        // Ensure it's always an array (even if selectdata returns string like "No Data Found!")
+        if (!is_array($result)) {
+            $result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $result = [];
+    }
     ?>
 
     <div class="page-wrapper">

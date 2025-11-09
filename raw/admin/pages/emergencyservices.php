@@ -145,6 +145,25 @@
                     $pincode = isset($address_arr[2]) ? $address_arr[2] : "";
 
                     if (isset($_POST['submit'])) {
+                        // Step 1: Create the 'banks' table if it does not exist in this village database
+                        $createTableQuery = "
+                       CREATE TABLE `emergencyservices` (
+  `emergencyservicesid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `servicename` varchar(100) NOT NULL,
+  `servicetype` varchar(30) NOT NULL,
+  `contactnumber` varchar(15) NOT NULL,
+  `address` varchar(300) DEFAULT NULL,
+  `villageid` int(11) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+                        // Run the create table query once (it won't recreate if already exists)
+                        if (!$Emg->tableExists('emergencyservices')) {
+                            if (!$Emg->mysqli->query($createTableQuery)) {
+                                echo "<script>alert('Error creating table: " . $Emg->mysqli->error . "');</script>";
+                            }
+                        }
 
                         $emergencyservicesID = isset($_POST['emergencyservicesID']) ? $_POST['emergencyservicesID'] : "";
                         $VillageID = $villageid;

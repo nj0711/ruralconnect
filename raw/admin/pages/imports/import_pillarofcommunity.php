@@ -39,6 +39,32 @@ $expected_headers = [
     'visibility'
 ];
 
+$createTableQuery = "
+                       CREATE TABLE `pillarofcommunity` (
+  `pillarofcommunityid` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) NOT NULL,
+  `birthdate` date NOT NULL,
+  `dateofpassing` date DEFAULT NULL,
+  `education` varchar(255) DEFAULT NULL,
+  `politicalcareer` varchar(255) DEFAULT NULL,
+  `positionsheld` varchar(255) DEFAULT NULL,
+  `roleinindependencemovement` varchar(255) DEFAULT NULL,
+  `villageid` int(11) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `photo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin  CHECK (json_valid(`photo`)),
+  `profession` varchar(500) DEFAULT NULL,
+  `typeofleader` varchar(50) DEFAULT NULL,
+  `visibility` varchar(5) NOT NULL DEFAULT 'off'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+                        ";
+
+// Run the create table query once (it won't recreate if already exists)
+if (!$obj->tableExists('pillarofcommunity')) {
+    if (!$obj->mysqli->query($createTableQuery)) {
+        echo "<script>alert('Error creating table: " . $obj->mysqli->error . "');</script>";
+    }
+}
+
 $table_name = 'pillarofcommunity';
 
 if (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] == 0) {

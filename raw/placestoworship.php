@@ -810,14 +810,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'placestoworship';
-    $values = 'SELECT * FROM placestoworship';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $worship_result = [];   // All temples, mosques, churches, gurudwaras, etc.
+    $worship_data   = [];   // Same data — can be used for filtering by religion/type
 
-    // Worship Place Data
-    $worship_values = 'SELECT * FROM placestoworship';
-    $worship_result = $obj->selectdata($table, $worship_values);
+    try {
+        $table = 'placestoworship';
+        $sql   = 'SELECT * FROM placestoworship';
+
+        // Fetch all places of worship
+        $worship_result = $obj->selectdata($table, $sql);
+        if (!is_array($worship_result)) {
+            $worship_result = [];
+        }
+
+        // Fetch again (same data — safe for future filtering by religion, type, etc.)
+        $worship_data = $obj->selectdata($table, $sql);
+        if (!is_array($worship_data)) {
+            $worship_data = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $worship_result = [];
+        $worship_data   = [];
+    }
     ?>
 
     <div class="page-wrapper">

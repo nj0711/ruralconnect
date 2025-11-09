@@ -766,14 +766,31 @@
     <?php
     include_once('admin/config.php');
     $obj = new ConnDb();
-    $table = 'electrification';
-    $values = 'SELECT * FROM electrification';
 
-    $result = $obj->selectdata($table, $values);
+    // Initialize as empty arrays to prevent foreach/array_filter errors
+    $electrification = [];   // General electrification data (e.g., street lights, household connections)
+    $substation_result     = [];   // Substations
 
-    // Substation Data
-    $substation_values = 'SELECT * FROM electrification';
-    $substation_result = $obj->selectdata($table, $substation_values);
+    try {
+        $table = 'electrification';
+        $sql   = 'SELECT * FROM electrification';
+
+        // Fetch general electrification data
+        $electrification = $obj->selectdata($table, $sql);
+        if (!is_array($electrification)) {
+            $electrification = [];
+        }
+
+        // Fetch substation data (same table — we'll filter by type later if needed)
+        $substation_result = $obj->selectdata($table, $sql);
+        if (!is_array($substation_result)) {
+            $substation_result = [];
+        }
+    } catch (Exception $e) {
+        // Table doesn't exist, query fails, or any DB error → treat as empty
+        $electrification = [];
+        $substations_result     = [];
+    }
     ?>
 
     <div class="page-wrapper">
@@ -781,7 +798,7 @@
             <div class="container">
                 <div class="page-banner-title">
                     <h3>Electrification Services</h3>
-                   
+
                 </div><!-- page-banner-title -->
             </div><!-- container -->
         </section>
