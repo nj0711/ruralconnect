@@ -1,0 +1,9 @@
+admin page
+
+
+ -> dashboard
+ -> profile
+ -> add villages form -
+ -> manage villages -
+ -> manage admins of other village -
+ -> edit own site content (18 pages)
