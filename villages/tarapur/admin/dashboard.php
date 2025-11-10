@@ -156,6 +156,82 @@ echo "<script>
 </script>";
 ?>
 
+<?php
+/* --------------------------------------------------------------
+   EXPORT ALL SERVICES → ONE BIG CSV (NO ZIP)
+   -------------------------------------------------------------- */
+if (isset($_GET['export_all_csv'])) {
+    // session_start();
+    if (!isset($_SESSION['village_admin_email'])) {
+        exit('Unauthorized');
+    }
+
+    global $services_stats, $village_id, $obj;
+
+    if (!isset($obj->mysqli) || !($obj->mysqli instanceof mysqli)) {
+        exit('DB error');
+    }
+    $mysqli = $obj->mysqli;
+
+    $tableMap = [
+        'banks'             => 'Banking',
+        'hospitals'         => 'Hospitals',
+        'education'         => 'Education',
+        'emergencyservices' => 'Emergency Services',
+        'employmentcenters' => 'Employment Centers',
+        'eventsfestivals'   => 'Events & Festivals',
+        'fuelstation'       => 'Fuel Stations',
+        'hotels'            => 'Hotels',
+        'restaurants'       => 'Restaurants',
+        'tourismplaces'     => 'Tourism Places',
+        'placestoworship'   => 'Places to Worship',
+        'pillarofcommunity' => 'Pillar of Community'
+    ];
+
+    // Open in-memory CSV
+    $fp = fopen('php://temp', 'r+');
+    $first = true;
+
+    $esc_village_id = $mysqli->real_escape_string($village_id);
+
+    foreach ($tableMap as $table => $friendly) {
+        $stat = $services_stats[$friendly] ?? null;
+        if (!$stat || $stat['total'] == 0) continue;
+
+        $sql = "SELECT * FROM `$table` WHERE villageid = '$esc_village_id'";
+        $result = $obj->selectdata($table, $sql);
+
+        if (!is_array($result) || empty($result)) continue;
+
+        // Add service name as a header row
+        if (!$first) fputcsv($fp, []); // blank line between services
+        fputcsv($fp, ["--- $friendly ---"]);
+        fputcsv($fp, array_keys($result[0])); // column headers
+
+        foreach ($result as $row) {
+            fputcsv($fp, $row);
+        }
+        $first = false;
+    }
+
+    // If no data
+    if (ftell($fp) == 0) {
+        fclose($fp);
+        exit('No data to export');
+    }
+
+    // Send CSV
+    rewind($fp);
+    $csv = stream_get_contents($fp);
+    fclose($fp);
+
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="jol_all_services_' . date('Y-m-d') . '.csv"');
+    echo $csv;
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1071,6 +1147,14 @@ echo "<script>
 
 
             <div class="container-fluid px-4">
+
+                <div class="col-md-3 mb-3">
+                    <button id="exportAllCsvBtn" class="btn btn-primary w-100 rounded-pill">
+                        Export All Services (CSV)
+                    </button>
+
+
+                </div>
                 <!-- Overall Statistics Cards -->
                 <div class="row mb-5 g-4">
                     <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
@@ -1784,6 +1868,12 @@ echo "<script>
 
     <script src="js/custom.min.js"></script>
     <script src="js/dlabnav-init.js"></script>
+
+    <script>
+        document.getElementById('exportAllCsvBtn').addEventListener('click', function() {
+            location = location.pathname + '?export_all_csv=1&_=' + Date.now();
+        });
+    </script>
 
     <script>
         // Enhanced Typewriter effect with better animation
