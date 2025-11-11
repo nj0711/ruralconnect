@@ -4,11 +4,22 @@ if (isset($_SESSION['admin_email'])) {
     header("Location: dashboard.php");
     exit();
 }
+
+// DISPLAY SUCCESS MESSAGE
+if (isset($_SESSION['success_message'])) {
+    echo "<script>
+        setTimeout(function() {
+            alert('" . $_SESSION['success_message'] . "');
+        }, 100);
+    </script>";
+    unset($_SESSION['success_message']); // Clear it
+}
 ?>
 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +38,8 @@ if (isset($_SESSION['admin_email'])) {
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #f4f4f9; /* Light background */
+            background-color: #f4f4f9;
+            /* Light background */
         }
 
         .login-container {
@@ -66,7 +78,8 @@ if (isset($_SESSION['admin_email'])) {
         }
 
         .input-group input:focus {
-            border-color: #0066cc; /* Highlight color */
+            border-color: #0066cc;
+            /* Highlight color */
             outline: none;
         }
 
@@ -74,7 +87,8 @@ if (isset($_SESSION['admin_email'])) {
             width: 100%;
             padding: 0.6rem;
             border: none;
-            background-color: #0066cc; /* Primary button color */
+            background-color: #0066cc;
+            /* Primary button color */
             color: #ffffff;
             font-size: 1rem;
             font-weight: bold;
@@ -94,6 +108,7 @@ if (isset($_SESSION['admin_email'])) {
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>Admin Login</h2>
@@ -107,8 +122,8 @@ if (isset($_SESSION['admin_email'])) {
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="login-btn">Login</button>
-            <!-- <p style="margin-top:20px"><a href='forget.php'>Forgot Password?</a></p>
-            <p id="error" class="error-message"></p> -->
+            <p style="margin-top:20px"><a href='forget.php'>Forgot Password?</a></p>
+            <p id="error" class="error-message"></p>
         </form>
     </div>
 
@@ -131,4 +146,5 @@ if (isset($_SESSION['admin_email'])) {
         }
     </script>
 </body>
+
 </html>
