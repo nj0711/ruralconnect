@@ -142,6 +142,8 @@
 
                  </a>
              </li>
+             <li><a href="service.php"><i class="fas fa-tools"></i> <span class="nav-text">Add Service</span></a></li>
+
              <li><a href="../contact.php" aria-expanded="false">
                      <i class="flaticon-381-user-9"></i>
                      <span class="nav-text">Contact</span>

@@ -137,6 +137,7 @@
             <ul class="metismenu" id="menu">
                 <li><a href="index.php"><i class="flaticon-025-dashboard"></i> <span class="nav-text">Dashboard</span></a></li>
                 <li><a href="./pages/allpages.php"><i class="flaticon-022-copy"></i> <span class="nav-text">Add Data</span></a></li>
+                <li><a href="./pages/service.php"><i class="fas fa-tools"></i> <span class="nav-text">Add Service</span></a></li>
                 <li><a href="contact.php"><i class="flaticon-381-user-9"></i> <span class="nav-text">Contact</span></a></li>
             </ul>
         </div>
