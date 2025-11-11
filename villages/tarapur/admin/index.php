@@ -6,128 +6,284 @@ if (isset($_SESSION['village_admin_email'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Village Admin Login | VillageOnWeb</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* General styling */
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --gray-100: #f8fafc;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-900: #1e293b;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+            --radius: 24px;
+        }
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
 
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f9; /* Light background */
+            padding: 1rem;
         }
 
-        .login-container {
-            width: 320px;
-            padding: 2rem;
-            background-color: #ffffff;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 8px;
-            text-align: center;
+        .login-wrapper {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.8s ease-out;
         }
 
-        h2 {
-            color: #333;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-section h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-section p {
+            color: var(--gray-500);
+            font-size: 1rem;
+            margin-bottom: 2rem;
         }
 
         .input-group {
-            margin-bottom: 1rem;
-            text-align: left;
+            position: relative;
+            margin-bottom: 1.5rem;
         }
 
-        .input-group label {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 0.2rem;
-            display: block;
+        .input-group .icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: 1.1rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 0.9rem 1rem;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 12px;
             font-size: 1rem;
+            background: var(--gray-100);
+            transition: all 0.2s ease;
         }
 
         .input-group input:focus {
-            border-color: #0066cc; /* Highlight color */
             outline: none;
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
         }
 
-        .login-btn {
+        .btn-login {
             width: 100%;
-            padding: 0.6rem;
+            padding: 0.9rem;
+            background: var(--primary);
+            color: white;
             border: none;
-            background-color: #0066cc; /* Primary button color */
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 4px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 1rem;
-        }
-
-        .login-btn:hover {
-            background-color: #005bb5;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.85rem;
+            transition: all 0.2s ease;
             margin-top: 0.5rem;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .back-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* .error-message {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-align: center;
+            padding: 0.75rem;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+        } */
+
+        .illustration-section {
+            flex: 1;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration-section::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+            z-index: 1;
+        }
+
+        .illustration {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            z-index: 2;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
+            .login-wrapper {
+                flex-direction: column;
+                max-width: 420px;
+            }
+
+            .form-section {
+                padding: 2.5rem 2rem;
+            }
+
+            .illustration-section {
+                padding: 2rem;
+                min-height: 300px;
+            }
+
+            .illustration {
+                max-width: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-section {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .illustration-section {
+                min-height: 250px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <form id="loginForm" action="login_process.php" method="POST" onsubmit="return validateForm()">
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="login-btn">Login</button>
-            <p id="error" class="error-message"></p>
-        </form>
+    <div class="login-wrapper">
+        <!-- Left: Village Admin Login Form -->
+        <div class="form-section">
+            <h1>Village Admin</h1>
+            <p>Login to manage your village portal.</p>
+
+            <form id="loginForm" action="login_process.php" method="POST" onsubmit="return validateForm()">
+                <div class="input-group">
+                    <!-- <span class="icon">Email</span> -->
+                    <input type="email" name="email" placeholder="villageadmin@example.com" required>
+                </div>
+                <div class="input-group">
+                    <!-- <span class="icon">Lock</span> -->
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+                <div class="back-link">
+                    <a href="../index.php">Back to Sub Admin</a>
+                </div>
+                <p id="error" class="error-message"></p>
+            </form>
+        </div>
+
+        <!-- Right: Illustration -->
+        <div class="illustration-section">
+            <img src="../../../assets/20944201.jpg" alt="Village Admin Workspace" class="illustration">
+        </div>
     </div>
 
     <script>
-        // JavaScript validation to prevent basic SQL injection attempts
         function validateForm() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('error');
+            const email = document.querySelector('input[name="email"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+            const error = document.getElementById('error');
+            const danger = /['"=;*\/-]/;
 
-            // Regular expression to detect potentially dangerous characters
-            const regex = /['"=;*\/-]/;
-
-            if (regex.test(email) || regex.test(password)) {
-                errorElement.textContent = "Invalid characters detected in input.";
+            if (danger.test(email) || danger.test(password)) {
+                error.textContent = "Invalid characters detected.";
                 return false;
             }
-
             return true;
         }
     </script>
 </body>
+
 </html>
