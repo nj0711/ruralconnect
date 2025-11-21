@@ -232,8 +232,10 @@ if (isset($_GET['export_all_csv'])) {
     $csv = stream_get_contents($fp);
     fclose($fp);
 
+    // Dynamic filename using actual village name
+    $safe_village_name = preg_replace('/[^a-zA-Z0-9_-]/', '_', $name); // Sanitize for filename
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="jol_all_services_' . date('Y-m-d') . '.csv"');
+    header('Content-Disposition: attachment; filename="' . $safe_village_name . '_all_services_' . date('Y-m-d') . '.csv"');
     echo $csv;
     exit;
 }
