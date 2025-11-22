@@ -70,9 +70,17 @@
 						<div class="team-card">
 							<div class="team-card-img">
 								<img src="assets/image/team/sonal-mam.jpeg" class="img-fluid" alt="Sonal S Jain">
+								<div class="team-card-icon d-flex justify-content-center align-items-center">
+
+									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+
+									<a href="mailto:sonaljain@spuvvn.edu" class="mail me-2"><i class="fa fa-envelope"></i></a>
+									<a href="https://linkedin.com/in/Shruti-Gohil" class="facebook ms-2"><i class="fa-brands fa-linkedin"></i></a>
+								</div>
 							</div>
+
 							<div class="team-card-content">
-								<h4><a href="">Sonal S Jain</a></h4>
+								<h4><a href="">Dr.Sonal A Jain</a></h4>
 								<p><strong>Project Head</strong> <br />Post Graduate Department Of Computer Science And Technology, Anand</p>
 							</div>
 						</div>
@@ -83,8 +91,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/shrutipic_team.jpg" class="img-fluid" alt="Shruti Gohil">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="https://linkedin.com/in/Shruti-Gohil" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -102,8 +112,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/varsil.jpg" class="img-fluid" alt="Varsil Suvagiya">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="https://instagram.com/" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="https://linkedin.com/in/" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -121,8 +133,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/sudhir-rajai.jpeg" class="img-fluid" alt="Sudhir Rajai">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="https://in.linkedin.com/in/rajai-sudhir-52796a214" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -138,8 +152,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/jagdish-rajai.jpeg" class="img-fluid" alt="Jagdish Rajai">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="https://www.linkedin.com/in/jagdish-rajai" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -155,8 +171,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/nishtha-dholakiya.jpeg" class="img-fluid" alt="Nishtha Dholakiya">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="https://www.linkedin.com/in/nishthadholakiya" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -172,8 +190,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/nikita-darji.jpeg" class="img-fluid" alt="Nikita Darji">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="#" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -189,8 +209,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/dummy.jpg" class="img-fluid" alt="Priyank Rajai">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="#" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>
@@ -206,8 +228,10 @@
 							<div class="team-card-img">
 								<img src="assets/image/team/dummy.jpg" class="img-fluid" alt="Riya Panchal">
 								<div class="team-card-icon">
+
 									<a href="#" class="pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-									<a href="#" class="twitter"><i class="fa-brands fa-instagram"></i></a>
+
+									<a href="mailto:" class="mail me-2"><i class="fa fa-envelope"></i></a>
 									<a href="#" class="facebook"><i class="fa-brands fa-linkedin"></i></a>
 								</div>
 							</div>

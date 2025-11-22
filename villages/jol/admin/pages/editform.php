@@ -1,5 +1,5 @@
 <?php
-	include('../config.php');
+include('../config.php');
 
 
 session_start();
@@ -23,27 +23,26 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 // Update the last activity timestamp to the current time
 $_SESSION['LAST_ACTIVITY'] = time();
 
-	$obj = new ConnDb();
+$obj = new ConnDb();
 
-    $tableName=$_GET['tablename'];
+$tableName = $_GET['tablename'];
 
-    if(!$obj->tableExists($tableName)){
-        header('Location: index.php');
+if (!$obj->tableExists($tableName)) {
+    header('Location: index.php');
+}
 
-    }
-
-	?>
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <script>
-    // Force reload on back
-    window.addEventListener('pageshow', function(event) {
-        if (event.persisted) {
-            window.location.reload();
-        }
-    });
+        // Force reload on back
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
     </script>
 
     <!-- Meta -->
@@ -84,49 +83,49 @@ $_SESSION['LAST_ACTIVITY'] = time();
         <!--**********************************
             Content body start
         ***********************************-->
-       <div class="content-body">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-12 col-xxl-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"><?php echo strtoupper($tableName); ?></h4>
-                        <?php 
-                        if ($tableName != "villagebasic" && $tableName != "population") { ?>
-                            <a href="<?php echo $tableName . '.php'; ?>">
-                                <button class="btn btn-primary">Add Data</button>
-                            </a>
-                        <?php } ?>
-                    </div>
-                    <div class="card-body">
-                        <div class="basic-form">
-                            <form method="post" action="#" enctype="multipart/form-data">
-                                <div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="table-responsive recentOrderTable">
-                                                    <table class="table table-responsive-md">
-                                                        <thead>
-                                                            <?php 
-                                                            $selC = "SHOW COLUMNS FROM $tableName";
-                                                            $resCol = $obj->selectdata($tableName, $selC);
-                                                            ?>
-                                                            <tr>
-                                                                <th><strong><?php echo $resCol[0]['Field']; ?></strong></th>
-                                                                <th><strong><?php echo $resCol[2]['Field']; ?></strong></th>
-                                                                <?php if($tableName != 'villagebasic' && $tableName != 'population'){ ?>
-                                                                <th><strong>Visibility</strong></th>
-                                                                <?php }?>
-                                                                <th><strong>Edit</strong></th>
-                                                                
-                                                                <?php if ($tableName != 'villagebasic' && $tableName != 'population') { ?>
-                                                                    <th><strong>Delete</strong></th>
-                                                                <?php } ?>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"><?php echo strtoupper($tableName); ?></h4>
+                                <?php
+                                if ($tableName != "villagebasic" && $tableName != "population") { ?>
+                                    <a href="<?php echo $tableName . '.php'; ?>">
+                                        <button class="btn btn-primary">Add Data</button>
+                                    </a>
+                                <?php } ?>
+                            </div>
+                            <div class="card-body">
+                                <div class="basic-form">
+                                    <form method="post" action="#" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col-xl-12 col-lg-12 col-xxl-12 col-sm-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="table-responsive recentOrderTable">
+                                                            <table class="table table-responsive-md">
+                                                                <thead>
+                                                                    <?php
+                                                                    $selC = "SHOW COLUMNS FROM $tableName";
+                                                                    $resCol = $obj->selectdata($tableName, $selC);
+                                                                    ?>
+                                                                    <tr>
+                                                                        <th><strong><?php echo $resCol[0]['Field']; ?></strong></th>
+                                                                        <th><strong><?php echo $resCol[2]['Field']; ?></strong></th>
+                                                                        <?php if ($tableName != 'villagebasic' && $tableName != 'population') { ?>
+                                                                            <th><strong>Visibility</strong></th>
+                                                                        <?php } ?>
+                                                                        <th><strong>Edit</strong></th>
+
+                                                                        <?php if ($tableName != 'villagebasic' && $tableName != 'population') { ?>
+                                                                            <th><strong>Delete</strong></th>
+                                                                        <?php } ?>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
                                                                     /* --------------------------------------------------------------
    1. SELECT ALL RECORDS
    -------------------------------------------------------------- */
@@ -271,49 +270,49 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 
     <script>
-    function JobickCarousel() {
+        function JobickCarousel() {
 
-        /*  testimonial one function by = owl.carousel.js */
-        jQuery('.front-view-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            nav: true,
-            autoplaySpeed: 3000,
-            navSpeed: 3000,
-            autoWidth: true,
-            paginationSpeed: 3000,
-            slideSpeed: 3000,
-            smartSpeed: 3000,
-            autoplay: false,
-            animateOut: 'fadeOut',
-            dots: true,
-            navText: ['', ''],
-            responsive: {
-                0: {
-                    items: 1,
+            /*  testimonial one function by = owl.carousel.js */
+            jQuery('.front-view-slider').owlCarousel({
+                loop: false,
+                margin: 30,
+                nav: true,
+                autoplaySpeed: 3000,
+                navSpeed: 3000,
+                autoWidth: true,
+                paginationSpeed: 3000,
+                slideSpeed: 3000,
+                smartSpeed: 3000,
+                autoplay: false,
+                animateOut: 'fadeOut',
+                dots: true,
+                navText: ['', ''],
+                responsive: {
+                    0: {
+                        items: 1,
 
-                    margin: 10
-                },
+                        margin: 10
+                    },
 
-                480: {
-                    items: 1
-                },
+                    480: {
+                        items: 1
+                    },
 
-                767: {
-                    items: 3
-                },
-                1750: {
-                    items: 3
+                    767: {
+                        items: 3
+                    },
+                    1750: {
+                        items: 3
+                    }
                 }
-            }
-        })
-    }
+            })
+        }
 
-    jQuery(window).on('load', function() {
-        setTimeout(function() {
-            JobickCarousel();
-        }, 1000);
-    });
+        jQuery(window).on('load', function() {
+            setTimeout(function() {
+                JobickCarousel();
+            }, 1000);
+        });
     </script>
 </body>
 

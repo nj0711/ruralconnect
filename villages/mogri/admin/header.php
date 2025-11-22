@@ -64,9 +64,9 @@
                     <ul class="navbar-nav header-right">
 
                         <!-- Google Translate Widget -->
-                        <!-- <li class="nav-item">
+                        <li class="nav-item">
                             <div id="google_translate_element"></div>
-                        </li> -->
+                        </li>
 
                         <!-- Profile Dropdown -->
                         <li class="nav-item dropdown header-profile">

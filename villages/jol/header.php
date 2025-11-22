@@ -7,7 +7,8 @@
             <div class="main-menu-left">
                 <div class="main-menu-logo">
                     <a href="index.php"><img src="assets/image/logo1.png" alt="img-1" width="80" height="80"></a>
-                    <!-- <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center"> -->
+
+                    <div id="google_translate_element" class="translate-widget container mt-4 p-3 text-center">
                     </div>
                 </div><!-- main-menu-logo -->
 
@@ -130,8 +131,8 @@
     }
 
     .main-menu-logo {
-        padding: 0px;
-        background: #003b49;
+        padding: 10px;
+        /* background: #003b49; */
 
     }
 </style>
