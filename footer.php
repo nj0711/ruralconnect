@@ -86,7 +86,7 @@
 			</li><!-- li -->
 			<li>
 				<i class="fa-solid fa-map-marker-alt"></i>
-				Anand, Gujarat, India
+				Surat, Gujarat, India
 			</li><!-- li -->
 		</ul><!-- mobile-nav-contact -->
 		
