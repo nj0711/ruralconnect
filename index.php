@@ -5,7 +5,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Village On Web</title>
+	<title>RuralConnect Web</title>
 	<!-- google font -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -322,7 +322,7 @@
 						<div class="section-title-box">
 							<div class="section-tagline">About</div><!-- section-tagline -->
 							<h5 class="section-title">Welcome to Village</h5>
-							<p>In the age of digitalization, the concept of showcasing village information online may seem unconventional, but it is increasingly becoming a trend with the rise of websites dedicated to displaying details about various villages. This innovative approach not only provides a platform for villages to promote themselves to a global audience but also serves as a valuable resource for individuals looking to explore and learn more about different communities. Village On Web is at the forefront of this movement, offering a comprehensive database of village information accessible at your fingertips. Read on to discover how Village On Web is revolutionizing the way we interact with and learn about villages online.</p>
+							<p>In the age of digitalization, the concept of showcasing village information online may seem unconventional, but it is increasingly becoming a trend with the rise of websites dedicated to displaying details about various villages. This innovative approach not only provides a platform for villages to promote themselves to a global audience but also serves as a valuable resource for individuals looking to explore and learn more about different communities. RuralConnect Web is at the forefront of this movement, offering a comprehensive database of village information accessible at your fingertips. Read on to discover how RuralConnect Web is revolutionizing the way we interact with and learn about villages online.</p>
 						</div><!-- section-title-box -->
 					</div><!-- about-inner -->
 				</div><!--col-lg-6-->

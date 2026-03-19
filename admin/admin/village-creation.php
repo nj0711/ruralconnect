@@ -274,7 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_close($conn);
 
             // Now connect to the admin panel database
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel'); // Replace with your actual admin database
+            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'ruralconnectadmin_panel'); // Replace with your actual admin database
             if (!$conn) {
                 die("Failed to connect to admin panel database: " . mysqli_connect_error());
             }
@@ -287,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             //jagdish code start 
 
-            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel');
+            $conn = mysqli_connect($dbHost, $dbUser, $dbPass, 'ruralconnectadmin_panel');
             $id_of_admin_query = "select * from villages where village_name='" . $villageName . "'";
             $id_of_admin = mysqli_query($conn, $id_of_admin_query);
             $id_a = mysqli_fetch_assoc($id_of_admin)['id'];

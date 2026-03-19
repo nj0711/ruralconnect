@@ -74,7 +74,7 @@ function deleteVillageEntry($villageName, $conn) {
 
 // Function to drop the village database
 function deleteVillageDatabase($villageName, $conn) {
-    $fullDbName = "villageonweb_" . $villageName;
+    $fullDbName = "ruralconnect" . $villageName;
     $sql = "DROP DATABASE `$fullDbName`";
     return mysqli_query($conn, $sql);
 }

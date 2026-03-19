@@ -7,7 +7,7 @@
 						<a href="index.php"><img src="assets/image/logo1.png" width="80px" class="img-fluid" alt="img-25"></a>
 					</div><!-- footer-widget-logo -->
 					<div class="footer-widget-text">
-						<p>Village On Web.</p>
+						<p>RuralConnect Web.</p>
 					</div><!-- footer-widget-text -->
 					<div class="footer-widget-socials">
 						<a href="#"><i class="fa-brands fa-twitter"></i></a>

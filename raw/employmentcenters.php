@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Employment Centers || Village On Web</title>
+    <title>Employment Centers || RuralConnect Web</title>
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1548,7 +1548,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: centerName + ' - Career Services',
-                    text: 'Employment center location shared from Village On Web',
+                    text: 'Employment center location shared from RuralConnect Web',
                     url: window.location.href
                 }).catch(console.error);
             } else {

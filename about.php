@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>About || Village On Web</title>
+	<title>About || RuralConnect Web</title>
 	<!-- google font -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,7 @@
 						<div class="section-tagline">
 							About Us
 						</div><!-- section-tagline -->
-						<h2 class="section-title">Welcome to Village On Web</h2>
+						<h2 class="section-title">Welcome to RuralConnect Web</h2>
 							<p>Welcome to Anand, where the rhythm of life beats with the harmony of community, and the echoes of our heritage resound through the streets. Nestled amidst nature's embrace, our village is more than just a place; it's a tapestry of stories, woven by the hands of generations past and present.</p>
 							<h5 class="about-one-inner-text">Join us as we celebrate our shared journey, rooted in tradition yet reaching for the horizon of possibility.</h5>
 						<div class="row row-gutter-y-30">

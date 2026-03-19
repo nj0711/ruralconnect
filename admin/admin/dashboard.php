@@ -189,7 +189,7 @@ $_SESSION['LAST_ACTIVITY'] = time();
 
 
     <script>
-        const text = "Welcome To Village On Web's Super Admin Panel";
+        const text = "Welcome To RuralConnect Web's Super Admin Panel";
         let index = 0;
         const speed = 150; // Typing speed in milliseconds
         const element = document.getElementById("typewriter");

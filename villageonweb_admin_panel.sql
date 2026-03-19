@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `villageonweb_admin_panel`
+-- Database: `ruralconnectadmin_panel`
 --
 
 -- --------------------------------------------------------
@@ -150,26 +150,26 @@ CREATE TABLE `villages` (
 --
 
 INSERT INTO `villages` (`id`, `village_name`, `db_host`, `db_name`, `db_user`, `db_pass`, `admin_email`, `admin_pass`) VALUES
-(5, 'ajarpura', 'localhost', 'villageonweb_ajarpura', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'ajarpura@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(6, 'ardi', 'localhost', 'villageonweb_ardi', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'ardi@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(7, 'asodar', 'localhost', 'villageonweb_asodar', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'asodar@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(8, 'boriya', 'localhost', 'villageonweb_boriya', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'boriya@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(9, 'chikhodara', 'localhost', 'villageonweb_chikhodara', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'chikhodara@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(10, 'gana', 'localhost', 'villageonweb_gana', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'gana@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(11, 'jol', 'localhost', 'villageonweb_jol', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'jol@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(12, 'mogar', 'localhost', 'villageonweb_mogar', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'mogar@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(13, 'morad', 'localhost', 'villageonweb_morad', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'morad@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(14, 'napad', 'localhost', 'villageonweb_napad', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'napad@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(16, 'porda', 'localhost', 'villageonweb_porda', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'porda@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(17, 'ramnagar', 'localhost', 'villageonweb_ramnagar', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'ramnagar@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(18, 'ravipura', 'localhost', 'villageonweb_ravipura', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'ravipura@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(19, 'rudel', 'localhost', 'villageonweb_rudel', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'rudel@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(20, 'vadod', 'localhost', 'villageonweb_vadod', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'vadod@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(21, 'vaghasi', 'localhost', 'villageonweb_vaghasi', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'vaghasi@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(22, 'vatadara', 'localhost', 'villageonweb_vatadara', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'vatadara@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(23, 'vishnoli', 'localhost', 'villageonweb_vishnoli', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'vishnoli@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(25, 'adas', 'localhost', 'villageonweb_adas', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'adas@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
-(26, 'navli', 'localhost', 'villageonweb_navli', 'villageonweb_root', 'V!wrJq(Q%nZ=', 'navli@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b');
+(5, 'ajarpura', 'localhost', 'ruralconnectajarpura', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'ajarpura@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(6, 'ardi', 'localhost', 'ruralconnectardi', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'ardi@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(7, 'asodar', 'localhost', 'ruralconnectasodar', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'asodar@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(8, 'boriya', 'localhost', 'ruralconnectboriya', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'boriya@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(9, 'chikhodara', 'localhost', 'ruralconnectchikhodara', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'chikhodara@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(10, 'gana', 'localhost', 'ruralconnectgana', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'gana@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(11, 'jol', 'localhost', 'ruralconnectjol', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'jol@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(12, 'mogar', 'localhost', 'ruralconnectmogar', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'mogar@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(13, 'morad', 'localhost', 'ruralconnectmorad', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'morad@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(14, 'napad', 'localhost', 'ruralconnectnapad', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'napad@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(16, 'porda', 'localhost', 'ruralconnectporda', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'porda@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(17, 'ramnagar', 'localhost', 'ruralconnectramnagar', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'ramnagar@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(18, 'ravipura', 'localhost', 'ruralconnectravipura', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'ravipura@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(19, 'rudel', 'localhost', 'ruralconnectrudel', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'rudel@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(20, 'vadod', 'localhost', 'ruralconnectvadod', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'vadod@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(21, 'vaghasi', 'localhost', 'ruralconnectvaghasi', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'vaghasi@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(22, 'vatadara', 'localhost', 'ruralconnectvatadara', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'vatadara@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(23, 'vishnoli', 'localhost', 'ruralconnectvishnoli', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'vishnoli@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(25, 'adas', 'localhost', 'ruralconnectadas', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'adas@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b'),
+(26, 'navli', 'localhost', 'ruralconnectnavli', 'ruralconnectroot', 'V!wrJq(Q%nZ=', 'navli@villageonweb.in', '6992d6cfe9394cdf7aa682c6db48a07d783a049b');
 
 --
 -- Indexes for dumped tables

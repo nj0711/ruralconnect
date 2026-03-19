@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Electrification || Village On Web</title>
+    <title>Electrification || RuralConnect Web</title>
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1572,7 +1572,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: substationName + ' - Village Substation',
-                    text: 'Substation location shared from Village On Web',
+                    text: 'Substation location shared from RuralConnect Web',
                     url: window.location.href
                 }).catch(console.error);
             } else {

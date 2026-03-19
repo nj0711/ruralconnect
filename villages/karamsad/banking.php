@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Banking || Village On Web</title>
+    <title>Banking || RuralConnect Web</title>
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1644,7 +1644,7 @@
             if (navigator.share) {
                 navigator.share({
                     title: atmName + ' - Village ATM',
-                    text: 'ATM location shared from Village On Web',
+                    text: 'ATM location shared from RuralConnect Web',
                     url: window.location.href
                 }).catch(console.error);
             } else {

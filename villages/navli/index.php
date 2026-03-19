@@ -65,7 +65,7 @@ $totalK = $totalPop > 0 ? floor($totalPop / 1000) : 0;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Village On Web</title>
+    <title>RuralConnect Web</title>
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,7 +151,7 @@ $totalK = $totalPop > 0 ? floor($totalPop / 1000) : 0;
                             <div class="col-md-12">
                                 <div class="slider-content">
 
-                                    <!-- <div class="slider-tagline">Village on Web</div> -->
+                                    <!-- <div class="slider-tagline">RuralConnect Web</div> -->
                                     <h1 class="section-title"><?php echo ucwords($temp_db[1]); ?></h1>
 
                                 </div><!-- slider-content -->
@@ -166,7 +166,7 @@ $totalK = $totalPop > 0 ? floor($totalPop / 1000) : 0;
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="slider-content">
-                                    <!-- <div class="slider-tagline">Village on Web</div> -->
+                                    <!-- <div class="slider-tagline">RuralConnect Web</div> -->
                                     <h1 class="section-title"><?php echo ucwords($temp_db[1]); ?></h1>
                                 </div><!-- slider-content -->
                             </div><!-- col-md-12 -->

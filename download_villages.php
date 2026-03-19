@@ -3,7 +3,7 @@
 $host = 'localhost';
 $username = 'root';
 $password = '';
-$dbname = 'villageonweb_admin_panel';
+$dbname = 'ruralconnectadmin_panel';
 
 // Create connection
 $conn = mysqli_connect($host, $username, $password, $dbname);

@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // ========== STEP 1: Connect to Admin Panel DB ==========
-    $adminPanelConn = mysqli_connect($dbHost, $dbUser, $dbPass, 'villageonweb_admin_panel');
+    $adminPanelConn = mysqli_connect($dbHost, $dbUser, $dbPass, 'ruralconnectadmin_panel');
     if (!$adminPanelConn) {
         die("Admin DB Connection failed: " . mysqli_connect_error());
     }

@@ -1,6 +1,6 @@
 <?php
             // Define the database name globally
-            $db = "villageonweb_karamsad";  // Replace with your actual database name
+            $db = "ruralconnectkaramsad";  // Replace with your actual database name
             
             class ConnDb
             {

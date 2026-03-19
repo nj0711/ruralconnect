@@ -6,9 +6,9 @@ function __ns_mysqli($server, $user, $pass, $db = '') {
 }
 
 global $db;
-$db = 'villageonweb_navli';
+$db = 'ruralconnectnavli';
 
-$db = "villageonweb_navli";
+$db = "ruralconnectnavli";
 
     class ConnDb {
         private $server = "localhost";

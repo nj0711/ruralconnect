@@ -1,5 +1,5 @@
 <?php
-    $db = "villageonweb_jol";
+    $db = "ruralconnectjol";
 
     class ConnDb {
         private $server = "localhost";

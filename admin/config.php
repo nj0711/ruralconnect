@@ -1,7 +1,7 @@
 <?php
 // Admin panel database configuration
 $dbHost = 'localhost';
-$dbName = 'villageonweb_admin_panel';  // Replace with your actual admin panel database name
+$dbName = 'ruralconnectadmin_panel';  // Replace with your actual admin panel database name
 $dbUser = "root";            // Replace with your actual database username
 $dbPass = "root";                // Replace with your actual database password
 

@@ -53,7 +53,7 @@ function firstImage(array $photos, string $fallback = 'assets/image/no-leader.jp
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Leaders || Village On Web</title>
+    <title>Leaders || RuralConnect Web</title>
     <!-- google font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

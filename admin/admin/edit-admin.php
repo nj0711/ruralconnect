@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_admin'])) {
     }
 
     // Update the super admin database (admin_panel)
-    $superAdminConn = mysqli_connect($dbHost, $dbUser, $dbPass, "villageonweb_admin_panel");
+    $superAdminConn = mysqli_connect($dbHost, $dbUser, $dbPass, "ruralconnectadmin_panel");
 
     if (!$superAdminConn) {
         die("Connection to super admin database failed: " . mysqli_connect_error());
